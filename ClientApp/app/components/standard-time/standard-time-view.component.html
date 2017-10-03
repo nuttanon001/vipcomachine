@@ -1,0 +1,47 @@
+﻿<div *ngIf="displayValue,else elseBlock">
+    <md-tab-group>
+        <md-tab>
+            <ng-template md-tab-label>
+                <b>Group Standard Time</b>
+            </ng-template>
+            <div class="view-container">
+                <div class="row my-1">
+                    <div class="my-label">
+                        Name :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.Name || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        Group Machine :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.TypeMachineString || "-"}}
+                    </div>
+                </div>
+            </div>
+        </md-tab>
+        <md-tab>
+            <ng-template md-tab-label>
+                <b>Standard Time Values</b>
+            </ng-template>
+            <div class="view-container">
+                <ngx-datatable class="material my-scrolling"
+                               [rows]="standards"
+                               [columns]="columns"
+                               [columnMode]="'flex'"
+                               [headerHeight]="50"
+                               [footerHeight]="0"
+                               [rowHeight]="50"
+                               [scrollbarV]="true">
+                </ngx-datatable>
+            </div>
+        </md-tab>
+    </md-tab-group>
+</div>
+
+<ng-template #elseBlock>
+    <md-progress-bar mode="indeterminate" style="margin-top:50px;"></md-progress-bar>
+    Waiting... for loading
+</ng-template>

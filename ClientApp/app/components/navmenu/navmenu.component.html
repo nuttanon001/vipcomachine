@@ -1,0 +1,91 @@
+<nav class="navbar navbar-expand navbar-dark bg-bar">
+    <!--<a class="navbar-brand" href="#">Always expand</a>-->
+    <a class="navbar-brand" [routerLink]="['/home']">
+        <img src="/images/logoVIPCO.png" alt="Vipco" width="36" height="36" class="d-inline-block align-top">
+        Vipco Machine System
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#Mynavbars"
+            aria-controls="Mynavbars" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse pl-4" id="Mynavbars" style="z-index:1500;">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a #mainMenu="mdMenuTrigger" [mdMenuTriggerFor]="menu1"
+                   (onMenuOpen)="menuOnCloseMenu1()" (mouseover)="menuOnOpenMenu1()"
+                   class="nav-link">
+                    <i class="fa fa-map-signs" aria-hidden="true"></i>
+                    Main Menu
+                </a>
+                <md-menu #menu1="mdMenu" [overlapTrigger]="false">
+                    <button md-menu-item [routerLink]="['/jobcard']" routerLinkActive="active">
+                        <i class="fa fa-hacker-news" aria-hidden="true"></i>
+                        <span>Require Machine</span>
+                    </button>
+                    <button md-menu-item [routerLink]="['/machine']" routerLinkActive="active">
+                        <i class="fa fa-plug" aria-hidden="true"></i>
+                        <span>Machine</span>
+                    </button>
+                    <hr />
+                    <button md-menu-item [routerLink]="['/project']" routerLinkActive="active">
+                        <i class="fa fa-product-hunt" aria-hidden="true"></i>
+                        <span>Job Master</span>
+                    </button>
+                    <button md-menu-item [routerLink]="['/cutting-plan']" routerLinkActive="active">
+                        <i class="fa fa-cube" aria-hidden="true"></i>
+                        <span>Cutting Plan</span>
+                    </button>
+                    <button md-menu-item [routerLink]="['/standard-time']" routerLinkActive="active">
+                        <i class="fa fa-hourglass-end" aria-hidden="true"></i>
+                        <span>StandardTime</span>
+                    </button>
+                    <hr />
+                    <button md-menu-item [routerLink]="['/developer']" routerLinkActive="active">
+                        <i class="fa fa-university" aria-hidden="true"></i>
+                        <span>Developer</span>
+                    </button>
+                </md-menu>
+            </li>
+            <li class="nav-item">
+                <a #subMenu="mdMenuTrigger" [mdMenuTriggerFor]="menu2"
+                   (onMenuOpen)="menuOnCloseMenu2()" (mouseover)="menuOnOpenMenu2()"
+                   class="nav-link">
+                    <i class="fa fa-comments-o" aria-hidden="true"></i>
+                    Main Menu 2
+                </a>
+                <md-menu #menu2="mdMenu" [overlapTrigger]="false">
+                    <div>
+                        <button md-menu-item [routerLink]="['/home']" routerLinkActive="active">
+                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                            <span>Menu1</span>
+                        </button>
+                        <button md-menu-item routerLink="['/home']" routerLinkActive="active">
+                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
+                            <span>Menu2</span>
+                        </button>
+                    </div>
+                </md-menu>
+            </li>
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a *ngIf="showLogin; else elseBlock" [routerLink]="['/login']">
+                    <i class="fa fa-sign-in" aria-hidden="true"></i>
+                    Login
+                </a>
+                <ng-template #elseBlock>
+                    <!--unmark this if authService is complete
+                        <a class="username">
+                            Welcome <i>{{authService.userName}}</i>
+                        </a>-->
+                    <!--<a (click)="onLogOut()">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                         Logout
+                    </a>-->
+                    <a class="username">Welcome <i>{{authService.userName}}</i></a>
+                </ng-template>
+            </li>
+        </ul>
+    </div>
+</nav>

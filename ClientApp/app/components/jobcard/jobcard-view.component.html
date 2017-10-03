@@ -1,0 +1,144 @@
+﻿<div *ngIf="displayValue,else elseBlock">
+    <md-tab-group>
+        <md-tab>
+            <ng-template md-tab-label>
+                <b>Require Machine Master</b>
+            </ng-template>
+            <div class="view-container">
+                <div class="row my-1">
+                    <div class="my-label">
+                        Work No :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.JobCardMasterNo || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        Date :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.JobCardDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        Group Machine :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue?.TypeMachineString || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        Job Lv2/3 :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue?.ProjectDetailString || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        EmployeeWrite :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue?.EmployeeWriteString || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        EmployeeRequire :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue?.EmployeeRequireString || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        Description :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.Description || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        Remark :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.Remark || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        DueDate :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.DueDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        Status :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.StatusString) || "-"}}
+                    </div>
+                </div>
+            </div>
+        </md-tab>
+        <md-tab>
+            <ng-template md-tab-label>
+                <b>Attach File</b>
+            </ng-template>
+            <div class="view-container">
+                <div *ngIf="attachFiles.length > 0,else elseAttact">
+                    <table class="table table-hover table-sm small">
+                        <colgroup>
+                            <col span="1" style="width: 80%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Open</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let file of attachFiles;let num = index">
+                                <td (click)="onOpenNewLink(file.FileAddress)" style="cursor:pointer;">
+                                    {{num + 1}}. {{file.FileName}}
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-default" (click)="onOpenNewLink(file.FileAddress)">
+                                        <em class="fa fa-file"></em>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ng-template #elseAttact>
+                    <p>No attach file !</p>
+                </ng-template>
+            </div>
+        </md-tab>
+        <md-tab>
+            <ng-template md-tab-label>
+                <b>Require Machine Detail</b>
+            </ng-template>
+            <div class="view-container">
+                <ngx-datatable class="material"
+                               [rows]="details"
+                               [columns]="columns"
+                               [columnMode]="'flex'"
+                               [headerHeight]="50"
+                               [rowHeight]="'auto'">
+                </ngx-datatable>
+            </div>
+        </md-tab>
+    </md-tab-group>
+</div>
+
+<ng-template #elseBlock>
+    <md-progress-bar mode="indeterminate" style="margin-top:50px;"></md-progress-bar>
+    Waiting... for loading
+</ng-template>

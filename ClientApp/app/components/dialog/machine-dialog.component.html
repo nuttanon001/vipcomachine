@@ -1,0 +1,53 @@
+﻿<H5 md-dialog-title style="color:cadetblue">Selected Job Level2/3</H5>
+<hr />
+<div md-dialog-content class="h-100 w-100 master-container">
+    <div class="child-container">
+        <div class="center-content w-100">
+            <split direction="horizontal" [gutterSize]="7" [visibleTransition]="true">
+                <split-area [size]="50" [order]="1">
+                    <div class="mx-2 mt-2">
+                        <ngx-datatable class="material"
+                                       [rows]="typeMachines"
+                                       [columns]="columnsType"
+                                       [columnMode]="'flex'"
+                                       [headerHeight]="50"
+                                       [rowHeight]="'auto'"
+                                       [selectionType]="'single'"
+                                       (select)="onSelectedTypeMachine($event)">
+                        </ngx-datatable>
+                    </div>
+                </split-area>
+                <split-area [size]="50" [order]="2">
+                    <div class="mx-2">
+                        <data-table (selected)="onSelectedMachine($event)" [columns]="columns" [height]="'calc(100vh - 400px)'">
+                        </data-table>
+                    </div>
+                </split-area>
+            </split>
+        </div>
+        <div md-dialog-actions class="right-content mx-2">
+            <!--<button type="button" md-icon-button color="accent" (click)="onNewModel()"
+                [disabled]="!showNewModel" mdTooltip="Create new" mdTooltipPosition="left">
+            <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
+        </button>
+        <button type="button" md-icon-button color="warn" (click)="onCancelNewModel()"
+                [disabled]="showNewModel" mdTooltip="Cancel" mdTooltipPosition="left">
+            <i class="fa fa-2x fa-times" aria-hidden="true"></i>
+        </button>
+        <hr />-->
+            <button type="button" md-icon-button color="primary" (click)="onSelectedClick()"
+                    [disabled]="!CanSelected" mdTooltip="Selected" mdTooltipPosition="left">
+                <i class="fa fa-2x fa-hand-pointer-o" aria-hidden="true"></i>
+            </button>
+            <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
+                    mdTooltip="Cancel" mdTooltipPosition="left">
+                <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<!--<hr />
+<div md-dialog-actions>
+    <button md-button (click)="onSelectedClick()" [disabled]="!CanSelected" color="primary">Selected</button>
+    <button md-button (click)="onCancelClick()" color="warn">Cancel</button>
+</div>-->

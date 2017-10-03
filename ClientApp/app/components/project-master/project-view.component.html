@@ -1,0 +1,64 @@
+﻿<div *ngIf="displayValue,else elseBlock">
+    <md-tab-group>
+        <md-tab>
+            <ng-template md-tab-label>
+                <b>Job Master</b>
+            </ng-template>
+            <div class="view-container">
+                <div class="row my-1">
+                    <div class="my-label">
+                        Job No :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.ProjectCode || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        ProjectName :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.ProjectName || "-"}}
+                    </div>
+
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        OpenDate :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.StartDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        CloseDate :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.EndDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+                </div>
+            </div>
+        </md-tab>
+        <md-tab>
+            <ng-template md-tab-label>
+                <b>Job Detail Level2/3</b>
+            </ng-template>
+            <div class="view-container">
+                <ngx-datatable class="material my-scrolling"
+                               [rows]="details"
+                               [columns]="columns"
+                               [columnMode]="'flex'"
+                               [headerHeight]="50"
+                               [footerHeight]="0"
+                               [rowHeight]="50"
+                               [scrollbarV]="true">
+                </ngx-datatable>
+            </div>
+        </md-tab>
+    </md-tab-group>
+</div>
+
+<ng-template #elseBlock>
+    <md-progress-bar mode="indeterminate" style="margin-top:50px;"></md-progress-bar>
+    Waiting... for loading
+</ng-template>

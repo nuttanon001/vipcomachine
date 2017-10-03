@@ -1,0 +1,126 @@
+﻿<div *ngIf="displayValue,else elseBlock">
+    <md-tab-group>
+        <md-tab>
+            <ng-template md-tab-label>
+                <b>Task Machine</b>
+            </ng-template>
+            <div class="view-container">
+                <div class="row my-1">
+                    <div class="my-label">
+                        TaskMachineName :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.TaskMachineName || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        Description :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.Description || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        Priority :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.Priority || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        Mat/Quantity :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.CurrentQuantity || "-"}} / {{displayValue.TotalQuantity || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        PlannedStart :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.PlannedStartDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        PlannedEnd :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.PlannedEndDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        ActualStart :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.ActualStartDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        ActualEnd :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.ActualEndDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        ManHours :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.ActualManHours || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        AssignedBy :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.AssignedByString || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        MachineNo :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.MachineString || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        JobLevel 2/3 :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.JobCardDetailString || "-"}}
+                    </div>
+                </div>
+            </div>
+        </md-tab>
+        <md-tab>
+            <ng-template md-tab-label>
+                <b>Over-Time</b>
+            </ng-template>
+            <div class="view-container">
+                <ngx-datatable class="material my-scrolling"
+                               [rows]="overtimes"
+                               [columns]="columns"
+                               [headerHeight]="50"
+                               [footerHeight]="0"
+                               [rowHeight]="50"
+                               [scrollbarV]="true">
+                </ngx-datatable>
+            </div>
+        </md-tab>
+    </md-tab-group>
+</div>
+
+<ng-template #elseBlock>
+    <md-progress-bar mode="indeterminate" style="margin-top:50px;"></md-progress-bar>
+    Waiting... for loading
+</ng-template>

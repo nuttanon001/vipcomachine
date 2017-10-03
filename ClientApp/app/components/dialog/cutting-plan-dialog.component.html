@@ -1,0 +1,76 @@
+﻿<H5 md-dialog-title style="color:cadetblue">Cutting-Plan</H5>
+<hr />
+<div md-dialog-content class="h-100 w-100 master-container">
+    <div class="child-container">
+        <div class="center-content">
+            <div *ngIf="showNewModel; else detailEdit" class="w-100">
+                <data-table (selected)="onSelectedValue($event)" [columns]="columns" [height]="'calc(100vh - 400px)'">
+                </data-table>
+            </div>
+            <ng-template #detailEdit>
+                <div class="edit-container" style="height:350px;">
+                    <form [formGroup]="editValueForm">
+                        <div class="my-form">
+                            <label for="CuttingPlanNo" class="my-label">CuttingPlanNo:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="my-input" placeholder="Insert cutting plan no here"
+                                       id="CuttingPlanNo" formControlName="CuttingPlanNo" required>
+                                <validation-messages [control]="editValueForm.controls.CuttingPlanNo"></validation-messages>
+                            </div>
+
+                            <label for="Description" class="my-label">Description:</label>
+                            <div class="col-sm-4">
+                                <input type="text" class="my-input" placeholder="Insert description of cutting plan here"
+                                       id="Description" formControlName="Description">
+                                <validation-messages [control]="editValueForm.controls.Description"></validation-messages>
+                            </div>
+                        </div>
+
+                        <div class="my-form">
+                            <label for="TypeCuttingPlan" class="my-label">Type:</label>
+                            <div class="col-sm-4">
+                                <p-dropdown class="my-input-combobox" [options]="cuttingTypes" filter="filter" [style]="{'width':'100%'}"
+                                            id="TypeCuttingPlan" formControlName="TypeCuttingPlan" required>
+                                </p-dropdown>
+                                <validation-messages [control]="editValueForm.controls.TypeCuttingPlan"></validation-messages>
+                            </div>
+
+                            <label for="ProjectCodeDetailId" class="my-label">Job Lv2/3:</label>
+                            <div class="col-sm-4">
+                                <p-dropdown class="my-input-combobox" [options]="projectDetails" filter="filter" [style]="{'width':'100%'}"
+                                            id="ProjectCodeDetailId" formControlName="ProjectCodeDetailId" required>
+                                </p-dropdown>
+                                <validation-messages [control]="editValueForm.controls.ProjectCodeDetailId"></validation-messages>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </ng-template>
+        </div>
+
+        <div md-dialog-actions class="right-content mx-2">
+            <button type="button" md-icon-button color="accent" (click)="onNewModel()"
+                    [disabled]="!showNewModel" mdTooltip="Create new" mdTooltipPosition="left">
+                <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
+            </button>
+            <button type="button" md-icon-button color="warn" (click)="onCancelNewModel()"
+                    [disabled]="showNewModel" mdTooltip="Cancel" mdTooltipPosition="left">
+                <i class="fa fa-2x fa-times" aria-hidden="true"></i>
+            </button>
+            <hr />
+            <button type="button" md-icon-button color="primary" (click)="onSelectedClick()"
+                    [disabled]="!CanSelected" mdTooltip="Selected" mdTooltipPosition="left">
+                <i class="fa fa-2x fa-hand-pointer-o" aria-hidden="true"></i>
+            </button>
+            <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
+                    mdTooltip="Cancel" mdTooltipPosition="left">
+                <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+</div>
+<!--<hr />-->
+<!--<div md-dialog-actions>
+    <button md-button (click)="onSelectedClick()" [disabled]="!CanSelected" color="primary">Selected</button>
+    <button md-button (click)="onCancelClick()" color="warn">Cancel</button>
+</div>-->

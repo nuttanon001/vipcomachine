@@ -1,0 +1,9 @@
+﻿.datatable-scrolling {
+    /*height: calc(100vh - 165px);*/
+    // height:100%;
+}
+
+:host /deep/ .datatable-scrolling .progress-linear {
+    position: fixed !important;
+    bottom: 0px;
+}
