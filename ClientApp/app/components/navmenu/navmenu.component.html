@@ -23,11 +23,15 @@
                         <i class="fa fa-hacker-news" aria-hidden="true"></i>
                         <span>Require Machine</span>
                     </button>
+                    <button md-menu-item [routerLink]="['/task-machine']" routerLinkActive="active">
+                        <i class="fa fa-tachometer" aria-hidden="true"></i>
+                        <span>Task Machine</span>
+                    </button>
+                    <hr />
                     <button md-menu-item [routerLink]="['/machine']" routerLinkActive="active">
                         <i class="fa fa-plug" aria-hidden="true"></i>
                         <span>Machine</span>
                     </button>
-                    <hr />
                     <button md-menu-item [routerLink]="['/project']" routerLinkActive="active">
                         <i class="fa fa-product-hunt" aria-hidden="true"></i>
                         <span>Job Master</span>
@@ -40,11 +44,6 @@
                         <i class="fa fa-hourglass-end" aria-hidden="true"></i>
                         <span>StandardTime</span>
                     </button>
-                    <hr />
-                    <button md-menu-item [routerLink]="['/developer']" routerLinkActive="active">
-                        <i class="fa fa-university" aria-hidden="true"></i>
-                        <span>Developer</span>
-                    </button>
                 </md-menu>
             </li>
             <li class="nav-item">
@@ -56,13 +55,9 @@
                 </a>
                 <md-menu #menu2="mdMenu" [overlapTrigger]="false">
                     <div>
-                        <button md-menu-item [routerLink]="['/home']" routerLinkActive="active">
-                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                            <span>Menu1</span>
-                        </button>
-                        <button md-menu-item routerLink="['/home']" routerLinkActive="active">
-                            <i class="fa fa-graduation-cap" aria-hidden="true"></i>
-                            <span>Menu2</span>
+                        <button md-menu-item [routerLink]="['/developer']" routerLinkActive="active">
+                            <i class="fa fa-university" aria-hidden="true"></i>
+                            <span>Developer</span>
                         </button>
                     </div>
                 </md-menu>

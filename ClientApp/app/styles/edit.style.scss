@@ -77,6 +77,12 @@ label {
     @extend .form-control-sm;
 }
 
+.my-input-click {
+    @extend .my-input;
+
+    cursor:pointer;
+}
+
 .my-input-combobox {
     @extend .form-control;
     @extend .form-control-sm;
@@ -115,4 +121,16 @@ label {
 .my-scrolling {
     height: calc(100vh - 280px);
     @extend .m-1;
+}
+
+:host /deep/ .is-cancel {
+    background-color: red;
+}
+
+:host /deep/ .is-wait {
+    background-color: gold;
+}
+
+:host /deep/ .is-complate {
+    background-color: lightgreen;
 }

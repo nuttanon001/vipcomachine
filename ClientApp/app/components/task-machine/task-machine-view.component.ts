@@ -1,11 +1,16 @@
 ﻿// angular
 import { Component } from "@angular/core";
 // models
-import { TaskMachine, TaskMachineHasOverTime } from "../../models/model.index";
+import {
+    TaskMachine, TaskMachineHasOverTime,
+    JobCardDetail, AttachFile
+} from "../../models/model.index";
 // components
 import { BaseViewComponent } from "../base-component/base-view.component";
 // services
 import { TaskMachineHasOverTimeService } from "../../services/over-time/over-time.service";
+import { JobCardMasterService } from "../../services/service.index";
+import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-detail.service";
 // 3rd party
 import { TableColumn } from "@swimlane/ngx-datatable";
 // pipes
@@ -21,8 +26,9 @@ export class TaskMachineViewComponent extends BaseViewComponent<TaskMachine>
 {
     // parameter
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
-
+    jobCardDetail: JobCardDetail | undefined;
     overtimes: Array<TaskMachineHasOverTime> = new Array;
+    attachFiles: Array<AttachFile> = new Array;
     columns: Array<TableColumn> = [
         { prop: "OverTimeStart", name: "Start", pipe:this.datePipe, flexGrow: 1 },
         { prop: "OverTimeEnd", name: "End", pipe: this.datePipe, flexGrow: 1 },
@@ -31,7 +37,9 @@ export class TaskMachineViewComponent extends BaseViewComponent<TaskMachine>
 
     /** task-machine-view ctor */
     constructor(
-        private service: TaskMachineHasOverTimeService
+        private service: TaskMachineHasOverTimeService,
+        private serviceJobCardDetail: JobCardDetailService,
+        private serviceJobCardMaster: JobCardMasterService
     ) {
         super();
     }
@@ -43,5 +51,28 @@ export class TaskMachineViewComponent extends BaseViewComponent<TaskMachine>
                 this.overtimes = dbOverTimes.slice();//[...dbDetail];
                 // console.log("DataBase is :", this.details);
             }, error => console.error(error));
+
+        if (value.JobCardDetailId) {
+            this.serviceJobCardDetail.getOneKeyNumber(value.JobCardDetailId)
+                .subscribe(dbJobCard => {
+                    this.jobCardDetail = dbJobCard
+                    //get Attach
+                    if(this.jobCardDetail) {
+                        if (this.jobCardDetail.JobCardMasterId) {
+                            this.serviceJobCardMaster.getAttachFile(this.jobCardDetail.JobCardMasterId)
+                                .subscribe(dbAttach => {
+                                    this.attachFiles = dbAttach.slice();
+                                }, error => console.error(error));
+                        }
+                    }
+                });
+        }
+    }
+
+    // open attact file
+    onOpenNewLink(link: string): void {
+        if (link) {
+            window.open(link, "_blank");
+        }
     }
 }

@@ -1,28 +1,27 @@
-﻿<H5 md-dialog-title style="color:cadetblue">Selected Employee</H5>
+﻿<H5 md-dialog-title style="color:cadetblue">Selected Require Machine</H5>
 <hr />
 <div md-dialog-content class="h-100 w-100 master-container">
     <div class="child-container">
-        <div class="center-content w-100">
+        <div class="center-content w-100 h-100">
             <split direction="horizontal" [gutterSize]="7" [visibleTransition]="true">
                 <split-area [size]="50" [order]="1">
-                    <data-table (selected)="onSelectedEmp($event)" [columns]="columns" [height]="'calc(100vh - 400px)'">
-                    </data-table>
+                    <div class="mx-2">
+                        <data-table (selected)="onSelectedMaster($event)" [columns]="columns" [height]="'calc(100vh - 400px)'">
+                        </data-table>
+                    </div>
                 </split-area>
                 <split-area [size]="50" [order]="2">
-                    <div style="margin-top:25px;">
+                    <div class="mx-2">
+                        <search-box (search)="onFilter($event)" class="w-100"></search-box>
                         <ngx-datatable class="material"
-                                       [rows]="selectEmployee"
+                                       #table
+                                       [rows]="details"
+                                       [columns]="columnsDetail"
                                        [columnMode]="'flex'"
                                        [headerHeight]="50"
                                        [rowHeight]="'auto'"
-                                       [selectionType]="'single'">
-                            <ngx-datatable-column name="Code" prop="EmpCode" [flexGrow]="1"></ngx-datatable-column>
-                            <ngx-datatable-column name="Name" prop="NameThai" [flexGrow]="1"></ngx-datatable-column>
-                            <ngx-datatable-column [flexGrow]="1" [sortable]="false">
-                                <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <button md-button (click)="onRemoveEmp(row)" color="warn">Remove</button>
-                                </ng-template>
-                            </ngx-datatable-column>
+                                       [selectionType]="'single'"
+                                       (select)="onSelectedDetail($event)">
                         </ngx-datatable>
                     </div>
                 </split-area>
@@ -30,8 +29,8 @@
         </div>
         <div md-dialog-actions class="right-content mx-2">
             <!--<button type="button" md-icon-button color="accent" (click)="onNewModel()"
-                    [disabled]="!showNewModel" mdTooltip="Create new" mdTooltipPosition="left">
-                <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
+                [disabled]="!showNewModel" mdTooltip="Create new" mdTooltipPosition="left">
+            <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
             </button>
             <button type="button" md-icon-button color="warn" (click)="onCancelNewModel()"
                     [disabled]="showNewModel" mdTooltip="Cancel" mdTooltipPosition="left">

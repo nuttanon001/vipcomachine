@@ -1,0 +1,31 @@
+﻿<div class="edit-container mx-3 my-2">
+    <div md-dialog-actions style="border-bottom:1px solid #32a8cc;">
+        <h5>
+            New/Edit OverTime.
+        </h5>
+    </div>
+    <form [formGroup]="editValueForm">
+        <div class="my-form">
+            <label for="OverTimeStart" class="my-label">OverTimeDate:</label>
+            <div class="col-sm-4">
+                <p-calendar formControlName="OverTimeStart" [showIcon]="true"
+                            [showTime]="true"  [hourFormat]="24"
+                            id="OverTimeStart" dateFormat="dd/mm/yy" placeholder="  Choose a date">
+                </p-calendar>
+                <span class="is-request-date">**</span>
+                <validation-messages [control]="editValueForm.controls.OverTimeStart"></validation-messages>
+            </div>
+
+            <label for="OverTimePerDate" class="my-label">Hour:</label>
+            <div class="col-sm-4">
+                <input type="number" min="0" class="my-input" placeholder="Add hour here"
+                       id="OverTimePerDate" formControlName="OverTimePerDate" required>
+                <validation-messages [control]="editValueForm.controls.OverTimePerDate"></validation-messages>
+            </div>
+        </div>
+    </form>
+    <div md-dialog-actions style="border-top:1px solid #32a8cc;">
+        <button md-raised-button (click)="onNewOrUpdateClick()" [disabled]="!editValueForm.valid" color="primary" class="my-1">New/Update</button>
+        <button md-raised-button (click)="onCancelClick()" color="warn" class="my-1">Cancel</button>
+    </div>
+</div>

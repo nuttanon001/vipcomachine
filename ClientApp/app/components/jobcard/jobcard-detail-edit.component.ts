@@ -70,6 +70,12 @@ export class JobcardDetailEditComponent implements OnInit
     onNewOrUpdateClick() {
         if (this.editValueForm) {
             let newOrUpdate: JobCardDetail = this.editValueForm.value;
+
+            if (newOrUpdate.JobCardDetailStatus === 3) {
+                newOrUpdate.JobCardDetailStatus = 1;
+                newOrUpdate.StatusString = "Wait";
+            }
+
             if (newOrUpdate.UnitsMeasureString || newOrUpdate.CuttingPlanString ||
                 newOrUpdate.Material || newOrUpdate.Quality || newOrUpdate.StandardTimeString) {
                 this.ComplateOrCancel.emit(this.editValueForm.value);

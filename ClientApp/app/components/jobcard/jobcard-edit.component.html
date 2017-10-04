@@ -105,38 +105,34 @@
                             {{num + 1}}. {{file.name}}
                         </a>
                     </div>
-                    <hr />
                 </div>
-            </div>
-            <div *ngIf="attachFiles.length > 0">
-                <table class="table table-hover table-sm small">
-                    <colgroup>
-                        <col span="1" style="width: 80%;">
-                    </colgroup>
-                    <thead>
-                        <tr>
-                            <th>File Name</th>
-                            <th>Command</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr *ngFor="let file of attachFiles; let num2 = index">
-                            <td (click)="onOpenNewLink(file.AttachAddress)" style="cursor:pointer;">
-                                {{num2 + 1}}. {{file.AttachFileName}}
-                            </td>
-                            <td>
-                                <div>
-                                    <a class="btn btn-sm btn-default" mdTooltip="Open Attach File" (click)="onOpenNewLink(file.AttachAddress)">
-                                        <em class="fa fa-file"></em>
-                                    </a>
-                                    <a class="btn btn-sm btn-danger" mdTooltip="Remove Attach File" (click)="onDeleteAttachFile(file)">
-                                        <em class="fa fa-remove"></em>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div *ngIf="attachFiles.length > 0">
+                    <table class="table table-hover table-sm small">
+                        <colgroup>
+                            <col span="1" style="width: 80%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Remove</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let file of attachFiles; let num2 = index">
+                                <td (click)="onOpenNewLink(file.FileAddress)" style="cursor:pointer;">
+                                    {{num2 + 1}}. {{file.FileName}}
+                                </td>
+                                <td>
+                                    <div>
+                                        <a class="btn btn-sm btn-danger" mdTooltip="Remove Attach File" (click)="onDeleteAttachFile(file)">
+                                            <em class="fa fa-remove"></em>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </md-tab>
         <md-tab>
@@ -156,13 +152,13 @@
                                [headerHeight]="50"
                                [footerHeight]="0"
                                [rowHeight]="50"
-                               [scrollbarV]="true"
-                               [selectionType]="'single'">
+                               [scrollbarV]="true">
                     <ngx-datatable-column name="CuttingPlan" prop="CuttingPlanString" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="StandardTime" prop="StandardTimeString" [flexGrow]="3"></ngx-datatable-column>
                     <ngx-datatable-column name="Material" prop="Material" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="Quality" prop="Quality" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="Uom" prop="UnitsMeasureString" [flexGrow]="1"></ngx-datatable-column>
+                    <ngx-datatable-column name="Status" prop="StatusString" [flexGrow]="1" [cellClass]="getCellClass"></ngx-datatable-column>
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
                             <button md-button (click)="onNewOrEditDetail(row)" color="accent">Edit</button>

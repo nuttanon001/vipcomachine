@@ -201,6 +201,7 @@ namespace VipcoMachine.Controllers
                 {
                     foreach (var nDetail in nJobCardMaster.JobCardDetails)
                     {
+                        nDetail.JobCardDetailStatus = JobCardDetailStatus.Wait;
                         nDetail.CreateDate = nJobCardMaster.CreateDate;
                         nDetail.Creator = nJobCardMaster.Creator;
                         // Insert UnitMeasure
@@ -257,6 +258,7 @@ namespace VipcoMachine.Controllers
                         {
                             uDetail.CreateDate = uJobCardMaster.ModifyDate;
                             uDetail.Creator = uJobCardMaster.Modifyer;
+                            uDetail.JobCardDetailStatus = JobCardDetailStatus.Wait;
                         }
 
                         // Insert UnitMeasure
@@ -408,7 +410,7 @@ namespace VipcoMachine.Controllers
         }
 
         // DELETE: api/TrainingCousre/DeleteAttach/5
-        [HttpDelete("DeleteAttach/{id}")]
+        [HttpDelete("DeleteAttach/{AttachFileId}")]
         public async Task<IActionResult> DeleteAttach(int AttachFileId)
         {
             if (AttachFileId > 0)

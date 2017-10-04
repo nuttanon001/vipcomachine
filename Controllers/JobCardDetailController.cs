@@ -58,6 +58,7 @@ namespace VipcoMachine.Controllers
         public async Task<IActionResult> Get()
         {
             var Includes = new List<string> {
+                "JobCardMaster.ProjectCodeDetail.ProjectCodeMaster",
                 "CuttingPlan",
                 "UnitsMeasure",
                 "StandardTime.TypeStandardTime",
@@ -74,6 +75,7 @@ namespace VipcoMachine.Controllers
         public async Task<IActionResult> Get(int key)
         {
             var Includes = new List<string> {
+                "JobCardMaster.ProjectCodeDetail.ProjectCodeMaster",
                 "CuttingPlan",
                 "UnitsMeasure",
                 "StandardTime.TypeStandardTime",
@@ -89,6 +91,7 @@ namespace VipcoMachine.Controllers
         {
             var QueryData = await this.repository.GetAllAsQueryable()
                                                    .Where(x => x.JobCardMasterId == MasterId)
+                                                   .Include(x => x.JobCardMaster.ProjectCodeDetail.ProjectCodeMaster)
                                                    .Include(x => x.CuttingPlan)
                                                    .Include(x => x.UnitsMeasure)
                                                    .Include(x => x.StandardTime.TypeStandardTime)

@@ -63,6 +63,10 @@ namespace VipcoMachine.Helpers
 
             //JobCardDetail
             CreateMap<JobCardDetail, JobCardDetailViewModel>()
+                // FullName
+                .ForMember(x => x.FullNameString,
+                           o => o.MapFrom(s => s.JobCardMaster.ProjectCodeDetail.ProjectCodeMaster.ProjectCode + "/ " +
+                                               s.JobCardMaster.ProjectCodeDetail.ProjectCodeDetailCode))
                 // UnitMeasure
                 .ForMember(x => x.UnitsMeasureString,
                            o => o.MapFrom(s => s.UnitsMeasure == null ? "-" : s.UnitsMeasure.UnitMeasureName))

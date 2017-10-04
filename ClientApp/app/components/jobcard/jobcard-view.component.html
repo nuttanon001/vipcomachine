@@ -99,18 +99,12 @@
                         <thead>
                             <tr>
                                 <th>File Name</th>
-                                <th>Open</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let file of attachFiles;let num = index">
                                 <td (click)="onOpenNewLink(file.FileAddress)" style="cursor:pointer;">
                                     {{num + 1}}. {{file.FileName}}
-                                </td>
-                                <td>
-                                    <a class="btn btn-sm btn-default" (click)="onOpenNewLink(file.FileAddress)">
-                                        <em class="fa fa-file"></em>
-                                    </a>
                                 </td>
                             </tr>
                         </tbody>

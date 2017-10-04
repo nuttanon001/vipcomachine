@@ -172,6 +172,11 @@ export class JobCardEditComponent
     // new Detail
     onNewOrEditDetail(detail?: JobCardDetail) {
         if (detail) {
+            if (detail.JobCardDetailStatus === 2){
+                this.serviceDialogs.context("Warning Message","คุณไม่สามารถแก้ไขข้อมูล ที่ดำเนินการแล้วได้ !!!",this.viewContainerRef);
+                return;
+            }
+
             if (this.editValue.JobCardDetails) {
                 this.indexJobDetail = this.editValue.JobCardDetails.indexOf(detail);
             } else {
@@ -180,7 +185,9 @@ export class JobCardEditComponent
             this.jobDetail = Object.assign({}, detail);
         } else {
             this.jobDetail = {
-                JobCardDetailId: 0
+                JobCardDetailId: 0,
+                JobCardDetailStatus: 1,
+                StatusString: "Wait"
             };
             this.indexJobDetail = -1;
         }
@@ -209,15 +216,34 @@ export class JobCardEditComponent
     // remove Detail
     onRemoveDetail(detail: JobCardDetail) {
         if (detail && this.editValue.JobCardDetails) {
-            if (detail.JobCardDetailId > 0) {
-                this.serviceDialogs.error("Deny Action", "ข้อมูลมีการอ้างอิงถึงระบบไม่สามารถให้การกระทำนี้มีผลต่อระบบได้.", this.viewContainerRef);
+            if (detail.JobCardDetailStatus === 3) {
                 return;
             }
 
+            if (detail.JobCardDetailId > 0 && detail.JobCardDetailStatus !== 1) {
+                this.serviceDialogs.error("Deny Action", "ข้อมูลมีการอ้างอิงถึงระบบไม่สามารถให้การกระทำนี้มีผลต่อระบบได้.", this.viewContainerRef);
+                return;
+            }
+            // find id
             let index: number = this.editValue.JobCardDetails.indexOf(detail)
+
             if (index > -1) {
-                // remove item
-                this.editValue.JobCardDetails.splice(index, 1);
+                if (detail.JobCardDetailId < 1) {
+                    if (index > -1) {
+                        // remove item
+                        this.editValue.JobCardDetails.splice(index, 1);
+                    }
+                } else {
+                    const editJobDetail = this.editValue.JobCardDetails
+                        .find((value, index) => value.JobCardDetailId === detail.JobCardDetailId);
+
+                    if (editJobDetail) {
+                        editJobDetail.JobCardDetailStatus = 3;
+                        editJobDetail.StatusString = "Cancel";
+                    }
+                }
+
+                // update array
                 this.editValue.JobCardDetails = [...this.editValue.JobCardDetails];
                 // cloning an object
                 this.editValueForm.patchValue({
@@ -274,10 +300,10 @@ export class JobCardEditComponent
     // on Attach Update List
     onUpdateAttachResults(results: FileList): void {
         // Debug here
-        console.log("File: ", results);
+        //console.log("File: ", results);
         this.editValue.AttachFile = results;
         // Debug here
-        console.log("Att File: ", this.editValue.AttachFile);
+        //console.log("Att File: ", this.editValue.AttachFile);
         this.editValueForm.patchValue({
             AttachFile: this.editValue.AttachFile
         });
@@ -290,8 +316,13 @@ export class JobCardEditComponent
             if (!this.editValue.RemoveAttach) {
                 this.editValue.RemoveAttach = new Array;
             }
+
             // remove
             this.editValue.RemoveAttach.push(attach.AttachFileId);
+            // debug here
+            // console.log("Remove :",this.editValue.RemoveAttach);
+
+
             this.editValueForm.patchValue({
                 RemoveAttach: this.editValue.RemoveAttach
             });
@@ -304,10 +335,27 @@ export class JobCardEditComponent
             this.onValueChanged(undefined);
         }
     }
+
     // open file attach
     onOpenNewLink(link: string): void {
         if (link) {
             window.open(link, "_blank");
+        }
+    }
+
+    // cell change style
+    getCellClass({ row, column, value }: any): any {
+        // console.log("getCellClass", value);
+        //return {
+        //    'is-cancel': value === 'Cancel'
+        //};
+
+        if (value === "Complate") {
+            return { "is-complate": true };
+        } else if (value === "Cancel") {
+            return { "is-cancel": true };
+        } else {
+            return { "is-wait": true };
         }
     }
 }

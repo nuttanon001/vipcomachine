@@ -8,6 +8,6 @@ import { BaseRestService } from "../service.index";
 @Injectable()
 export class TaskMachineHasOverTimeService extends BaseRestService<TaskMachineHasOverTime> {
     constructor(http: Http) {
-        super(http, "api/TaskMachineHasOverTime/");
+        super(http, "api/OverTime/");
     }
 }

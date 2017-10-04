@@ -1,11 +1,11 @@
-﻿<H5 md-dialog-title style="color:cadetblue">Selected Job Level2/3</H5>
+﻿<H5 md-dialog-title style="color:cadetblue">Selected Machine</H5>
 <hr />
 <div md-dialog-content class="h-100 w-100 master-container">
     <div class="child-container">
         <div class="center-content w-100">
             <split direction="horizontal" [gutterSize]="7" [visibleTransition]="true">
-                <split-area [size]="50" [order]="1">
-                    <div class="mx-2 mt-2">
+                <split-area [size]="50" [order]="0">
+                    <div style="margin-top:50px;">
                         <ngx-datatable class="material"
                                        [rows]="typeMachines"
                                        [columns]="columnsType"
@@ -17,7 +17,7 @@
                         </ngx-datatable>
                     </div>
                 </split-area>
-                <split-area [size]="50" [order]="2">
+                <split-area [size]="50" [order]="1">
                     <div class="mx-2">
                         <data-table (selected)="onSelectedMachine($event)" [columns]="columns" [height]="'calc(100vh - 400px)'">
                         </data-table>

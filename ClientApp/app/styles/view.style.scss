@@ -82,3 +82,15 @@
 .my-scrolling {
     height: calc(100vh - 190px);
 }
+
+:host /deep/ .is-cancel {
+    background-color: red;
+}
+
+:host /deep/ .is-wait {
+    background-color: gold;
+}
+
+:host /deep/ .is-complate {
+    background-color: lightgreen;
+}

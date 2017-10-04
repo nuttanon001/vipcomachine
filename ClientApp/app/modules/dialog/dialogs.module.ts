@@ -1,8 +1,8 @@
 ﻿import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import "rxjs/Rx";
-import "hammerjs";
+import 'rxjs/Rx';
+import 'hammerjs';
 // services
 import { DialogsService } from "../../services/service.index";
 // components
@@ -12,7 +12,7 @@ import {
     ErrorDialog, MachineDialogComponent,
     MaterialDialogComponent, ProjectDialogComponent,
     StandardTimeDialogComponent, StdtimeSelectDialogComponent,
-    UomDialogComponent,
+    UomDialogComponent,JobcardDialogComponent
 } from "../../components/dialog/dialog.index";
 // modules
 import { CustomMaterialModule } from "../customer-material/customer-material.module";
@@ -40,7 +40,8 @@ import { CuttingPlanModule } from "../cutting-plan/cutting-plan.module";
         MaterialDialogComponent,
         CuttingPlanDialogComponent,
         StandardTimeDialogComponent,
-        StdtimeSelectDialogComponent
+        StdtimeSelectDialogComponent,
+        JobcardDialogComponent
     ],
     declarations: [
         ErrorDialog,
@@ -53,7 +54,8 @@ import { CuttingPlanModule } from "../cutting-plan/cutting-plan.module";
         MaterialDialogComponent,
         CuttingPlanDialogComponent,
         StandardTimeDialogComponent,
-        StdtimeSelectDialogComponent
+        StdtimeSelectDialogComponent,
+        JobcardDialogComponent
     ],
     providers: [
         DialogsService,
@@ -71,7 +73,8 @@ import { CuttingPlanModule } from "../cutting-plan/cutting-plan.module";
         EmployeeDialogComponent,
         CuttingPlanDialogComponent,
         StandardTimeDialogComponent,
-        StdtimeSelectDialogComponent
+        StdtimeSelectDialogComponent,
+        JobcardDialogComponent,
     ],
 })
 export class DialogsModule { }

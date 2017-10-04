@@ -88,6 +88,8 @@
     <None Remove="ClientApp\app\modules\project\project.routing.ts" />
     <None Remove="ClientApp\app\modules\standard-time\standard-time.module.ts" />
     <None Remove="ClientApp\app\modules\standard-time\standard-time.routing.ts" />
+    <None Remove="ClientApp\app\modules\task-machine\task-machine.module.ts" />
+    <None Remove="ClientApp\app\modules\task-machine\task-machine.routing.ts" />
     <None Remove="ClientApp\app\pipes\date-only.pipe.ts" />
     <None Remove="ClientApp\app\services\base-service\base-communicate.service.ts" />
     <None Remove="ClientApp\app\services\cutting-plan\cutting-plan.service.ts" />
@@ -175,6 +177,8 @@
     <TypeScriptCompile Include="ClientApp\app\modules\project\project.routing.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\standard-time\standard-time.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\standard-time\standard-time.routing.ts" />
+    <TypeScriptCompile Include="ClientApp\app\modules\task-machine\task-machine.module.ts" />
+    <TypeScriptCompile Include="ClientApp\app\modules\task-machine\task-machine.routing.ts" />
     <TypeScriptCompile Include="ClientApp\app\pipes\date-only.pipe.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\base-service\base-communicate.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\cutting-plan\cutting-plan.service.ts" />

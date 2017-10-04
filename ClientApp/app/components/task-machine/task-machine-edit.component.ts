@@ -2,13 +2,18 @@
 import { Component, ViewContainerRef, ViewChild } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 // models
-import { TaskMachine, TaskMachineHasOverTime, Employee } from "../../models/model.index";
+import {
+    TaskMachine, TaskMachineHasOverTime,
+    Employee, JobCardDetail,AttachFile
+} from "../../models/model.index";
 // components
 import { BaseEditComponent } from "../base-component/base-edit.component";
 // services
 import { DialogsService } from "../../services/dialog/dialogs.service";
 import { TaskMachineService, TaskMachineServiceCommunicate } from "../../services/task-machine/task-machine.service";
 import { TaskMachineHasOverTimeService } from "../../services/over-time/over-time.service";
+import { JobCardMasterService } from "../../services/jobcard-master/jobcard-master.service";
+import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-detail.service";
 // primeng
 import { SelectItem } from "primeng/primeng";
 // 3rd party
@@ -23,11 +28,26 @@ import { TableColumn } from "@swimlane/ngx-datatable"
 export class TaskMachineEditComponent
     extends BaseEditComponent<TaskMachine, TaskMachineService>
 {
+    jobCardDetail: JobCardDetail = {
+        JobCardDetailId: 0,
+        FullNameString: "",
+        CuttingPlanString: "",
+        StandardTimeString: "",
+        Material: "",
+        Quality: 0,
+        UnitsMeasureString: "",
+    };
+
+    overTime: TaskMachineHasOverTime | undefined;
+    indexOverTime: number;
+    attachFiles: Array<AttachFile> = new Array;
     /** task-machine-edit ctor */
     constructor(
         service: TaskMachineService,
         serviceCom: TaskMachineServiceCommunicate,
         private serviceOverTime: TaskMachineHasOverTimeService,
+        private serviceJobCardMaster: JobCardMasterService,
+        private serviceJobCardDetail: JobCardDetailService,
         private viewContainerRef: ViewContainerRef,
         private serviceDialogs: DialogsService,
         private fb: FormBuilder
@@ -76,6 +96,16 @@ export class TaskMachineEditComponent
                             });
                     }
 
+                    //JobCardDetail
+                    if (this.editValue.JobCardDetailId) {
+                        this.serviceJobCardDetail.getOneKeyNumber(this.editValue.JobCardDetailId)
+                            .subscribe(dbJobCardDetail => {
+                                this.jobCardDetail = dbJobCardDetail;
+                                // get attach file
+                                this.getAttach();
+                            });
+                    }
+
                 }, error => console.error(error), () => this.defineData());
         } else {
             this.editValue = {
@@ -88,6 +118,7 @@ export class TaskMachineEditComponent
     // define data for edit form
     defineData(): void {
         this.buildForm();
+        this.overTime = undefined;
     }
 
     // build form
@@ -151,9 +182,82 @@ export class TaskMachineEditComponent
 
     }
 
+    // new OverTime
+    onNewOrEditOverTime(overTime?: TaskMachineHasOverTime) {
+        if (overTime) {
+            if (this.editValue.TaskMachineHasOverTimes) {
+                this.indexOverTime = this.editValue.TaskMachineHasOverTimes.indexOf(overTime);
+            } else {
+                this.indexOverTime = -1;
+            }
+            this.overTime = Object.assign({}, overTime);
+        } else {
+            this.overTime = {
+                OverTimeId: 0,
+                OverTimeStart: new Date,
+            };
+            this.indexOverTime = -1;
+        }
+    }
+
+    // edit OverTime
+    onComplateOrCancel(overTime?: TaskMachineHasOverTime) {
+        if (!this.editValue.TaskMachineHasOverTimes) {
+            this.editValue.TaskMachineHasOverTimes = new Array;
+        }
+
+        if (overTime && this.editValue.TaskMachineHasOverTimes) {
+            if (this.indexOverTime > -1) {
+                // remove item
+                this.editValue.TaskMachineHasOverTimes.splice(this.indexOverTime, 1);
+            }
+            // cloning an object
+            this.editValue.TaskMachineHasOverTimes.push(Object.assign({}, overTime));
+            this.editValueForm.patchValue({
+                TaskMachineHasOverTimes: this.editValue.TaskMachineHasOverTimes.slice(),
+            });
+        }
+        this.overTime = undefined;
+    }
+
+    // remove OverTime
+    onRemoveOverTime(overTime: TaskMachineHasOverTime) {
+        if (overTime && this.editValue.TaskMachineHasOverTimes) {
+            // find id
+            let index: number = this.editValue.TaskMachineHasOverTimes.indexOf(overTime)
+
+            if (index > -1) {
+                this.editValue.TaskMachineHasOverTimes.splice(index, 1);
+                // update array
+                this.editValue.TaskMachineHasOverTimes = [...this.editValue.TaskMachineHasOverTimes];
+                // cloning an object
+                this.editValueForm.patchValue({
+                    TaskMachineHasOverTimes: this.editValue.TaskMachineHasOverTimes.slice(),
+                });
+            }
+        }
+    }
+
+    // JobCardDetail
+    onSelectJobCardDetail() {
+        this.serviceDialogs.dialogSelectedJobCardDetail(this.viewContainerRef)
+            .subscribe(jobCardDetail => {
+                if (jobCardDetail) {
+                    this.jobCardDetail = Object.assign({}, jobCardDetail);;
+                    // cloning an object
+                    this.editValueForm.patchValue({
+                        JobCardDetailId: jobCardDetail.JobCardDetailId,
+                        TotalQuantity: jobCardDetail.Quality,
+                    });
+
+                    this.getAttach();
+                }
+            });
+    }
+
     // AssignedBy
     onSelectedAssignedBy() {
-        this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef,"Employee")
+        this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef,"Once")
             .subscribe(employees => {
                 if (employees) {
                     let employee: Employee = Object.assign({}, employees[0]);
@@ -177,5 +281,24 @@ export class TaskMachineEditComponent
                     })
                 }
             });
+    }
+
+    //get Attach
+    getAttach(): void {
+        if (this.jobCardDetail) {
+            if (this.jobCardDetail.JobCardMasterId) {
+                this.serviceJobCardMaster.getAttachFile(this.jobCardDetail.JobCardMasterId)
+                    .subscribe(dbAttach => {
+                        this.attachFiles = dbAttach.slice();
+                    }, error => console.error(error));
+            }
+        }
+    }
+
+    // open attact file
+    onOpenNewLink(link: string): void {
+        if (link) {
+            window.open(link, "_blank");
+        }
     }
 }

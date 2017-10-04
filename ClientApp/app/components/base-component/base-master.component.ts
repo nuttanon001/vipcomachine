@@ -111,7 +111,7 @@ export abstract class BaseMasterComponent<Model, Service> implements OnInit, OnD
                 this.canSave = false;
                 this.ShowEdit = false;
                 this.editValue = undefined;
-
+                this.onDetailView(undefined);
                 setTimeout(() => {
                     this.loadPagedData({
                         Skip: 0,

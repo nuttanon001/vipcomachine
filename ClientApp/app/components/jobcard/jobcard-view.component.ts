@@ -25,6 +25,7 @@ export class JobCardViewComponent extends BaseViewComponent<JobCardMaster>
         { prop: "Material", name: "Material", flexGrow: 1 },
         { prop: "Quality", name: "Quality", flexGrow: 1 },
         { prop: "UnitsMeasureString", name: "Uom", flexGrow: 1 },
+        { prop: "StatusString", name: "Status", flexGrow: 1, cellClass: this.getCellClass}
     ];
     /** jobcard-view ctor */
     constructor(
@@ -48,6 +49,22 @@ export class JobCardViewComponent extends BaseViewComponent<JobCardMaster>
     onOpenNewLink(link: string): void {
         if (link) {
             window.open(link, "_blank");
+        }
+    }
+
+    // cell change style
+    getCellClass({ row, column, value }: any): any {
+        // console.log("getCellClass", value);
+        //return {
+        //    'is-cancel': value === 'Cancel'
+        //};
+
+        if (value === "Complate") {
+            return { "is-complate": true };
+        } else if (value === "Cancel") {
+            return { "is-cancel": true };
+        } else {
+            return { "is-wait": true };
         }
     }
 }

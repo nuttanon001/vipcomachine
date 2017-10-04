@@ -4,23 +4,25 @@ import { Observable } from "rxjs/Rx";
 
 // models
 import {
-    ProjectCodeDetail, Material,
-    Employee, Machine, StandardTime,
-    CuttingPlan, UnitsMeasure
-} from "../../models/model.index";
+    CuttingPlan,
+    Employee,
+    JobCardDetail,
+    Machine,
+    Material,
+    ProjectCodeDetail,
+    StandardTime,
+    UnitsMeasure,
+} from '../../models/model.index';
 
 // components
-import { ConfirmDialog } from "../../components/dialog/confirm-dialog.component";
-import { ContextDialog } from "../../components/dialog/context-dialog.component";
-import { ErrorDialog } from "../../components/dialog/error-dialog.component";
-import { ProjectDialogComponent } from "../../components/dialog/project-dialog.component";
-import { MaterialDialogComponent } from "../../components/dialog/material-dialog.component";
-import { EmployeeDialogComponent } from "../../components/dialog/employee-dialog.component";
-import { MachineDialogComponent } from "../../components/dialog/machine-dialog.component";
-import { StandardTimeDialogComponent } from "../../components/dialog/standard-time-dialog.component";
-import { StdtimeSelectDialogComponent } from "../../components/dialog/stdtime-select-dialog.component";
-import { CuttingPlanDialogComponent } from "../../components/dialog/cutting-plan-dialog.component";
-import { UomDialogComponent } from "../../components/dialog/uom-dialog.component";
+import {
+    ConfirmDialog,ContextDialog,
+    ErrorDialog, ProjectDialogComponent,
+    MaterialDialogComponent, EmployeeDialogComponent,
+    MachineDialogComponent, StandardTimeDialogComponent,
+    StdtimeSelectDialogComponent, CuttingPlanDialogComponent,
+    UomDialogComponent, JobcardDialogComponent
+ } from "../../components/dialog/dialog.index";
 
 @Injectable()
 export class DialogsService {
@@ -123,7 +125,7 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.height = "650px";
-        config.width = "1000px";
+        config.width = "1100px";
         config.hasBackdrop = true;
 
         // open dialog
@@ -189,6 +191,21 @@ export class DialogsService {
 
         // open dialog
         dialogRef = this.dialog.open(UomDialogComponent, config);
+        return dialogRef.afterClosed();
+    }
+
+    public dialogSelectedJobCardDetail(viewContainerRef: ViewContainerRef): Observable<JobCardDetail>{
+        let dialogRef: MdDialogRef<JobcardDialogComponent>;
+        let config = new MdDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        config.height = "650px";
+        config.width = "1100px";
+        config.hasBackdrop = true;
+
+        //open dialog
+        dialogRef = this.dialog.open(JobcardDialogComponent,config);
         return dialogRef.afterClosed();
     }
 }

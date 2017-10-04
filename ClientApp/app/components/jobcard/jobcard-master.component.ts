@@ -107,6 +107,9 @@ export class JobCardMasterComponent
         let attachs: FileList | undefined = value.AttachFile;
         // remove attach
         if (value.RemoveAttach) {
+            // debug here
+            //console.log("Remove: ",value.RemoveAttach);
+
             this.onRemoveFileFromDataBase(value.RemoveAttach);
         }
         // change timezone

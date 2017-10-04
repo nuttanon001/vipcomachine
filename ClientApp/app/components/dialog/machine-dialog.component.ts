@@ -42,7 +42,7 @@ export class MachineDialogComponent
         { prop: "MachineName", name: "Name", flexGrow: 2 },
     ];
     columnsType: Array<TableColumn> = [
-        { prop: "TypeMachineCode", name: "Code", flexGrow: 1 },
+        //{ prop: "TypeMachineCode", name: "Code", flexGrow: 1 },
         { prop: "Name", name: "Name", flexGrow: 2 },
     ];
 
@@ -88,6 +88,9 @@ export class MachineDialogComponent
             scroll.Filter += "#Condition" + this.typeMachine.TypeMachineId;
         }
 
+        //debug here
+        console.log("Scroll :", scroll);
+
         this.serviceMachine.getAllWithScroll(scroll)
             .subscribe(scrollData => {
                 if (scrollData) {
@@ -107,6 +110,7 @@ export class MachineDialogComponent
     onSelectedTypeMachine(selected?: any): void {
         if (selected) {
             this.typeMachine = selected.selected[0];
+            this.loadData({Filter:"",Skip:0,Take:10});
         }
     }
 
