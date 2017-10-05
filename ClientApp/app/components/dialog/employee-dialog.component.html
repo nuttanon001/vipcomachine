@@ -9,12 +9,13 @@
                     </data-table>
                 </split-area>
                 <split-area [size]="50" [order]="2">
-                    <div style="margin-top:25px;">
+                    <div style="margin-top:65px;">
                         <ngx-datatable class="material"
                                        [rows]="selectEmployee"
                                        [columnMode]="'flex'"
                                        [headerHeight]="50"
-                                       [rowHeight]="'auto'"
+                                       [footerHeight]="0"
+                                       [rowHeight]="50"
                                        [selectionType]="'single'">
                             <ngx-datatable-column name="Code" prop="EmpCode" [flexGrow]="1"></ngx-datatable-column>
                             <ngx-datatable-column name="Name" prop="NameThai" [flexGrow]="1"></ngx-datatable-column>

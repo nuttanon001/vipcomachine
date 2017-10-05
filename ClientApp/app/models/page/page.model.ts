@@ -15,4 +15,5 @@ export interface Scroll {
     SortOrder?: number;
     Filter?: string;
     Reload?: boolean;
+    Where?: string;
 }

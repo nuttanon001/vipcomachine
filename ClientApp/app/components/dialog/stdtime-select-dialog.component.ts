@@ -1,5 +1,5 @@
-﻿import { Component, OnDestroy } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+﻿import { Component, OnDestroy, Inject } from "@angular/core";
+import { MdDialogRef, MD_DIALOG_DATA } from "@angular/material";
 // models
 import { StandardTime, Scroll } from "../../models/model.index";
 // service
@@ -24,6 +24,7 @@ export class StdtimeSelectDialogComponent
         public service: StandardTimeService,
         public serviceDataTable: DataTableServiceCommunicate<StandardTime>,
         public dialogRef: MdDialogRef<StdtimeSelectDialogComponent>,
+        @Inject(MD_DIALOG_DATA) public mode: number
     ) {
         super(
             service,
@@ -32,7 +33,7 @@ export class StdtimeSelectDialogComponent
         );
 
         this.columns = [
-            { prop: "TypeStandardTimeString", name: "Type", flexGrow: 1 },
+            { prop: "TypeStandardTimeString", name: "Type", flexGrow: 2 },
             { prop: "GradeMaterialString", name: "Grade", flexGrow: 1 },
             { prop: "StandardTimeCode", name: "Code", flexGrow: 1 },
             { prop: "Description", name: "Spec", flexGrow: 2, sortable: false },
@@ -44,6 +45,9 @@ export class StdtimeSelectDialogComponent
     onInit(): void { }
     // on get data with lazy load
     loadDataScroll(scroll: Scroll): void {
+        if (this.mode) {
+            scroll.Where = this.mode.toString();
+        }
         this.service.getAllWithScroll(scroll)
             .subscribe(scrollData => {
                 if (scrollData) {

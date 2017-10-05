@@ -164,12 +164,13 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectStandardTime(viewContainerRef: ViewContainerRef): Observable<StandardTime> {
+    public dialogSelectStandardTime(viewContainerRef: ViewContainerRef, mode:number|undefined = undefined): Observable<StandardTime> {
         let dialogRef: MdDialogRef<StdtimeSelectDialogComponent>;
         let config = new MdDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
+        config.data = mode;
         config.height = "650px";
         config.width = "1000px";
         config.hasBackdrop = true;

@@ -105,6 +105,10 @@ export class JobCardMasterComponent
     // on update data
     onUpdateToDataBase(value: JobCardMaster): void {
         let attachs: FileList | undefined = value.AttachFile;
+
+        console.log("ATT: ", attachs);
+        console.log("JobCardMaster: ", value);
+
         // remove attach
         if (value.RemoveAttach) {
             // debug here

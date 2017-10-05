@@ -106,6 +106,15 @@ namespace VipcoMachine.Controllers
                                            .Include(x => x.TypeStandardTime.TypeMachine)
                                            .Include(x => x.GradeMaterial)
                                            .AsQueryable();
+            // Where
+            if (!string.IsNullOrEmpty(Scroll.Where))
+            {
+                if (int.TryParse(Scroll.Where, out int id))
+                {
+                    QueryData = QueryData.Where(x => x.TypeStandardTime.TypeMachineId == id);
+                }
+            }
+
             // Filter
             var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
                                 : Scroll.Filter.ToLower().Split(null);

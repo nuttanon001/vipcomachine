@@ -15,5 +15,6 @@ namespace VipcoMachine.ViewModels
         public int? SortOrder { get; set; }
         public string Filter { get; set; }
         public bool? Reload { get; set; }
+        public string Where { get; set; }
     }
 }

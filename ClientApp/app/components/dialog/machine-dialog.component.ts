@@ -23,29 +23,29 @@ import { DatatableComponent, TableColumn } from "@swimlane/ngx-datatable";
     providers: [
         MachineService,
         TypeMachineService,
-        DataTableServiceCommunicate
     ]
 })
 /** machine-dialog component*/
 export class MachineDialogComponent
-    implements OnInit, OnDestroy
+    implements OnInit
 {
+    machines: Array<Machine>;
+    templates: Array<Machine>;
     typeMachines: Array<TypeMachine>;
     typeMachine: TypeMachine;
     // Machine
     selectedMachine: Machine | undefined;
-    // Subscription
-    subscription: Subscription;
     // Column
     columns: Array<TableColumn> = [
         { prop: "MachineCode", name: "Code", flexGrow: 1 },
-        { prop: "MachineName", name: "Name", flexGrow: 2 },
+        { prop: "MachineName", name: "Name", flexGrow: 3 }
     ];
     columnsType: Array<TableColumn> = [
-        //{ prop: "TypeMachineCode", name: "Code", flexGrow: 1 },
-        { prop: "Name", name: "Name", flexGrow: 2 },
+        { prop: "TypeMachineCode", name: "Code", flexGrow: 1 },
+        { prop: "Name", name: "Name", flexGrow: 3}
     ];
-
+    // table
+    @ViewChild(DatatableComponent) table: DatatableComponent;
     // proprty
     get CanSelected(): boolean {
         return this.selectedMachine !== undefined;
@@ -55,7 +55,6 @@ export class MachineDialogComponent
     constructor(
         private serviceMachine: MachineService,
         private serviceTypeMachine: TypeMachineService,
-        private serviceDataTable: DataTableServiceCommunicate<Machine>,
         public dialogRef: MdDialogRef<MachineDialogComponent>
 
     ) { }
@@ -66,43 +65,20 @@ export class MachineDialogComponent
             this.typeMachines = new Array;
         }
 
+        if (!this.machines) {
+            this.machines = new Array;
+        }
+
         this.serviceTypeMachine.getAll()
             .subscribe(dbTypeMachine => {
                 this.typeMachines = dbTypeMachine.slice();
             });
-
-        this.subscription = this.serviceDataTable.ToParent$
-            .subscribe((scroll: Scroll) => this.loadData(scroll));
-    }
-
-    // angular hook
-    ngOnDestroy(): void {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
-    }
-
-    // on get data with lazy load
-    loadData(scroll: Scroll): void {
-        if (scroll && this.typeMachine) {
-            scroll.Filter += "#Condition" + this.typeMachine.TypeMachineId;
-        }
-
-        //debug here
-        console.log("Scroll :", scroll);
-
-        this.serviceMachine.getAllWithScroll(scroll)
-            .subscribe(scrollData => {
-                if (scrollData) {
-                    this.serviceDataTable.toChild(scrollData);
-                }
-            }, error => console.error(error));
     }
 
     // Selected Machine
-    onSelectedMachine(machine?: Machine): void {
-        if (machine) {
-            this.selectedMachine = machine;
+    onSelectedMachine(selected?: any): void {
+        if (selected) {
+            this.selectedMachine = selected.selected[0];
         }
     }
 
@@ -110,8 +86,25 @@ export class MachineDialogComponent
     onSelectedTypeMachine(selected?: any): void {
         if (selected) {
             this.typeMachine = selected.selected[0];
-            this.loadData({Filter:"",Skip:0,Take:10});
+            this.serviceMachine.getByMasterId(this.typeMachine.TypeMachineId)
+                .subscribe(dbMachine => {
+                    this.machines = dbMachine.slice();
+                });
         }
+    }
+
+    // on Filter
+    onFilter(search: string) {
+        // filter our data
+        const temp = this.templates.slice().filter((item, index) => {
+            let searchStr = ((item.MachineName || "") + (item.MachineCode || "") + (item.TypeMachineString || "")).toLowerCase();
+            return searchStr.indexOf(search.toLowerCase()) != -1;
+        });
+
+        // update the rows
+        this.machines = temp;
+        // Whenever the filter changes, always go back to the first page
+        this.table.offset = 0;
     }
 
     // No Click

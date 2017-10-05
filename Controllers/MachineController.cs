@@ -64,16 +64,34 @@ namespace VipcoMachine.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return new JsonResult(await this.repository.GetAllAsync(), this.DefaultJsonSettings);
+            // return new JsonResult(await this.repository.GetAllAsync(), this.DefaultJsonSettings);
+            var Includes = new List<string> { "TypeMachine"};
+            return new JsonResult(
+                  this.ConverterTableToViewModel<MachineViewModel, Machine>(await this.repository.GetAllWithInclude2Async(Includes)),
+                  this.DefaultJsonSettings);
         }
 
         // GET: api/Machine/5
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(int key)
         {
-            return new JsonResult(this.mapper.Map<Machine,MachineViewModel>(await this.repository.GetAsync(key)), this.DefaultJsonSettings);
+            //return new JsonResult(this.mapper.Map<Machine,MachineViewModel>(await this.repository.GetAsync(key)), this.DefaultJsonSettings);
+            var Includes = new List<string> { "TypeMachine" };
+            return new JsonResult(
+               this.mapper.Map<Machine, MachineViewModel>(await this.repository.GetAsynvWithIncludes(key, "MachineId", Includes)),
+               this.DefaultJsonSettings);
         }
-
+        // GET: api/Machine/GetByMaster/5
+        [HttpGet("GetByMaster/{MasterId}")]
+        public async Task<IActionResult> GetByMaster(int MasterId)
+        {
+            var QueryData = this.repository.GetAllAsQueryable()
+                                .Where(x => x.TypeMachineId == MasterId)
+                                .Include(x => x.TypeMachine);
+            return new JsonResult(
+                this.ConverterTableToViewModel<MachineViewModel, Machine>(await QueryData.AsNoTracking().ToListAsync()),
+                this.DefaultJsonSettings);
+        }
         #endregion
 
         #region POST

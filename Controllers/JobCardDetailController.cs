@@ -82,7 +82,7 @@ namespace VipcoMachine.Controllers
                 "StandardTime.GradeMaterial"
             };
             return new JsonResult(
-               this.mapper.Map<JobCardDetail, JobCardDetailViewModel>(await this.repository.GetAsynvWithIncludes(key, "ProjectCodeDetailId", Includes)),
+               this.mapper.Map<JobCardDetail, JobCardDetailViewModel>(await this.repository.GetAsynvWithIncludes(key, "JobCardDetailId", Includes)),
                this.DefaultJsonSettings);
         }
         // GET: api/JobCardDetail/GetByMaster/5

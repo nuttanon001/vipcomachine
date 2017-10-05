@@ -20,6 +20,7 @@ export class JobcardDetailEditComponent implements OnInit
     editValueForm: FormGroup;
     @Output("ComplateOrCancel") ComplateOrCancel = new EventEmitter<any>();
     @Input("EditValueDetail") EditValueDetail: JobCardDetail;
+    @Input("MachineTypeId") MachineTypeId: number|undefined;
     /** jobcard-detail-edit ctor */
     constructor(
         private viewContainerRef: ViewContainerRef,
@@ -106,7 +107,7 @@ export class JobcardDetailEditComponent implements OnInit
 
     // on StandardTime click
     onStandardTimeClick() {
-        this.serviceDialogs.dialogSelectStandardTime(this.viewContainerRef)
+        this.serviceDialogs.dialogSelectStandardTime(this.viewContainerRef,this.MachineTypeId)
             .subscribe(resultStdTime => {
                 if (resultStdTime) {
                     this.editValueForm.patchValue({

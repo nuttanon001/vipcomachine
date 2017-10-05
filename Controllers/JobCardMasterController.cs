@@ -96,7 +96,7 @@ namespace VipcoMachine.Controllers
             //return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
             var Includes = new List<string> { "EmployeeRequire", "EmployeeWrite", "TypeMachine", "ProjectCodeDetail.ProjectCodeMaster" };
             return new JsonResult(
-               this.mapper.Map<JobCardMaster, JobCardMasterViewModel>(await this.repository.GetAsynvWithIncludes(key, "ProjectCodeDetailId", Includes)),
+               this.mapper.Map<JobCardMaster, JobCardMasterViewModel>(await this.repository.GetAsynvWithIncludes(key, "JobCardMasterId", Includes)),
                this.DefaultJsonSettings);
         }
 

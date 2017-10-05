@@ -1,6 +1,10 @@
 ﻿// angular
 import { Component, ViewContainerRef } from "@angular/core";
-import { FormBuilder,FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms";
+import {
+    trigger,state,style,
+    animate,transition
+} from '@angular/animations';
 // models
 import { JobCardMaster, JobCardDetail, Employee, AttachFile } from "../../models/model.index";
 // components
@@ -20,6 +24,18 @@ import { SelectItem } from "primeng/primeng";
     selector: "jobcard-edit",
     templateUrl: "./jobcard-edit.component.html",
     styleUrls: ["../../styles/edit.style.scss"],
+    animations: [
+        trigger('flyInOut', [
+            state('in', style({ transform: 'translateX(0)' })),
+            transition('void => *', [
+                style({ transform: 'translateX(-100%)' }),
+                animate(250)
+            ]),
+            transition('* => void', [
+                animate('0.2s 0.1s ease-out', style({ opacity: 0, transform: 'translateX(100%)' }))
+            ])
+        ])
+    ]
 })
 /** jobcard-edit component*/
 export class JobCardEditComponent
@@ -83,7 +99,8 @@ export class JobCardEditComponent
                 }, error => console.error(error), () => this.defineData());
         } else {
             this.editValue = {
-                JobCardMasterId: 0
+                JobCardMasterId: 0,
+                JobCardMasterStatus : 1,
             };
             this.defineData();
         }

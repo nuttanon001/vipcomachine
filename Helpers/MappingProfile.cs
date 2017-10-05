@@ -53,7 +53,7 @@ namespace VipcoMachine.Helpers
             CreateMap<Machine, MachineViewModel>()
                 //TypeMachine
                 .ForMember(x => x.TypeMachineString,
-                           o => o.MapFrom(s => s.TypeMachine == null ? "-" : s.TypeMachine.TypeMachineCode))
+                           o => o.MapFrom(s => s.TypeMachine == null ? "-" : $"{s.TypeMachine.TypeMachineCode} - {s.TypeMachine.Name}"))
                 .ForMember(x => x.TypeMachine, o => o.Ignore());
             CreateMap<MachineViewModel, Machine>();
 
@@ -118,7 +118,7 @@ namespace VipcoMachine.Helpers
             CreateMap<StandardTime, StandardTimeViewModel>()
                 //TypeStandardTime
                 .ForMember(x => x.TypeStandardTimeString,
-                           o => o.MapFrom(s => s.TypeStandardTime == null ? "-" : $"{s.TypeStandardTime.TypeMachine.Name}/{s.TypeStandardTime.Name}"))
+                           o => o.MapFrom(s => s.TypeStandardTime == null ? "-" : $"{s.TypeStandardTime.Name}"))
                 .ForMember(x => x.TypeStandardTime,o => o.Ignore())
                 //GradeMaterial
                 .ForMember(x => x.GradeMaterialString,
