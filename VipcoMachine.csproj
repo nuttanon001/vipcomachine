@@ -58,6 +58,7 @@
     <None Remove="ClientApp\app\components\task-machine\task-machine-center.component.ts" />
     <None Remove="ClientApp\app\models\attach-file.model.ts" />
     <None Remove="ClientApp\app\models\classification-material\classification-material.model.ts" />
+    <None Remove="ClientApp\app\models\cutting-plan\cutting-plan-import.model.ts" />
     <None Remove="ClientApp\app\models\cutting-plan\cutting-plan.model.ts" />
     <None Remove="ClientApp\app\models\employee\employee.model.ts" />
     <None Remove="ClientApp\app\models\grade-material\grade-material.model.ts" />
@@ -144,6 +145,7 @@
     <TypeScriptCompile Include="ClientApp\app\components\task-machine\task-machine-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\attach-file\attach-file.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\classification-material\classification-material.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\cutting-plan\cutting-plan-import.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\cutting-plan\cutting-plan.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\employee\employee.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\grade-material\grade-material.model.ts" />

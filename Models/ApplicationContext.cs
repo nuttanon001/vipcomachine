@@ -24,7 +24,14 @@ namespace VipcoMachine.Models
             modelBuilder.Entity<JobCardMasterHasAttach>().ToTable("JobCardMasterHasAttach");
             modelBuilder.Entity<Machine>().ToTable("Machines");
             modelBuilder.Entity<MachineHasOperator>().ToTable("MachineHasOperator");
+
+            // material
             modelBuilder.Entity<Material>().ToTable("Material");
+            //set key
+            //modelBuilder.Entity<Material>()
+            //    .HasAlternateKey(m => m.Size)
+            //    .HasName("Unique_Size");
+
             modelBuilder.Entity<ProjectCodeDetail>().ToTable("ProjectCodeDetail");
             modelBuilder.Entity<ProjectCodeMaster>().ToTable("ProjectCodeMaster");
             modelBuilder.Entity<PropertyMachine>().ToTable("PropertyMachine");

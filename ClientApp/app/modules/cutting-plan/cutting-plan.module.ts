@@ -8,6 +8,7 @@ import { CuttingCenterComponent } from "../../components/cutting-plan/cutting-ce
 import { CuttingMasterComponent } from "../../components/cutting-plan/cutting-master.component";
 import { CuttingViewComponent } from "../../components/cutting-plan/cutting-view.component";
 import { CuttingEditComponent } from "../../components/cutting-plan/cutting-edit.component";
+import { ImportCsvComponent } from "../../components/cutting-plan/import-csv.component";
 // module
 import { CuttingPlanRouters } from "./cutting-plan.routing";
 import {
@@ -26,6 +27,7 @@ import { ProjectCodeDetailEditService } from "../../services/projectcode-detail/
         CuttingMasterComponent,
         CuttingViewComponent,
         CuttingEditComponent,
+        ImportCsvComponent,
     ],
     imports: [
         //Angular

@@ -1,6 +1,7 @@
 ﻿export { AttachFile } from "./attach-file/attach-file.model";
 export { ClassificationMaterial } from "./classification-material/classification-material.model";
 export { CuttingPlan } from "./cutting-plan/cutting-plan.model";
+export { CuttingImport } from "./cutting-plan/cutting-plan-import.model";
 export { Employee } from "./employee/employee.model";
 export { GradeMaterial } from "./grade-material/grade-material.model";
 export { JobCardDetail } from "./jobcard-detail/jobcard-detail.model";

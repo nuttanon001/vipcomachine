@@ -486,5 +486,11 @@ namespace VipcoMachine.Services.Classes
         {
             return await this.Context.Set<TEntity>().Where(match).CountAsync();
         }
+
+        //********************Check Data Have*********************//
+        public async Task<bool> AnyDataAsync(Expression<Func<TEntity,bool>> match)
+        {
+            return await this.entities.Where(match).AnyAsync();
+        }
     }
 }

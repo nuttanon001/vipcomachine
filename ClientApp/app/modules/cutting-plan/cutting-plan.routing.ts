@@ -3,12 +3,17 @@ import { Routes, RouterModule } from "@angular/router";
 // componentes
 import { CuttingCenterComponent } from "../../components/cutting-plan/cutting-center.component";
 import { CuttingMasterComponent } from "../../components/cutting-plan/cutting-master.component";
+import { ImportCsvComponent } from "../../components/cutting-plan/import-csv.component";
 
 const cuttingPlanRoutes: Routes = [
     {
         path: "cutting-plan",
         component: CuttingCenterComponent,
         children: [
+            {
+                path: "import-csv",
+                component: ImportCsvComponent,
+            },
             {
                 path: "",
                 component: CuttingMasterComponent,
