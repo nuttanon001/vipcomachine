@@ -11,9 +11,10 @@ using VipcoMachine.Models;
 namespace VipcoMachine.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20171006024737_UpdateModel061017")]
+    partial class UpdateModel061017
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,9 +85,7 @@ namespace VipcoMachine.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("MaterialGrade");
-
-                    b.Property<string>("MaterialSize");
+                    b.Property<int?>("MaterialId");
 
                     b.Property<DateTime?>("ModifyDate");
 
@@ -99,6 +98,8 @@ namespace VipcoMachine.Migrations
                     b.Property<int?>("TypeCuttingPlan");
 
                     b.HasKey("CuttingPlanId");
+
+                    b.HasIndex("MaterialId");
 
                     b.HasIndex("ProjectCodeDetailId");
 
@@ -731,6 +732,10 @@ namespace VipcoMachine.Migrations
 
             modelBuilder.Entity("VipcoMachine.Models.CuttingPlan", b =>
                 {
+                    b.HasOne("VipcoMachine.Models.Material", "Material")
+                        .WithMany()
+                        .HasForeignKey("MaterialId");
+
                     b.HasOne("VipcoMachine.Models.ProjectCodeDetail", "ProjectCodeDetail")
                         .WithMany("CuttingPlans")
                         .HasForeignKey("ProjectCodeDetailId");

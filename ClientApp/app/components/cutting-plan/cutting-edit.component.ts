@@ -94,6 +94,9 @@ export class CuttingEditComponent
             ],
             ProjectCodeDetailId: [this.editValue.ProjectCodeDetailId],
             TypeCuttingPlan: [this.editValue.TypeCuttingPlan],
+            Quantity: [this.editValue.Quantity],
+            MaterialSize: [this.editValue.MaterialSize],
+            MaterialGrade: [this.editValue.MaterialGrade],
             //
             Creator: [this.editValue.Creator],
             CreateDate: [this.editValue.CreateDate],

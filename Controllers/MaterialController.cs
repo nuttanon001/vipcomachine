@@ -24,6 +24,8 @@ namespace VipcoMachine.Controllers
     {
         #region PrivateMenbers
         private IRepository<Material> repository;
+        private IRepository<JobCardDetail> repositoryJobDetail;
+        private IRepository<CuttingPlan> repositoryCuttingPlan;
         private IMapper mapper;
 
         private JsonSerializerSettings DefaultJsonSettings =>
@@ -44,9 +46,15 @@ namespace VipcoMachine.Controllers
 
         #region Constructor
 
-        public MaterialController(IRepository<Material> repo, IMapper map)
+        public MaterialController(
+            IRepository<Material> repo,
+            IRepository<JobCardDetail> repoJobDetail,
+            IRepository<CuttingPlan> repoCuttingPlan,
+            IMapper map)
         {
             this.repository = repo;
+            this.repositoryJobDetail = repoJobDetail;
+            this.repositoryCuttingPlan = repoCuttingPlan;
             this.mapper = map;
         }
 
@@ -77,6 +85,45 @@ namespace VipcoMachine.Controllers
             //return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
         }
 
+        [HttpGet("GetAutoComplate")]
+        public async Task<IActionResult> GetAutoComplate()
+        {
+            var Message = "";
+            try
+            {
+                var autoComplate = new List<string>();
+                var material = await this.repositoryCuttingPlan.GetAllAsync();
+                if (material != null)
+                {
+                    foreach(var item in material.Where(x => !string.IsNullOrEmpty(x.MaterialSize))
+                        .Select(x => x.MaterialSize +  (string.IsNullOrEmpty(x.MaterialGrade) ? "" : " | " + x.MaterialGrade))
+                        .Distinct())
+                    {
+                        autoComplate.Add(item);
+                    }
+                }
+
+                var jobDetail = await this.repositoryJobDetail.GetAllAsync();
+                if (jobDetail != null)
+                {
+                    foreach(var item in jobDetail.Select(x => x.Material).Distinct())
+                    {
+                        if (!autoComplate.Any(x => x == item))
+                        {
+                            autoComplate.Add(item);
+                        }
+                    }
+                }
+
+                if (autoComplate.Any())
+                    return new JsonResult(autoComplate, this.DefaultJsonSettings);
+            }
+            catch(Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+            return NotFound(new { Error = Message });
+        }
         #endregion
 
         #region POST
@@ -91,17 +138,18 @@ namespace VipcoMachine.Controllers
                                 : Scroll.Filter.ToLower().Split(null);
             foreach (var keyword in filters)
             {
-                QueryData = QueryData.Where(x => x.Description.ToLower().Contains(keyword));
+                QueryData = QueryData.Where(x => x.Size.ToLower().Contains(keyword) ||
+                                                 x.Grade.ToLower().Contains(keyword));
             }
 
             // Order
             switch (Scroll.SortField)
             {
-                case "Description":
+                case "Size":
                     if (Scroll.SortOrder == -1)
-                        QueryData = QueryData.OrderByDescending(e => e.Description);
+                        QueryData = QueryData.OrderByDescending(e => e.Size);
                     else
-                        QueryData = QueryData.OrderBy(e => e.Description);
+                        QueryData = QueryData.OrderBy(e => e.Size);
                     break;
 
                 //case "ClassificationString":
@@ -111,15 +159,15 @@ namespace VipcoMachine.Controllers
                 //        QueryData = QueryData.OrderBy(e => e.ClassificationMaterial.ClassificationCode);
                 //    break;
 
-                //case "GradeString":
-                //    if (Scroll.SortOrder == -1)
-                //        QueryData = QueryData.OrderByDescending(e => e.GradeMaterial.GradeCode);
-                //    else
-                //        QueryData = QueryData.OrderBy(e => e.GradeMaterial.GradeCode);
-                //    break;
+                case "Grade":
+                    if (Scroll.SortOrder == -1)
+                        QueryData = QueryData.OrderByDescending(e => e.Grade);
+                    else
+                        QueryData = QueryData.OrderBy(e => e.Grade);
+                    break;
 
                 default:
-                    //QueryData = QueryData.OrderByDescending(e => e.ClassificationMaterial.ClassificationCode);
+                    QueryData = QueryData.OrderByDescending(e => e.Size);
                     break;
             }
 

@@ -26,8 +26,13 @@
         <div class="my-form">
             <label for="Material" class="my-label">Material:</label>
             <div class="col-sm-4">
-                <input type="text" class="my-input" placeholder="Insert material here"
-                       id="Material" formControlName="Material" >
+                <!--<input type="text" class="my-input" placeholder="Insert material here"
+                       id="Material" formControlName="Material" >-->
+                <p-autoComplete  class="my-input-combobox" placeholder="Insert material here"
+                                 (completeMethod)="onSearchAutoComplate($event)"
+                                 [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [size]="30"
+                                 id="Material" formControlName="Material" [suggestions]="materials">
+                </p-autoComplete>
                 <validation-messages [control]="editValueForm.controls.Material"></validation-messages>
             </div>
 

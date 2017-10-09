@@ -1,11 +1,12 @@
 ﻿// angular
-import { Component,Input,Output } from "@angular/core";
+import { Component, Input, Output } from "@angular/core";
 import { OnInit, ViewContainerRef, EventEmitter } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms";
 // model
 import { JobCardDetail } from "../../models/model.index";
 // service
 import { DialogsService } from "../../services/dialog/dialogs.service";
+import { MaterialService } from "../../services/material/material.service";
 // rxjs
 import { Subscription } from "rxjs/Subscription";
 
@@ -14,15 +15,18 @@ import { Subscription } from "rxjs/Subscription";
     templateUrl: "./jobcard-detail-edit.component.html",
     styleUrls: ["../../styles/edit.style.scss"],
 })
-/** jobcard-detail-edit component*/
-export class JobcardDetailEditComponent implements OnInit
-{
+// jobcard-detail-edit component
+export class JobcardDetailEditComponent implements OnInit {
     editValueForm: FormGroup;
     @Output("ComplateOrCancel") ComplateOrCancel = new EventEmitter<any>();
     @Input("EditValueDetail") EditValueDetail: JobCardDetail;
-    @Input("MachineTypeId") MachineTypeId: number|undefined;
+    @Input("MachineTypeId") MachineTypeId: number | undefined;
+
+    tempMaterials: Array<string>;
+    materials: Array<string>;
     /** jobcard-detail-edit ctor */
     constructor(
+        private serviceMaterial: MaterialService,
         private viewContainerRef: ViewContainerRef,
         private serviceDialogs: DialogsService,
         private fb: FormBuilder
@@ -31,35 +35,46 @@ export class JobcardDetailEditComponent implements OnInit
     /** Called by Angular after jobcard-detail-edit component initialized */
     ngOnInit(): void {
         this.buildForm();
+
+        if (!this.tempMaterials) {
+            this.tempMaterials = new Array;
+            this.serviceMaterial.getAutoComplate()
+                .subscribe(dbMaterials => {
+                    this.tempMaterials = dbMaterials;
+                });
+        }
+        if (!this.materials) {
+            this.materials = new Array;
+        }
     }
 
     buildForm(): void {
         this.editValueForm = this.fb.group({
             JobCardDetailId: [this.EditValueDetail.JobCardDetailId],
             Material: [this.EditValueDetail.Material,
-                [
-                    Validators.maxLength(200),
-                ]
+            [
+                Validators.maxLength(200),
+            ]
             ],
             Quality: [this.EditValueDetail.Quality],
             JobCardDetailStatus: [this.EditValueDetail.JobCardDetailStatus],
             Remark: [this.EditValueDetail.Remark,
-                [
-                    Validators.maxLength(200)
-                ]
+            [
+                Validators.maxLength(200)
+            ]
             ],
             Creator: [this.EditValueDetail.Creator],
             CreateDate: [this.EditValueDetail.CreateDate],
             Modifyer: [this.EditValueDetail.Modifyer],
             ModifyDate: [this.EditValueDetail.ModifyDate],
-            //FK
+            // fK
             JobCardMasterId: [this.EditValueDetail.JobCardMasterId],
             UnitMeasureId: [this.EditValueDetail.UnitMeasureId],
             StandardTimeId: [this.EditValueDetail.StandardTimeId],
             CuttingPlanId: [this.EditValueDetail.CuttingPlanId],
             UnitsMeasure: [this.EditValueDetail.UnitsMeasure],
             CuttingPlan: [this.EditValueDetail.CuttingPlan],
-            //ViewModel
+            // viewModel
             UnitsMeasureString: [this.EditValueDetail.UnitsMeasureString],
             CuttingPlanString: [this.EditValueDetail.CuttingPlanString],
             StandardTimeString: [this.EditValueDetail.StandardTimeString],
@@ -68,7 +83,7 @@ export class JobcardDetailEditComponent implements OnInit
     }
 
     // on New/Update
-    onNewOrUpdateClick() {
+    onNewOrUpdateClick(): void {
         if (this.editValueForm) {
             let newOrUpdate: JobCardDetail = this.editValueForm.value;
 
@@ -87,12 +102,12 @@ export class JobcardDetailEditComponent implements OnInit
     }
 
     // on Cancel
-    onCancelClick() {
+    onCancelClick(): void {
         this.ComplateOrCancel.emit(undefined);
     }
 
     // on CuttingPlan click
-    onCuttingPlanClick() {
+    onCuttingPlanClick(): void {
         this.serviceDialogs.dialogSelectCuttingPlan(this.viewContainerRef)
             .subscribe(resultCutting => {
                 if (resultCutting) {
@@ -100,14 +115,16 @@ export class JobcardDetailEditComponent implements OnInit
                         CuttingPlanId: resultCutting.CuttingPlanId,
                         CuttingPlanString: resultCutting.CuttingPlanNo,
                         CuttingPlan: Object.assign({}, resultCutting),
+                        Material: (resultCutting.MaterialSize || "") + (resultCutting.MaterialGrade || ""),
+                        Quality: resultCutting.Quantity || 0
                     });
                 }
             });
     }
 
     // on StandardTime click
-    onStandardTimeClick() {
-        this.serviceDialogs.dialogSelectStandardTime(this.viewContainerRef,this.MachineTypeId)
+    onStandardTimeClick(): void {
+        this.serviceDialogs.dialogSelectStandardTime(this.viewContainerRef, this.MachineTypeId)
             .subscribe(resultStdTime => {
                 if (resultStdTime) {
                     this.editValueForm.patchValue({
@@ -119,7 +136,7 @@ export class JobcardDetailEditComponent implements OnInit
     }
 
     // on UnitsMeasure click
-    onUnitsMeasureClick() {
+    onUnitsMeasureClick(): void {
         this.serviceDialogs.dialogSelectUom(this.viewContainerRef)
             .subscribe(resultUom => {
                 if (resultUom) {
@@ -130,5 +147,17 @@ export class JobcardDetailEditComponent implements OnInit
                     });
                 }
             });
+    }
+
+    // on search autocomplate
+    onSearchAutoComplate(event:any) {
+        this.materials = new Array;
+
+        for (let i = 0; i < this.tempMaterials.length; i++) {
+            let material = this.tempMaterials[i];
+            if (material.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+                this.materials.push(material);
+            }
+        }
     }
 }

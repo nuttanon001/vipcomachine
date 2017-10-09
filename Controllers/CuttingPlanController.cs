@@ -183,24 +183,52 @@ namespace VipcoMachine.Controllers
                     foreach (var Jobs in ImportDatas.GroupBy(x => x.JobNo.Trim()))
                     {
                         var PMaster = await this.repositoryProMaster.GetAllAsQueryable()
-                                                                .Where(x => x.ProjectCode.Trim().ToLower()
-                                                                            .Equals(Jobs.Key.Trim().ToLower()))
-                                                                .Include(x => x.ProjectCodeDetails)
-                                                                    .ThenInclude(z => z.CuttingPlans)
-                                                                        .ThenInclude(y => y.Material)
-                                                                .FirstOrDefaultAsync();
+                                                    .Where(x => x.ProjectCode.Trim().ToLower()
+                                                                .Equals(Jobs.Key.Trim().ToLower()))
+                                                    .Include(x => x.ProjectCodeDetails)
+                                                        .ThenInclude(z => z.CuttingPlans)
+                                                    .FirstOrDefaultAsync();
 
                         if (PMaster != null)
                         {
                             foreach (var JDetails in Jobs.GroupBy(x => x.Level23.Trim()))
                             {
-                                // Condtion Check Level2/3
-                                Expression<Func<ProjectCodeDetail, bool>> dWhere =
-                                    d => d.ProjectCodeDetailCode.Trim().ToLower().Equals(JDetails.Key.Trim().ToLower());
+                                var PDetail = PMaster.ProjectCodeDetails
+                                                .FirstOrDefault(x => x.ProjectCodeDetailCode.Trim()
+                                                    .ToLower().Contains(JDetails.Key.Trim().ToLower()));
 
-                                if (await this.repositoryProDetail.AnyDataAsync(dWhere))
+                                if (PDetail != null)
                                 {
+                                    foreach (var Import in JDetails.GroupBy(x => x.CuttingPlan.Trim() + x.MaterialSize.Trim()))
+                                    {
+                                        var Cutting = PDetail.CuttingPlans
+                                                        .FirstOrDefault(x =>
+                                                        (x.CuttingPlanNo.ToLower() + x.MaterialSize.ToLower())
+                                                        .Contains(Import.Key.ToLower()));
 
+                                        if (Cutting == null)
+                                        {
+                                            foreach(var import2 in Import)
+                                            {
+                                                double.TryParse(import2.Quantity, out double qty);
+                                                // Insert CuttingPlan and Material
+                                                var nCuttingPlan = new CuttingPlan()
+                                                {
+                                                    ProjectCodeDetailId = PDetail.ProjectCodeDetailId,
+                                                    CreateDate = date,
+                                                    Creator = UserName,
+                                                    CuttingPlanNo = import2.CuttingPlan,
+                                                    Description = "Did not has description yet",
+                                                    Quantity = qty,
+                                                    TypeCuttingPlan = 1,
+                                                    MaterialSize = string.IsNullOrEmpty(import2.MaterialSize) ? "" : import2.MaterialSize.Trim(),
+                                                    MaterialGrade = string.IsNullOrEmpty(import2.MaterialGrade) ? "" : import2.MaterialGrade.Trim(),
+                                                };
+
+                                                await this.repository.AddAsync(nCuttingPlan);
+                                            }
+                                        }
+                                    }
                                 }
                                 // if don't have add all data in this level2/3
                                 else
@@ -212,32 +240,31 @@ namespace VipcoMachine.Controllers
                                         Creator = UserName,
                                         Description = "Did not has description yet.",
                                         ProjectCodeDetailCode = JDetails.Key,
-                                        ProjectCodeMasterId =
+                                        ProjectCodeMasterId = PMaster.ProjectCodeMasterId,
+                                        CuttingPlans = new List<CuttingPlan>()
                                     };
 
                                     foreach (var Import in JDetails)
                                     {
                                         // Insert CuttingPlan and Material
-                                        nProDetail.CuttingPlans.Add(
-                                            new CuttingPlan()
-                                            {
-                                                CreateDate = date,
-                                                Creator = UserName,
-                                                CuttingPlanNo = Import.CuttingPlan,
-                                                Description = "Did not has description yet",
-                                                Quantity = double.TryParse(Import.Quantity, out double qty) ? qty : 0,
-                                                TypeCuttingPlan = 1,
-                                                Material = string.IsNullOrEmpty(Import.MaterialSize) ? null :
-                                                    new Material()
-                                                    {
-                                                        CreateDate = date,
-                                                        Creator = UserName,
-                                                        Grade = Import.MaterialGrade,
-                                                        Size = Import.MaterialSize,
-                                                        Name = "Did not has name yet"
-                                                    }
-                                            });
+                                        double.TryParse(Import.Quantity, out double qty);
+
+                                        var nCuttingPlan = new CuttingPlan()
+                                        {
+                                            CreateDate = date,
+                                            Creator = UserName,
+                                            CuttingPlanNo = Import.CuttingPlan,
+                                            Description = "Did not has description yet",
+                                            Quantity = qty,
+                                            TypeCuttingPlan = 1,
+                                            MaterialSize = string.IsNullOrEmpty(Import.MaterialSize) ? "" : Import.MaterialSize.Trim(),
+                                            MaterialGrade = string.IsNullOrEmpty(Import.MaterialGrade) ? "" : Import.MaterialGrade.Trim(),
+                                        };
+                                        nProDetail.CuttingPlans.Add(nCuttingPlan);
                                     }
+
+                                    // Insert ProjectDetail to DataBase
+                                    await this.repositoryProDetail.AddAsync(nProDetail);
                                 }
                             }
                         }
@@ -252,6 +279,7 @@ namespace VipcoMachine.Controllers
                                 ProjectCode = Jobs.Key,
                                 ProjectName = "Did not has name yet.",
                                 StartDate = date,
+                                ProjectCodeDetails = new List<ProjectCodeDetail>()
                             };
                             // Insert all ProjectDetail ,CuttingPlan and Material
                             foreach (var JDetails in Jobs.GroupBy(x => x.Level23))
@@ -262,31 +290,25 @@ namespace VipcoMachine.Controllers
                                     CreateDate = date,
                                     Creator = UserName,
                                     Description = "Did not has description yet.",
-                                    ProjectCodeDetailCode = JDetails.Key
+                                    ProjectCodeDetailCode = JDetails.Key,
+                                    CuttingPlans = new List<CuttingPlan>()
                                 };
-
                                 foreach (var Import in JDetails)
                                 {
                                     // Insert CuttingPlan and Material
-                                    nProDetail.CuttingPlans.Add(
-                                        new CuttingPlan()
+                                    double.TryParse(Import.Quantity, out double qty);
+                                    var nCuttingPlan = new CuttingPlan()
                                         {
                                             CreateDate = date,
                                             Creator = UserName,
                                             CuttingPlanNo = Import.CuttingPlan,
                                             Description = "Did not has description yet",
-                                            Quantity = double.TryParse(Import.Quantity, out double qty) ? qty : 0,
+                                            Quantity = qty,
                                             TypeCuttingPlan = 1,
-                                            Material = string.IsNullOrEmpty(Import.MaterialSize) ? null :
-                                                new Material()
-                                                {
-                                                    CreateDate = date,
-                                                    Creator = UserName,
-                                                    Grade = Import.MaterialGrade,
-                                                    Size = Import.MaterialSize,
-                                                    Name = "Did not has name yet"
-                                                }
-                                        });
+                                            MaterialSize = string.IsNullOrEmpty(Import.MaterialSize) ? "" : Import.MaterialSize.Trim(),
+                                            MaterialGrade = string.IsNullOrEmpty(Import.MaterialGrade) ? "" : Import.MaterialGrade.Trim(),
+                                    };
+                                    nProDetail.CuttingPlans.Add(nCuttingPlan);
                                 }
 
                                 nProMaster.ProjectCodeDetails.Add(nProDetail);

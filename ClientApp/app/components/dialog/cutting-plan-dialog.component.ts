@@ -60,6 +60,8 @@ export class CuttingPlanDialogComponent
         this.columns = [
             { prop: "CuttingPlanNo", name: "No.", flexGrow: 2 },
             { prop: "ProjectCodeString", name: "JobLevel2/3", flexGrow: 1 },
+            { prop: "MaterialSize", name: "Material", flexGrow: 1 },
+            { prop: "Quantity", name: "Quantity", flexGrow: 1 },
         ];
     }
 

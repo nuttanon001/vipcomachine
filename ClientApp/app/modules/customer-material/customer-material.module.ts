@@ -25,6 +25,7 @@ import {
     TreeModule,
     TreeTableModule,
     AccordionModule,
+    AutoCompleteModule,
 } from "primeng/primeng";
 
 import { AngularSplitModule } from "angular-split";
@@ -69,6 +70,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         TreeModule,
         TreeTableModule,
         AccordionModule,
+        AutoCompleteModule,
     ],
     exports: [
         //Material
@@ -97,6 +99,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         TreeModule,
         TreeTableModule,
         AccordionModule,
+        AutoCompleteModule,
         //Component
         SearchBoxComponent,
         DataTableComponent,

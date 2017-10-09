@@ -14,6 +14,8 @@ namespace VipcoMachine.Models
         public string CuttingPlanNo { get; set; }
         public string Description { get; set; }
         public double? Quantity { get; set; }
+        public string MaterialSize { get; set; }
+        public string MaterialGrade { get; set; }
         /// <summary>
         /// 1:Cutting Plan
         /// 2:Shop Drawing
@@ -29,8 +31,8 @@ namespace VipcoMachine.Models
         public int? ProjectCodeDetailId { get; set; }
         public ProjectCodeDetail ProjectCodeDetail { get; set; }
         // Material
-        public int? MaterialId { get; set; }
-        public Material Material { get; set; }
+        //public int? MaterialId { get; set; }
+        //public Material Material { get; set; }
         // JobCardDetail
         public ICollection<JobCardDetail> JobCardDetails { get; set; }
     }

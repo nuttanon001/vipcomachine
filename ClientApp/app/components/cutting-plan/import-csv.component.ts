@@ -24,6 +24,7 @@ export class ImportCsvComponent implements OnInit
     importDatas: Array<CuttingImport>;
     /** import-csv ctor */
     constructor(
+        private service: CuttingPlanService,
         private serviceDialogs: DialogsService,
         private viewContainerRef: ViewContainerRef,
     ) { }
@@ -60,7 +61,6 @@ export class ImportCsvComponent implements OnInit
             //};
         }
     }
-
     // extract Data
     // Input csv data to the function
     extractData(data:any) {
@@ -122,5 +122,22 @@ export class ImportCsvComponent implements OnInit
         //this.textCsv = new Array;
         this.textHeader = new Array;
         this.importDatas = new Array;
+    }
+
+    // onSubmit
+    onSubmit() {
+        if (this.importDatas.length) {
+            this.service.postImportCsv(this.importDatas)
+                .subscribe(result => {
+                    this.serviceDialogs
+                        .context("Import Complate", "System import complate.", this.viewContainerRef);
+                    // clear data
+                    this.inputFile.nativeElement.value = "";
+                    this.onClearData();
+                }, error => {
+                    this.serviceDialogs
+                        .error("Error Message", "ตรวจพบข้อผิดพลาด ในการนำเข้าข้อมูล โปรดตรวจสอบข้อมูล.", this.viewContainerRef);
+                });
+        }
     }
 }

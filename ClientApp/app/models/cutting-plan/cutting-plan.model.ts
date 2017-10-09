@@ -5,6 +5,9 @@ export interface CuttingPlan {
     CuttingPlanNo?: string;
     Description?: string;
     TypeCuttingPlan?: number;
+    Quantity?: number;
+    MaterialSize?: string;
+    MaterialGrade?: string;
     Creator?: string;
     CreateDate?: Date;
     Modifyer?: string;
