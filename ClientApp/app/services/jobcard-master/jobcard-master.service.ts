@@ -12,6 +12,35 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
         super(http, "api/JobCardMaster/");
     }
 
+    //===================== JobCard Waiting ===========================\\
+
+    // get job card master with MultiKey
+    postGetMultiKey(listKey: Array<string>): Observable<Array<JobCardMaster>> {
+        let url: string = `${this.actionUrl}GetMultiKey/`;
+        return this.http.post(url, listKey).map(this.extractData).catch(this.handleError);
+    }
+
+    // get check jobcard can cancel
+    getCheckJobCardCanCancel(JobCardMasterId: number): Observable<boolean> {
+        let url: string = `${this.actionUrl}JobCardCanCancel/${JobCardMasterId}`;
+        return this.http.get(url)
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    // get cancel jobcard
+    getCancelJobCardMaster(JobCardMasterId: number): Observable<JobCardMaster> {
+        let url: string = `${this.actionUrl}JobCardCancel/${JobCardMasterId}`;
+        return this.http.get(url)
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    // get waiting jobcard
+    getJobCardHasWait(): Observable<any> {
+        let url: string = `${this.actionUrl}JobCardHasWait/`;
+        return this.http.get(url)
+            .map(this.extractData).catch(this.handleError);
+    }
+
     //===================== Upload File ===============================\\
     // get file
     getAttachFile(JobCardMasterId: number): Observable<Array<AttachFile>> {
@@ -19,6 +48,7 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
         return this.http.get(url)
             .map(this.extractData).catch(this.handleError);
     }
+
 
     // upload file
     postAttactFile(JobCardMasterId: number, files: FileList): Observable<any> {
@@ -29,7 +59,7 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
                 input.append("files", files[i]);
         }
 
-        console.log("Files : ", input);
+        // console.log("Files : ", input);
 
         let CreateBy: string = "Someone";// this.authService.userName || "Someone";
         let url: string = `${this.actionUrl}PostAttach/${JobCardMasterId}/${CreateBy}`;

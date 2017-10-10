@@ -51,6 +51,7 @@
     <None Remove="ClientApp\app\components\dialog\temp-cutting-plan-dialog.component.ts" />
     <None Remove="ClientApp\app\components\jobcard\jobcard-center.component.ts" />
     <None Remove="ClientApp\app\components\jobcard\jobcard-master.component.ts" />
+    <None Remove="ClientApp\app\components\jobcard\jobcard-view-waiting.component.ts" />
     <None Remove="ClientApp\app\components\machine\machine-center.component.ts" />
     <None Remove="ClientApp\app\components\project-master\project-center.component.ts" />
     <None Remove="ClientApp\app\components\project-master\project.index.ts" />
@@ -138,6 +139,7 @@
     <TypeScriptCompile Include="ClientApp\app\components\dialog\temp-cutting-plan-dialog.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\jobcard\jobcard-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\jobcard\jobcard-master.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\jobcard\jobcard-view-waiting.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\machine\machine-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\project-master\project-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\project-master\project.index.ts" />

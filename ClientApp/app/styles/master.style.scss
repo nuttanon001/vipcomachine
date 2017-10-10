@@ -7,6 +7,12 @@
     height: calc(100vh - 80px);
 }
 
+.master-dialog {
+    display: flex;
+    flex-direction: column;
+    width: 1165px;
+}
+
 .child-left-container {
     display: flex;
     flex-direction: column;

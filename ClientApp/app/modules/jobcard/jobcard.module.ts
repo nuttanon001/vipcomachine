@@ -1,6 +1,6 @@
 ﻿import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 // 3rd party
 import "hammerjs";
 
@@ -9,6 +9,7 @@ import { JobCardCenterComponent } from "../../components/jobcard/jobcard-center.
 import { JobCardMasterComponent } from "../../components/jobcard/jobcard-master.component";
 import { JobCardViewComponent } from "../../components/jobcard/jobcard-view.component";
 import { JobCardEditComponent } from "../../components/jobcard/jobcard-edit.component";
+import { JobCardWaitingComponent } from "../../components/jobcard/jobcard-waiting.component";
 import { JobcardDetailEditComponent } from "../../components/jobcard/jobcard-detail-edit.component";
 // module
 import { JobCardRouters } from "./jobcard.routing";
@@ -26,23 +27,27 @@ import {
         JobCardMasterComponent,
         JobCardViewComponent,
         JobCardEditComponent,
-        JobcardDetailEditComponent
+        JobcardDetailEditComponent,
+        JobCardWaitingComponent
     ],
     imports: [
-        //Angular
+        // angular
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        //Custom
+        // custom
         CustomMaterialModule,
         ValidationModule,
         JobCardRouters,
+    ],
+    exports: [
+        JobCardViewComponent,
     ],
     providers: [
         JobCardMasterService,
         JobCardDetailService,
         JobCardMasterServiceCommunicate,
-        // DataTableServiceCommunicate
+        // dataTableServiceCommunicate
     ]
 })
 

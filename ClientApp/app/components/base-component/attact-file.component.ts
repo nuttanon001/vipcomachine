@@ -14,7 +14,7 @@ import "rxjs/add/operator/switch";
 @Component({
     selector: "attact-file",
     template: `
-    <input name="attachFile" type="file" class="form-control" multiple />
+    <input name="attachFile" type="file" class="m-0 p-0 form-control-file form-control-sm" multiple />
   `
 })
 

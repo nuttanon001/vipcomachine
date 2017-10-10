@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms"
 import {
     trigger,state,style,
     animate,transition
-} from '@angular/animations';
+} from "@angular/animations";
 // models
 import { JobCardMaster, JobCardDetail, Employee, AttachFile } from "../../models/model.index";
 // components
@@ -25,35 +25,34 @@ import { SelectItem } from "primeng/primeng";
     templateUrl: "./jobcard-edit.component.html",
     styleUrls: ["../../styles/edit.style.scss"],
     animations: [
-        trigger('flyInOut', [
-            state('in', style({ transform: 'translateX(0)' })),
-            transition('void => *', [
-                style({ transform: 'translateX(-100%)' }),
+        trigger("flyInOut", [
+            state("in", style({ transform: "translateX(0)" })),
+            transition("void => *", [
+                style({ transform: "translateX(-100%)" }),
                 animate(250)
             ]),
-            transition('* => void', [
-                animate('0.2s 0.1s ease-out', style({ opacity: 0, transform: 'translateX(100%)' }))
+            transition("* => void", [
+                animate("0.2s 0.1s ease-out", style({ opacity: 0, transform: "translateX(100%)" }))
             ])
         ])
     ]
 })
-/** jobcard-edit component*/
+// jobcard-edit component
 export class JobCardEditComponent
-    extends BaseEditComponent<JobCardMaster, JobCardMasterService>
-{
+    extends BaseEditComponent<JobCardMaster, JobCardMasterService> {
     // paramater
-    //columns: Array<TableColumn> = [
+    // columns: Array<TableColumn> = [
     //    { prop: "CuttingPlanString", name: "CuttingPlan", flexGrow: 1 },
     //    { prop: "Material", name: "Material", flexGrow: 1 },
     //    { prop: "StandardTimeString", name: "StandardTime", flexGrow: 1 },
     //    { prop: "Quality", name: "Quality", flexGrow: 1 },
     //    { prop: "UnitsMeasureString", name: "Uom", flexGrow: 1 },
-    //];
+    // ];
     jobDetail?: JobCardDetail;
     indexJobDetail: number;
     machineTypes: Array<SelectItem>;
     attachFiles: Array<AttachFile> = new Array;
-    /** jobcard-edit ctor */
+    // jobcard-edit ctor
     constructor(
         service: JobCardMasterService,
         serviceCom: JobCardMasterServiceCommunicate,
@@ -75,7 +74,7 @@ export class JobCardEditComponent
             this.service.getOneKeyNumber(value.JobCardMasterId)
                 .subscribe(dbJobCardMaster => {
                     this.editValue = dbJobCardMaster;
-                    // Set Date
+                    // set Date
                     if (this.editValue.JobCardDate) {
                         this.editValue.JobCardDate = this.editValue.JobCardDate != null ?
                             new Date(this.editValue.JobCardDate) : new Date();
@@ -95,12 +94,12 @@ export class JobCardEditComponent
                                 });
                             });
                     }
-
                 }, error => console.error(error), () => this.defineData());
         } else {
             this.editValue = {
                 JobCardMasterId: 0,
-                JobCardMasterStatus : 1,
+                JobCardMasterStatus: 1,
+                JobCardDate: new Date(),
             };
             this.defineData();
         }
@@ -111,7 +110,7 @@ export class JobCardEditComponent
         this.buildForm();
         this.jobDetail = undefined;
 
-        // MachineType ComboBox
+        // machineType ComboBox
         this.serviceMachineType.getAll()
             .subscribe(dbTypeMachines => {
                 this.machineTypes = new Array;
@@ -155,7 +154,7 @@ export class JobCardEditComponent
             CreateDate: [this.editValue.CreateDate],
             Modifyer: [this.editValue.Modifyer],
             ModifyDate: [this.editValue.ModifyDate],
-            //FK
+            // fK
             EmpWrite: [this.editValue.EmpWrite],
             EmpRequire: [this.editValue.EmpRequire],
             ProjectCodeDetailId: [this.editValue.ProjectCodeDetailId,
@@ -169,7 +168,7 @@ export class JobCardEditComponent
                 ]
             ],
             JobCardDetails: [this.editValue.JobCardDetails],
-            //ViewModel
+            // viewModel
             ProjectDetailString: [this.editValue.ProjectDetailString,
                 [
                     Validators.required
@@ -179,7 +178,7 @@ export class JobCardEditComponent
             StatusString: [this.editValue.StatusString],
             EmployeeRequireString: [this.editValue.EmployeeRequireString],
             EmployeeWriteString: [this.editValue.EmployeeWriteString],
-            //Attach
+            // attach
             AttachFile: [this.editValue.AttachFile],
             RemoveAttach: [this.editValue.RemoveAttach],
         });
@@ -187,9 +186,9 @@ export class JobCardEditComponent
     }
 
     // new Detail
-    onNewOrEditDetail(detail?: JobCardDetail) {
+    onNewOrEditDetail(detail?: JobCardDetail):void {
         if (detail) {
-            if (detail.JobCardDetailStatus === 2){
+            if (detail.JobCardDetailStatus === 2) {
                 this.serviceDialogs.context("Warning Message","คุณไม่สามารถแก้ไขข้อมูล ที่ดำเนินการแล้วได้ !!!",this.viewContainerRef);
                 return;
             }
@@ -211,7 +210,7 @@ export class JobCardEditComponent
     }
 
     // edit Detail
-    onComplateOrCancel(detail?: JobCardDetail) {
+    onComplateOrCancel(detail?: JobCardDetail):void {
         if (!this.editValue.JobCardDetails) {
             this.editValue.JobCardDetails = new Array;
         }
@@ -231,18 +230,19 @@ export class JobCardEditComponent
     }
 
     // remove Detail
-    onRemoveDetail(detail: JobCardDetail) {
+    onRemoveDetail(detail: JobCardDetail):void {
         if (detail && this.editValue.JobCardDetails) {
             if (detail.JobCardDetailStatus === 3) {
                 return;
             }
 
             if (detail.JobCardDetailId > 0 && detail.JobCardDetailStatus !== 1) {
-                this.serviceDialogs.error("Deny Action", "ข้อมูลมีการอ้างอิงถึงระบบไม่สามารถให้การกระทำนี้มีผลต่อระบบได้.", this.viewContainerRef);
+                this.serviceDialogs.error("Deny Action", "ข้อมูลมีการอ้างอิงถึงระบบไม่สามารถให้การกระทำนี้มีผลต่อระบบได้.",
+                    this.viewContainerRef);
                 return;
             }
             // find id
-            let index: number = this.editValue.JobCardDetails.indexOf(detail)
+            let index: number = this.editValue.JobCardDetails.indexOf(detail);
 
             if (index > -1) {
                 if (detail.JobCardDetailId < 1) {
@@ -251,7 +251,7 @@ export class JobCardEditComponent
                         this.editValue.JobCardDetails.splice(index, 1);
                     }
                 } else {
-                    const editJobDetail = this.editValue.JobCardDetails
+                    const editJobDetail:JobCardDetail|undefined = this.editValue.JobCardDetails
                         .find((value, index) => value.JobCardDetailId === detail.JobCardDetailId);
 
                     if (editJobDetail) {
@@ -271,7 +271,7 @@ export class JobCardEditComponent
     }
 
     // on ProjectDetail click
-    onProjectDetailClick() {
+    onProjectDetailClick():void {
         this.serviceDialogs.dialogSelectedDetail(this.viewContainerRef)
             .subscribe(resultDetail => {
                 if (resultDetail) {
@@ -284,7 +284,7 @@ export class JobCardEditComponent
     }
 
     // on Employee Write click
-    onEmployeeWriteClick(mode:string) {
+    onEmployeeWriteClick(mode:string):void {
         this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef,"singe")
             .subscribe(resultEmp => {
                 if (resultEmp) {
@@ -316,11 +316,11 @@ export class JobCardEditComponent
 
     // on Attach Update List
     onUpdateAttachResults(results: FileList): void {
-        // Debug here
-        //console.log("File: ", results);
+        // debug here
+        // console.log("File: ", results);
         this.editValue.AttachFile = results;
-        // Debug here
-        //console.log("Att File: ", this.editValue.AttachFile);
+        // debug here
+        // console.log("Att File: ", this.editValue.AttachFile);
         this.editValueForm.patchValue({
             AttachFile: this.editValue.AttachFile
         });
@@ -328,7 +328,7 @@ export class JobCardEditComponent
     }
 
     // on Attach delete file
-    onDeleteAttachFile(attach: AttachFile) {
+    onDeleteAttachFile(attach: AttachFile):void {
         if (attach) {
             if (!this.editValue.RemoveAttach) {
                 this.editValue.RemoveAttach = new Array;
@@ -363,9 +363,9 @@ export class JobCardEditComponent
     // cell change style
     getCellClass({ row, column, value }: any): any {
         // console.log("getCellClass", value);
-        //return {
-        //    'is-cancel': value === 'Cancel'
-        //};
+        // return {
+        //    "is-cancel": value === "Cancel"
+        // };
 
         if (value === "Complate") {
             return { "is-complate": true };

@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
@@ -100,9 +101,140 @@ namespace VipcoMachine.Controllers
                this.DefaultJsonSettings);
         }
 
+        [HttpGet("JobCardCanCancel/{key}")]
+        public async Task<IActionResult> GetJobCardCanCancel(int key)
+        {
+            var QueryData = this.repository.GetAllAsQueryable()
+                                           .Where(x => x.JobCardMasterId == key)
+                                           .Include(x => x.JobCardDetails);
+
+            return new JsonResult(await QueryData.AnyAsync(x =>
+                                        x.JobCardDetails.Any(z => z.JobCardDetailStatus != JobCardDetailStatus.Task)),
+                                        this.DefaultJsonSettings);
+        }
+
+        [HttpGet("JobCardHasWait")]
+        public async Task<IActionResult> GetJobCardHasWait()
+        {
+            string Message = "";
+
+            try
+            {
+                var QueryData = this.repository.GetAllAsQueryable()
+                                               .Include(x => x.JobCardDetails)
+                                               .Include(x => x.EmployeeRequire)
+                                               .Include(x => x.TypeMachine)
+                                               .Include(x => x.ProjectCodeDetail.ProjectCodeMaster)
+                                               .AsQueryable();
+
+                QueryData = QueryData.Where(x => x.JobCardMasterStatus == JobCardMasterStatus.Wait);
+
+                var GetData = await QueryData.ToListAsync();
+                if (GetData.Any())
+                {
+                    var dataTable = new List<IDictionary<String, Object>>();
+                    List<string> columns = new List<string>() { "GroupMachine", "Employee" };
+
+                    foreach (var item in GetData.Where(x => x.JobCardDate != null).OrderBy(x => x.JobCardDate).GroupBy(x => x.JobCardDate.Value.Date)
+                                                            .Select(x => x.Key))
+                    {
+                        columns.Add(item.ToString("dd/MM/yy"));
+                    }
+
+                    foreach (var dataByEmp in GetData.GroupBy(x => x.EmployeeRequire))
+                    {
+                        if (dataByEmp == null)
+                            continue;
+                        else
+                        {
+                            IDictionary<String, Object> rowData = new ExpandoObject();
+                            var EmployeeReq = dataByEmp.Key != null ? $"{(dataByEmp?.Key.NameThai ?? "")}" : "No-Data";
+                            // add column time
+                            rowData.Add(columns[1], EmployeeReq);
+                            foreach (var item in dataByEmp)
+                            {
+                                string TypeCode = item.TypeMachine == null ? "No-Data" : item.TypeMachine.TypeMachineCode;
+                                // if don't have type add item to rowdata
+                                if (!rowData.Keys.Any(x => x == "GroupMachine"))
+                                    rowData.Add(columns[0], TypeCode);
+
+                                var key = columns.Where(y => y.Contains(item.JobCardDate.Value.ToString("dd/MM/yy"))).FirstOrDefault();
+                                // if don't have data add it to rowData
+                                if (!rowData.Keys.Any(x => x == key))
+                                    rowData.Add(key, $"คลิกที่ไอคอน เพื่อแสดงข้อมูล#{item.JobCardMasterId}");
+                                else
+                                    rowData[key] += $"#{item.JobCardMasterId}";
+                            }
+                            dataTable.Add(rowData);
+                        }
+                    }
+
+                    if (dataTable.Any())
+                        return new JsonResult(new
+                                    {
+                                        Columns = columns,
+                                        DataTable = dataTable
+                                    }, this.DefaultJsonSettings);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+
+            return NotFound(new { Error = Message });
+        }
+
+        [HttpGet("JobCardCancel/{key}")]
+        public async Task<IActionResult> GetCancelJobCard(int key)
+        {
+            if (key > 0)
+            {
+                var Includes = new List<string> { "JobCardDetails" };
+                var dbJobCard = await this.repository.GetAsynvWithIncludes(key, "JobCardMasterId", Includes);
+                if (dbJobCard != null)
+                {
+                    dbJobCard.JobCardMasterStatus = JobCardMasterStatus.Cancel;
+                    foreach(var dbJobDetail in dbJobCard.JobCardDetails)
+                    {
+                        dbJobDetail.JobCardDetailStatus = JobCardDetailStatus.Cancel;
+                        await this.repositoryDetail.UpdateAsync(dbJobDetail, dbJobDetail.JobCardDetailId);
+                    }
+                    return new JsonResult(await this.repository.UpdateAsync(dbJobCard, key), this.DefaultJsonSettings);
+                }
+            }
+
+            return NotFound(new { Error = "Not found key." });
+        }
+
         #endregion GET
 
         #region POST
+        // POST: api/JobCardMaster/GetMultiKey
+        [HttpPost("GetMultiKey")]
+        public async Task<IActionResult> GetMultiKey([FromBody] List<string> ListKey)
+        {
+            if (ListKey != null)
+            {
+                var Includes = new List<string> { "EmployeeRequire", "EmployeeWrite", "TypeMachine", "ProjectCodeDetail.ProjectCodeMaster" };
+                var JobCardMasters = new List<JobCardMasterViewModel>();
+
+                foreach(var key in ListKey)
+                {
+                    if (int.TryParse(key, out int keyInt))
+                    {
+                        JobCardMasters.Add(this.mapper.Map<JobCardMaster, JobCardMasterViewModel>
+                            (await this.repository.GetAsynvWithIncludes(keyInt, "JobCardMasterId", Includes)));
+                    }
+                }
+
+                if (JobCardMasters.Any())
+                    return new JsonResult(JobCardMasters, this.DefaultJsonSettings);
+            }
+            return NotFound(new { Error = "Not Found Key." });
+        }
+
 
         // POST: api/JobCardMaster/GetScroll
         [HttpPost("GetScroll")]

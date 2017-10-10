@@ -55,6 +55,11 @@
                 </a>
                 <md-menu #menu2="mdMenu" [overlapTrigger]="false">
                     <div>
+                        <button md-menu-item [routerLink]="['/jobcard/jobcard-waiting']" routerLinkActive="active">
+                            <i class="fa fa-history" aria-hidden="true"></i>
+                            <span>Require Machine Wating</span>
+                        </button>
+                        <hr/>
                         <button md-menu-item [routerLink]="['/cutting-plan/import-csv']" routerLinkActive="active">
                             <i class="fa fa-inbox" aria-hidden="true"></i>
                             <span>Cutting Plan Import</span>

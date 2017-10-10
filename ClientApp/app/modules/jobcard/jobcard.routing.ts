@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 // componentes
 import { JobCardCenterComponent } from "../../components/jobcard/jobcard-center.component";
 import { JobCardMasterComponent } from "../../components/jobcard/jobcard-master.component";
+import { JobCardWaitingComponent } from "../../components/jobcard/jobcard-waiting.component";
 
 const jobcardRoutes: Routes = [
     {
@@ -10,12 +11,16 @@ const jobcardRoutes: Routes = [
         component: JobCardCenterComponent,
         children: [
             {
+                path: "jobcard-waiting",
+                component: JobCardWaitingComponent,
+            },
+            {
                 path: "",
                 component: JobCardMasterComponent,
             }
         ],
     }
-]
+];
 
 @NgModule({
     imports: [

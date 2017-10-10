@@ -12,6 +12,7 @@ import {
     ProjectCodeDetail,
     StandardTime,
     UnitsMeasure,
+    JobCardMaster,
 } from '../../models/model.index';
 
 // components
@@ -21,7 +22,8 @@ import {
     MaterialDialogComponent, EmployeeDialogComponent,
     MachineDialogComponent, StandardTimeDialogComponent,
     StdtimeSelectDialogComponent, CuttingPlanDialogComponent,
-    UomDialogComponent, JobcardDialogComponent
+    UomDialogComponent, JobcardDialogComponent,
+    JobCardWatingDialogComponent
  } from "../../components/dialog/dialog.index";
 
 @Injectable()
@@ -207,6 +209,22 @@ export class DialogsService {
 
         //open dialog
         dialogRef = this.dialog.open(JobcardDialogComponent,config);
+        return dialogRef.afterClosed();
+    }
+
+    public dialogSelectedJobCardDetailForWait(viewContainerRef: ViewContainerRef, jobCardMasters:Array<JobCardMaster>): Observable<JobCardDetail> {
+        let dialogRef: MdDialogRef<JobCardWatingDialogComponent>;
+        let config = new MdDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        config.data = jobCardMasters;
+        config.height = "650px";
+        config.width = "1200px";
+        config.hasBackdrop = true;
+
+        // open dialog
+        dialogRef = this.dialog.open(JobCardWatingDialogComponent, config);
         return dialogRef.afterClosed();
     }
 }

@@ -4,7 +4,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import 'rxjs/Rx';
 import 'hammerjs';
 // services
-import { DialogsService } from "../../services/service.index";
+import {
+    JobCardMasterService, JobCardDetailService,
+    DialogsService
+} from "../../services/service.index";
 // components
 import {
     ConfirmDialog, ContextDialog,
@@ -12,12 +15,14 @@ import {
     ErrorDialog, MachineDialogComponent,
     MaterialDialogComponent, ProjectDialogComponent,
     StandardTimeDialogComponent, StdtimeSelectDialogComponent,
-    UomDialogComponent,JobcardDialogComponent
+    UomDialogComponent,JobcardDialogComponent,JobCardWatingDialogComponent
 } from "../../components/dialog/dialog.index";
+import { JobCardViewWaitingComponent } from "../../components/jobcard/jobcard-view-waiting.component";
 // modules
 import { CustomMaterialModule } from "../customer-material/customer-material.module";
 import { ValidationModule } from "../validation/validation.module";
 import { CuttingPlanModule } from "../cutting-plan/cutting-plan.module";
+import { JobCardModule } from "../jobcard/jobcard.module";
 
 @NgModule({
     imports: [
@@ -28,6 +33,7 @@ import { CuttingPlanModule } from "../cutting-plan/cutting-plan.module";
         // Customer Module
         ValidationModule,
         CustomMaterialModule,
+        //JobCardModule,
     ],
     exports: [
         ErrorDialog,
@@ -41,7 +47,8 @@ import { CuttingPlanModule } from "../cutting-plan/cutting-plan.module";
         CuttingPlanDialogComponent,
         StandardTimeDialogComponent,
         StdtimeSelectDialogComponent,
-        JobcardDialogComponent
+        JobCardWatingDialogComponent,
+        JobcardDialogComponent,
     ],
     declarations: [
         ErrorDialog,
@@ -55,10 +62,14 @@ import { CuttingPlanModule } from "../cutting-plan/cutting-plan.module";
         CuttingPlanDialogComponent,
         StandardTimeDialogComponent,
         StdtimeSelectDialogComponent,
-        JobcardDialogComponent
+        JobCardWatingDialogComponent,
+        JobcardDialogComponent,
+        JobCardViewWaitingComponent,
     ],
     providers: [
         DialogsService,
+        JobCardMasterService,
+        JobCardDetailService,
     ],
     // A list of components that are not referenced in a reachable component template.
     // doc url is :https://angular.io/guide/ngmodule-faq
@@ -74,7 +85,9 @@ import { CuttingPlanModule } from "../cutting-plan/cutting-plan.module";
         CuttingPlanDialogComponent,
         StandardTimeDialogComponent,
         StdtimeSelectDialogComponent,
+        JobCardWatingDialogComponent,
         JobcardDialogComponent,
+        JobCardViewWaitingComponent,
     ],
 })
 export class DialogsModule { }

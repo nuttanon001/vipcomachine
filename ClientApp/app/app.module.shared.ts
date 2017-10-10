@@ -10,6 +10,7 @@ import { NavMenuComponent } from "./components/navmenu/navmenu.component";
 import { HomeComponent } from "./components/home/home.component";
 import { LoginComponent } from "./components/login/login.component";
 import { ProjectMasterComponent } from "./components/project-master/project-master.component";
+import { JobCardViewComponent } from "./components/jobcard/jobcard-view.component";
 // modules
 import {
     CustomMaterialModule, ValidationModule,
@@ -30,6 +31,7 @@ import "popper.js";
         HomeComponent,
         LoginComponent,
         NavMenuComponent,
+        // JobCardViewComponent,
         // ProjectMasterComponent,
     ],
     imports: [

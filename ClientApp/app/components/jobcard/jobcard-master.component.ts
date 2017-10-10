@@ -31,7 +31,7 @@ export class JobCardMasterComponent
         { prop: "JobCardDate", name: "Date", pipe: this.datePipe, flexGrow: 1}
     ];
 
-    // Holla! {{"column.name" | translate }}
+    // holla! {{"column.name" | translate }}
 
     constructor(
         service: JobCardMasterService,
@@ -61,7 +61,7 @@ export class JobCardMasterComponent
 
     // on change time zone befor update to webapi
     changeTimezone(value: JobCardMaster): JobCardMaster {
-        var zone = "Asia/Bangkok";
+        let zone:string = "Asia/Bangkok";
         if (value !== null) {
             if (value.CreateDate !== null) {
                 value.CreateDate = moment.tz(value.CreateDate, zone).toDate();
@@ -97,7 +97,8 @@ export class JobCardMasterComponent
                 console.error(error);
                 this.editValue.Creator = undefined;
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!",
+                    this.viewContainerRef);
             }
         );
     }
@@ -106,13 +107,13 @@ export class JobCardMasterComponent
     onUpdateToDataBase(value: JobCardMaster): void {
         let attachs: FileList | undefined = value.AttachFile;
 
-        console.log("ATT: ", attachs);
-        console.log("JobCardMaster: ", value);
+        // console.log("ATT: ", attachs);
+        // console.log("JobCardMaster: ", value);
 
         // remove attach
         if (value.RemoveAttach) {
             // debug here
-            //console.log("Remove: ",value.RemoveAttach);
+            // console.log("Remove: ",value.RemoveAttach);
 
             this.onRemoveFileFromDataBase(value.RemoveAttach);
         }
@@ -130,7 +131,8 @@ export class JobCardMasterComponent
             (error: any) => {
                 console.error(error);
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!",
+                    this.viewContainerRef);
             }
         );
     }

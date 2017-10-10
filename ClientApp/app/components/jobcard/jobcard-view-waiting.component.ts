@@ -1,24 +1,25 @@
 ﻿// angular
 import { Component, Output, EventEmitter, Input } from "@angular/core";
 // models
-import { JobCardMaster,JobCardDetail,AttachFile } from "../../models/model.index";
+import { JobCardMaster, JobCardDetail, AttachFile } from "../../models/model.index";
 // components
 import { BaseViewComponent } from "../base-component/base-view.component";
 // services
-import { JobCardDetailService,JobCardMasterService } from "../../services/service.index";
+import { JobCardDetailService, JobCardMasterService } from "../../services/service.index";
 // 3rd party
 import { TableColumn } from "@swimlane/ngx-datatable";
 @Component({
-    selector: "jobcard-view",
+    selector: "jobcard-view-waiting",
     templateUrl: "./jobcard-view.component.html",
     styleUrls: ["../../styles/view.style.scss"],
 })
 
 /** jobcard-view component*/
-export class JobCardViewComponent extends BaseViewComponent<JobCardMaster>
+export class JobCardViewWaitingComponent extends BaseViewComponent<JobCardMaster>
 {
-    @Output("selected") selected: EventEmitter<string> = new EventEmitter<string>();
+    @Output("selected") selected: EventEmitter<JobCardDetail> = new EventEmitter<JobCardDetail>();
     @Input("mode") mode: boolean = false;
+
 
     details: Array<JobCardDetail>;
     attachFiles: Array<AttachFile> = new Array;
@@ -34,7 +35,7 @@ export class JobCardViewComponent extends BaseViewComponent<JobCardMaster>
     /** jobcard-view ctor */
     constructor(
         private serviceMaster: JobCardMasterService,
-        private service : JobCardDetailService
+        private service: JobCardDetailService
     ) {
         super();
     }
@@ -42,7 +43,7 @@ export class JobCardViewComponent extends BaseViewComponent<JobCardMaster>
     onLoadMoreData(value: JobCardMaster) {
         this.service.getByMasterId(value.JobCardMasterId)
             .subscribe(dbDetail => {
-                this.details = dbDetail.slice();
+                this.details = dbDetail.filter(item => item.JobCardDetailStatus === 1).slice();
             });
 
         this.serviceMaster.getAttachFile(value.JobCardMasterId)
@@ -69,6 +70,13 @@ export class JobCardViewComponent extends BaseViewComponent<JobCardMaster>
             return { "is-cancel": true };
         } else {
             return { "is-wait": true };
+        }
+    }
+
+    // emit row selected to output
+    onSelect(selected: any) {
+        if (selected) {
+            this.selected.emit(selected.selected[0]);
         }
     }
 }

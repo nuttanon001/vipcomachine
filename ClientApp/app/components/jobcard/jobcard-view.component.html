@@ -39,14 +39,14 @@
 
                 <div class="row my-1">
                     <div class="my-label">
-                        EmployeeWrite :
+                        Emp Write :
                     </div>
                     <div class="my-value">
                         {{displayValue?.EmployeeWriteString || "-"}}
                     </div>
 
                     <div class="my-label">
-                        EmployeeRequire :
+                        Emp Require :
                     </div>
                     <div class="my-value">
                         {{displayValue?.EmployeeRequireString || "-"}}
@@ -84,9 +84,33 @@
                         {{(displayValue.StatusString) || "-"}}
                     </div>
                 </div>
+
+                <fieldset>AttachFile</fieldset>
+                <div *ngIf="attachFiles.length > 0,else elseAttact">
+                    <table class="table table-hover table-sm small">
+                        <colgroup>
+                            <col span="1" style="width: 80%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let file of attachFiles;let num = index">
+                                <td (click)="onOpenNewLink(file.FileAddress)" style="cursor:pointer;">
+                                    {{num + 1}}. {{file.FileName}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ng-template #elseAttact>
+                    <p>No attach file !</p>
+                </ng-template>
             </div>
         </md-tab>
-        <md-tab>
+        <!--<md-tab>
             <ng-template md-tab-label>
                 <b>Attach File</b>
             </ng-template>
@@ -114,20 +138,39 @@
                     <p>No attach file !</p>
                 </ng-template>
             </div>
-        </md-tab>
+        </md-tab>-->
         <md-tab>
             <ng-template md-tab-label>
                 <b>Require Machine Detail</b>
             </ng-template>
             <div class="view-container">
-                <ngx-datatable class="material"
+                <div *ngIf="mode,else elseTable">
+                    <ngx-datatable class="material"
                                [rows]="details"
                                [columns]="columns"
                                [columnMode]="'flex'"
                                [headerHeight]="50"
                                [footerHeight]="0"
                                [rowHeight]="50">
-                </ngx-datatable>
+                    </ngx-datatable>
+                </div>
+                <ng-template #elseTable>
+                    <ngx-datatable class="material"
+                                   [rows]="details"
+                                   [columnMode]="'flex'"
+                                   [headerHeight]="50"
+                                   [footerHeight]="0"
+                                   [rowHeight]="50"
+                                   [selectionType]="'single'"
+                                   (select)="onSelect($event)">
+                        <ngx-datatable-column name="CuttingPlan" prop="CuttingPlanString" [flexGrow]="1"></ngx-datatable-column>
+                        <ngx-datatable-column name="StandardTime" prop="StandardTimeString" [flexGrow]="2"></ngx-datatable-column>
+                        <ngx-datatable-column name="Material" prop="Material" [flexGrow]="2"></ngx-datatable-column>
+                        <ngx-datatable-column name="Quality" prop="Quality" [flexGrow]="1"></ngx-datatable-column>
+                        <ngx-datatable-column name="Uom" prop="UnitsMeasureString" [flexGrow]="1"></ngx-datatable-column>
+                        <ngx-datatable-column name="Status" prop="StatusString" [flexGrow]="1" [cellClass]="getCellClass"></ngx-datatable-column>
+                    </ngx-datatable>
+                </ng-template>
             </div>
         </md-tab>
     </md-tab-group>

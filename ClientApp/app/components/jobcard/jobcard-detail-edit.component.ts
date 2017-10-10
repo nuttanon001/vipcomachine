@@ -48,6 +48,7 @@ export class JobcardDetailEditComponent implements OnInit {
         }
     }
 
+    // build form
     buildForm(): void {
         this.editValueForm = this.fb.group({
             JobCardDetailId: [this.EditValueDetail.JobCardDetailId],

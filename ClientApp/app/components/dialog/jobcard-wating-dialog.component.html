@@ -1,0 +1,38 @@
+﻿<div class="master-dialog">
+    <split direction="horizontal"  >
+        <split-area [size]="20">
+            <div class="child-left-container">
+                <div style="margin-top:20px;"></div>
+                <ngx-datatable class="material"
+                               [rows]="jobCardMasters"
+                               [columns]="columns"
+                               [columnMode]="'flex'"
+                               [headerHeight]="50"
+                               [footerHeight]="0"
+                               [rowHeight]="50"
+                               [selectionType]="'single'"
+                               (select)="onSelectedJobCardMaster($event)">
+                </ngx-datatable>
+            </div>
+        </split-area>
+        <split-area [size]="80">
+            <div class="child-container">
+                <!--Center-->
+                <div class="center-content">
+                    <div class="card-body">
+                        <!--Component-->
+                        <jobcard-view-waiting [displayValue]="selected" [mode]="true" (selected)="onSelectedJobCardDetail($event)">
+                        </jobcard-view-waiting>
+                    </div>
+                </div>
+                <!--Right-->
+                <div class="right-content">
+                    <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
+                            mdTooltip="Cancel" mdTooltipPosition="left">
+                        <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+        </split-area>
+    </split>
+</div>
