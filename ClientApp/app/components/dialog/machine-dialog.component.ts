@@ -55,8 +55,8 @@ export class MachineDialogComponent
     constructor(
         private serviceMachine: MachineService,
         private serviceTypeMachine: TypeMachineService,
-        public dialogRef: MdDialogRef<MachineDialogComponent>
-
+        public dialogRef: MdDialogRef<MachineDialogComponent>,
+        @Inject(MD_DIALOG_DATA) public mode: number
     ) { }
 
     /** Called by Angular after machine-dialog component initialized */
@@ -71,7 +71,19 @@ export class MachineDialogComponent
 
         this.serviceTypeMachine.getAll()
             .subscribe(dbTypeMachine => {
-                this.typeMachines = dbTypeMachine.slice();
+                if (this.mode) {
+                    this.typeMachines = dbTypeMachine.filter(item => item.TypeMachineId == this.mode).slice();
+                } else {
+                    this.typeMachines = dbTypeMachine.slice();
+                }
+
+                if (this.typeMachines) {
+                    this.typeMachine = this.typeMachines[0];
+                    this.serviceMachine.getByMasterId(this.typeMachine.TypeMachineId)
+                        .subscribe(dbMachine => {
+                            this.machines = dbMachine.slice();
+                        });
+                }
             });
     }
 

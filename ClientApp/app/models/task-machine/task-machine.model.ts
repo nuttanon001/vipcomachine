@@ -23,11 +23,11 @@ export interface TaskMachine {
     PrecedingTaskMachineId?: number;
     TaskMachineHasOverTimes?: Array<TaskMachineHasOverTime>;
     //ViewModel
-    PlannedStartTime?: string;
-    PlannedEndTime?: string;
-    ActualStartTime?: string;
-    ActualEndTime?: string;
+    //PlannedStartTime?: string;
+    //PlannedEndTime?: string;
+    //ActualStartTime?: string;
+    //ActualEndTime?: string;
     MachineString?: string;
-    JobCardDetailString?: string;
+    CuttingPlanNo?: string;
     AssignedByString?: string;
 }

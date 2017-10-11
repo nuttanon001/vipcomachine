@@ -98,6 +98,52 @@ namespace VipcoMachine.Controllers
         #endregion
 
         #region POST
+        // POST: api/StandardTime/GetTotalStandardTime/5
+        [HttpPost("GetTotalStandardTime")]
+        public async Task<IActionResult> GetTotalStandardTime([FromBody] PlanViewModel PlanData)
+        {
+            if (PlanData != null)
+            {
+                if (PlanData.StandardTimeId != null)
+                {
+                    // Set StartDate
+                    if (PlanData.PlannedStartDate == null)
+                        PlanData.PlannedStartDate = DateTime.Today;
+                    else // Set Time +7 Hour
+                        PlanData.PlannedStartDate = PlanData.PlannedStartDate.Value.AddHours(+7);
+                    // Get StandardTime
+                    var StdTime = await this.repository.GetAsync(PlanData.StandardTimeId.Value);
+                    if (StdTime != null)
+                    {
+                        // Calc Min to Hour
+                        var TotalHour = ((StdTime.PreparationAfter ?? 0) +
+                                        (StdTime.PreparationBefor ?? 0) +
+                                        (StdTime.StandardTimeValue ?? 0)) / 60;
+
+                        if (TotalHour > 0)
+                        {
+                            // Round Up
+                            double Hour = Math.Ceiling(TotalHour);
+                            if (PlanData.Quantity != null)
+                            {
+                                double Days = Math.Ceiling((Hour * PlanData.Quantity.Value) / 8);
+                                PlanData.PlannedEndDate = PlanData.PlannedStartDate.Value.AddDays(Days);
+                            }
+                            else
+                            {
+                                double Days = Math.Ceiling(Hour / 8);
+                                PlanData.PlannedEndDate = PlanData.PlannedStartDate.Value.AddDays(Days);
+                            }
+                            // Return
+                            return new JsonResult(PlanData, this.DefaultJsonSettings);
+                        }
+                    }
+                }
+            }
+
+            return NotFound(new { Error = "Not found standard time id." });
+        }
+
         // POST: api/StandardTime/GetScroll
         [HttpPost("GetScroll")]
         public async Task<IActionResult> GetScroll([FromBody] ScrollViewModel Scroll)

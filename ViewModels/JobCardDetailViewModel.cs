@@ -17,5 +17,6 @@ namespace VipcoMachine.ViewModels
             !this.JobCardDetailStatus.HasValue ? "-" :
             (this.JobCardDetailStatus.Value == Models.JobCardDetailStatus.Wait ? "Wait" :
             (this.JobCardDetailStatus.Value == Models.JobCardDetailStatus.Cancel ? "Cancel" : "Task"));
+
     }
 }

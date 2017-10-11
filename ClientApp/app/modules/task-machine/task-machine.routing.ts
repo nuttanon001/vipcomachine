@@ -10,12 +10,16 @@ const taskMachineRoutes: Routes = [
         component: TaskMachineCenterComponent,
         children: [
             {
+                path: "jobcard-detail/:condition",
+                component: TaskMachineMasterComponent,
+            },
+            {
                 path: "",
                 component: TaskMachineMasterComponent,
             }
         ],
     }
-]
+];
 
 @NgModule({
     imports: [

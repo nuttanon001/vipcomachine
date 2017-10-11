@@ -46,6 +46,9 @@ export abstract class BaseMasterComponent<Model, Service> implements OnInit, OnD
     }
     // angular hook
     ngOnInit(): void {
+        // debug here
+        // console.log("Base ngOnInit");
+
         this.ShowEdit = false;
         this.canSave = false;
 

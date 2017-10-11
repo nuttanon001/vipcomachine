@@ -138,6 +138,27 @@ namespace VipcoMachine.Helpers
 
             CreateMap<TypeStandardTimeViewModel, TypeStandardTime>();
             #endregion
+
+            #region TaskMachine
+
+            //TaskMachine
+            CreateMap<TaskMachine, TaskMachineViewModel>()
+                // CuttingPlanNo
+                .ForMember(x => x.CuttingPlanNo,
+                           o => o.MapFrom(s => s.JobCardDetail.CuttingPlan == null ? "-" : s.JobCardDetail.CuttingPlan.CuttingPlanNo))
+                .ForMember(x => x.JobCardDetail, o => o.Ignore())
+                // Machine
+                .ForMember(x => x.MachineString,
+                           o => o.MapFrom(s => s.Machine == null ? "-" : $"{ s.Machine.MachineCode}/{ s.Machine.MachineName}"))
+                .ForMember(x => x.Machine, o => o.Ignore())
+                // Employee
+                .ForMember(x => x.AssignedByString,
+                           o => o.MapFrom(s => s.Employee == null ? "-" : s.Employee.NameThai))
+                .ForMember(x => x.Employee, o => o.Ignore());
+
+            CreateMap<TaskMachineViewModel, TaskMachine>();
+
+            #endregion
         }
     }
 }

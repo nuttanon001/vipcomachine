@@ -62,7 +62,8 @@ export class JobcardDialogComponent
         private serviceMaster: JobCardMasterService,
         private serviceDetail: JobCardDetailService,
         private serviceDataTable: DataTableServiceCommunicate<JobCardMaster>,
-        public dialogRef: MdDialogRef<JobcardDialogComponent>
+        public dialogRef: MdDialogRef<JobcardDialogComponent>,
+        @Inject(MD_DIALOG_DATA) public mode: number
     ) { }
 
     /** Called by Angular after jobcard-dialog component initialized */
@@ -97,8 +98,12 @@ export class JobcardDialogComponent
         if (master) {
             this.serviceDetail.getByMasterId(master.JobCardMasterId)
                 .subscribe(dbDetail => {
-                    this.details = dbDetail.slice();
-                    this.templates = [...dbDetail];
+                    if (this.mode) {
+                        this.details = dbDetail.filter(item => item.JobCardDetailStatus === 1).slice();
+                    } else {
+                        this.details = dbDetail.slice();
+                    }
+                    this.templates = [...this.details];
                     this.selectedDetail = undefined;
                 });
 

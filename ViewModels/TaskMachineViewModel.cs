@@ -9,7 +9,7 @@ namespace VipcoMachine.ViewModels
     public class TaskMachineViewModel : TaskMachine
     {
         public string MachineString { get; set; }
-        public string JobCardDetailString { get; set; }
-        public string EmployeeString { get; set; }
+        public string CuttingPlanNo { get; set; }
+        public string AssignedByString { get; set; }
     }
 }

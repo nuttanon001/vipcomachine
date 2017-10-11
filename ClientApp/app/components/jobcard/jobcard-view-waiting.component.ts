@@ -14,9 +14,8 @@ import { TableColumn } from "@swimlane/ngx-datatable";
     styleUrls: ["../../styles/view.style.scss"],
 })
 
-/** jobcard-view component*/
-export class JobCardViewWaitingComponent extends BaseViewComponent<JobCardMaster>
-{
+// jobcard-view component*/
+export class JobCardViewWaitingComponent extends BaseViewComponent<JobCardMaster> {
     @Output("selected") selected: EventEmitter<JobCardDetail> = new EventEmitter<JobCardDetail>();
     @Input("mode") mode: boolean = false;
 
@@ -40,7 +39,7 @@ export class JobCardViewWaitingComponent extends BaseViewComponent<JobCardMaster
         super();
     }
     // load more data
-    onLoadMoreData(value: JobCardMaster) {
+    onLoadMoreData(value: JobCardMaster):void {
         this.service.getByMasterId(value.JobCardMasterId)
             .subscribe(dbDetail => {
                 this.details = dbDetail.filter(item => item.JobCardDetailStatus === 1).slice();
@@ -60,9 +59,9 @@ export class JobCardViewWaitingComponent extends BaseViewComponent<JobCardMaster
     // cell change style
     getCellClass({ row, column, value }: any): any {
         // console.log("getCellClass", value);
-        //return {
+        // return {
         //    'is-cancel': value === 'Cancel'
-        //};
+        // };
 
         if (value === "Complate") {
             return { "is-complate": true };
@@ -74,7 +73,7 @@ export class JobCardViewWaitingComponent extends BaseViewComponent<JobCardMaster
     }
 
     // emit row selected to output
-    onSelect(selected: any) {
+    onSelect(selected: any): void {
         if (selected) {
             this.selected.emit(selected.selected[0]);
         }

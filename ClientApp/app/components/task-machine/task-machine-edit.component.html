@@ -5,55 +5,55 @@
                 <b>Require Machine Master</b>
             </ng-template>
             <div class="edit-container mx-3">
-                <form [formGroup]="editValueForm">
-                    <div *ngIf="jobCardDetail">
-                        <div class="my-form">
-                            <label for="FullNameString" class="my-label">Job Level2/3 :</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="my-input-click" [value]="jobCardDetail.FullNameString"
-                                       (click)="onSelectJobCardDetail()"  placeholder="Click to selected require machine"
-                                       id="FullNameString" readonly>
-                            </div>
-                            <label for="CuttingPlanString" class="my-label">CuttingPlan/ShopDrawing:</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="my-input-click" [value]="jobCardDetail.CuttingPlanString"
-                                       (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
-                                       id="CuttingPlanString" readonly>
-                            </div>
-                        </div>
 
-                        <div class="my-form">
-                            <label for="StandardTimeString" class="my-label">StandardTime :</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="my-input-click" [value]="jobCardDetail.StandardTimeString"
-                                       (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
-                                       id="StandardTimeString" readonly>
-                            </div>
-                            <label for="Material" class="my-label">Material :</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="my-input-click" [value]="jobCardDetail.Material"
-                                       (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
-                                       id="Material" readonly>
-                            </div>
+                <div *ngIf="jobCardDetail">
+                    <div class="my-form">
+                        <label for="FullNameString" class="my-label">Job Level2/3 :</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input-click" [value]="jobCardDetail.FullNameString"
+                                   (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
+                                   id="FullNameString" readonly>
                         </div>
-
-                        <div class="my-form">
-                            <label for="Quality" class="my-label">Quantity :</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="my-input-click" [value]="jobCardDetail.Quality"
-                                       (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
-                                       id="Quality" readonly>
-                            </div>
-                            <label for="UnitsMeasureString" class="my-label">Uom :</label>
-                            <div class="col-sm-4">
-                                <input type="text" class="my-input-click" [value]="jobCardDetail.UnitsMeasureString"
-                                       (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
-                                       id="UnitsMeasureString" readonly>
-                            </div>
+                        <label for="CuttingPlanString" class="my-label">CuttingPlan/ShopDrawing:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input-click" [value]="jobCardDetail.CuttingPlanString"
+                                   (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
+                                   id="CuttingPlanString" readonly>
                         </div>
                     </div>
-                    <hr />
 
+                    <div class="my-form">
+                        <label for="StandardTimeString" class="my-label">StandardTime :</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input-click" [value]="jobCardDetail.StandardTimeString"
+                                   (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
+                                   id="StandardTimeString" readonly>
+                        </div>
+                        <label for="Material" class="my-label">Material :</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input-click" [value]="jobCardDetail.Material"
+                                   (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
+                                   id="Material" readonly>
+                        </div>
+                    </div>
+
+                    <div class="my-form">
+                        <label for="Quality" class="my-label">Quantity :</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input-click" [value]="jobCardDetail.Quality"
+                                   (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
+                                   id="Quality" readonly>
+                        </div>
+                        <label for="UnitsMeasureString" class="my-label">Uom :</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input-click" [value]="jobCardDetail.UnitsMeasureString"
+                                   (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
+                                   id="UnitsMeasureString" readonly>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <form [formGroup]="editValueForm">
                     <div class="my-form">
                         <label for="TaskMachineName" class="my-label">Task Code:</label>
                         <div class="col-sm-4">
@@ -82,7 +82,7 @@
                         <div class="col-sm-4">
                             <input type="number" class="my-input" min="0" placeholder="Insert production number here"
                                    id="CurrentQuantity" formControlName="CurrentQuantity" >
-                            <validation-messages [control]="editValueForm.controls.Description"></validation-messages>
+                            <validation-messages [control]="editValueForm.controls.CurrentQuantity"></validation-messages>
                         </div>
                     </div>
 
@@ -131,7 +131,7 @@
                         <div class="col-sm-4">
                             <input type="text" class="my-input-click" placeholder="Choose employee assigned here"
                                    (click)="onSelectedAssignedBy()"
-                                   id="AssignedByString" formControlName="AssignedByString" required readonly>
+                                   id="AssignedByString" formControlName="AssignedByString" readonly>
                             <validation-messages [control]="editValueForm.controls.AssignedByString"></validation-messages>
                         </div>
 
@@ -146,7 +146,7 @@
                 </form>
             </div>
         </md-tab>
-        <md-tab>
+        <!--<md-tab>
             <ng-template md-tab-label>
                 <b>Over-Time</b>
             </ng-template>
@@ -164,7 +164,6 @@
                                [footerHeight]="0"
                                [rowHeight]="50">
                     <ngx-datatable-column name="StartTime" prop="OverTimeStart" [flexGrow]="1"></ngx-datatable-column>
-                    <!--<ngx-datatable-column name="EndTime" prop="OverTimeEnd" [flexGrow]="1"></ngx-datatable-column>-->
                     <ngx-datatable-column name="Hour" prop="OverTimePerDate" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
@@ -183,7 +182,7 @@
                     <over-time-edit (ComplateOrCancel)="onComplateOrCancel($event)" [EditValueOverTime]="overTime"></over-time-edit>
                 </div>
             </ng-template>
-        </md-tab>
+        </md-tab>-->
         <md-tab>
             <ng-template md-tab-label>
                 <b>Attach File</b>

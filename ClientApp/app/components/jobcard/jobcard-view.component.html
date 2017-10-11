@@ -144,7 +144,7 @@
                 <b>Require Machine Detail</b>
             </ng-template>
             <div class="view-container">
-                <div *ngIf="mode,else elseTable">
+                <div *ngIf="!mode,else elseTable">
                     <ngx-datatable class="material"
                                [rows]="details"
                                [columns]="columns"

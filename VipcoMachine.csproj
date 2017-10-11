@@ -74,6 +74,7 @@
     <None Remove="ClientApp\app\models\projectcode-master\projectcode-master.model.ts" />
     <None Remove="ClientApp\app\models\property-machine\prooerty-machine.model.ts" />
     <None Remove="ClientApp\app\models\standard-time\standard-time.model.ts" />
+    <None Remove="ClientApp\app\models\task-machine\plan.model.ts" />
     <None Remove="ClientApp\app\models\template-project-detail\template-project-detail.model.ts" />
     <None Remove="ClientApp\app\models\type-machine\type-machine.model.ts" />
     <None Remove="ClientApp\app\models\type-standard-time\type-standard-time.model.ts" />
@@ -164,6 +165,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\projectcode-master\projectcode-master.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\property-machine\prooerty-machine.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\standard-time\standard-time.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\task-machine\plan.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\task-machine\task-machine.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\template-project-detail\template-project-detail.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\type-machine\type-machine.model.ts" />

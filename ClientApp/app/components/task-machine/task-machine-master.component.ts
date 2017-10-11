@@ -1,4 +1,5 @@
 ﻿import { Component, ViewContainerRef } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
 // components
 import { BaseMasterComponent } from "../base-component/base-master.component";
 // models
@@ -20,17 +21,17 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
     styleUrls: ["../../styles/master.style.scss"],
     providers: [DataTableServiceCommunicate]
 })
-/** task-machine-master component*/
+// task-machine-master component*/
 export class TaskMachineMasterComponent
-    extends BaseMasterComponent<TaskMachine, TaskMachineService>
-{
+    extends BaseMasterComponent<TaskMachine, TaskMachineService> {
     // parameter
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
 
     columns: Array<TableColumn> = [
-        { prop: "MachineCode", name: "Code", flexGrow: 1 },
+        { prop: "TaskMachineName", name: "TaskMachineName", flexGrow :1 },
+        { prop: "MachineString", name: "Code", flexGrow: 1 },
         { prop: "CuttingPlanNo", name: "CuttingPlan", flexGrow: 1 },
-        { prop: "ActualStartDate", name: "ActualDate", pipe: this.datePipe , flexGrow: 1 },
+        //{ prop: "ActualStartDate", name: "ActualDate", pipe: this.datePipe , flexGrow: 1 },
     ];
 
     /** task-machine-master ctor */
@@ -40,6 +41,8 @@ export class TaskMachineMasterComponent
         serviceComDataTable: DataTableServiceCommunicate<TaskMachine>,
         dialogsService: DialogsService,
         viewContainerRef: ViewContainerRef,
+        private router: Router,
+        private route: ActivatedRoute,
     ) {
         super(
             service,
@@ -48,6 +51,28 @@ export class TaskMachineMasterComponent
             dialogsService,
             viewContainerRef
         );
+    }
+
+    ngOnInit(): void {
+        // debug here
+        // console.log("Task-Machine ngOnInit");
+
+        // override class
+        super.ngOnInit();
+            this.route.params.subscribe((params: any) => {
+                let key: number = params["condition"];
+
+                if (key) {
+                    let newTaskMachine: TaskMachine = {
+                        TaskMachineId: 0,
+                        JobCardDetailId: key
+                    };
+                    setTimeout(() => {
+                        this.onDetailEdit(newTaskMachine);
+                    }, 1500);
+
+                }
+            }, error => console.error(error));
     }
 
     // on get data with lazy load
@@ -62,7 +87,7 @@ export class TaskMachineMasterComponent
 
     // on change time zone befor update to webapi
     changeTimezone(value: TaskMachine): TaskMachine {
-        var zone = "Asia/Bangkok";
+        let zone:string = "Asia/Bangkok";
         if (value !== null) {
             if (value.CreateDate !== null) {
                 value.CreateDate = moment.tz(value.CreateDate, zone).toDate();
@@ -98,8 +123,9 @@ export class TaskMachineMasterComponent
                         OverTime.OverTimeEnd = moment.tz(OverTime.OverTimeEnd, zone).toDate();
                     }
 
-                    if (value.TaskMachineHasOverTimes)
+                    if (value.TaskMachineHasOverTimes) {
                         value.TaskMachineHasOverTimes[index] = OverTime;
+                    }
                 });
             }
         }
@@ -120,7 +146,8 @@ export class TaskMachineMasterComponent
                 console.error(error);
                 this.editValue.Creator = undefined;
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !",
+                    "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef);
             }
         );
     }
@@ -138,7 +165,8 @@ export class TaskMachineMasterComponent
             (error: any) => {
                 console.error(error);
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !",
+                    "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef);
             }
         );
     }

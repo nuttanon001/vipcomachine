@@ -10,14 +10,14 @@
                         Job Level2/3 :
                     </div>
                     <div class="my-value">
-                        {{jobCardDetail.FullNameString || "-"}}
+                        {{jobCardDetail?.FullNameString || "-"}}
                     </div>
 
                     <div class="my-label">
-                        CuttingPlan/ShopDrawing :
+                        CuttingPlan/SD :
                     </div>
                     <div class="my-value">
-                        {{jobCardDetail.CuttingPlanString || "-"}}
+                        {{jobCardDetail?.CuttingPlanString || "-"}}
                     </div>
                 </div>
                 <div class="row my-1">
@@ -25,14 +25,14 @@
                         StandardTime :
                     </div>
                     <div class="my-value">
-                        {{jobCardDetail.StandardTimeString || "-"}}
+                        {{jobCardDetail?.StandardTimeString || "-"}}
                     </div>
 
                     <div class="my-label">
                         Material :
                     </div>
                     <div class="my-value">
-                        {{jobCardDetail.Material || "-"}}
+                        {{jobCardDetail?.Material || "-"}}
                     </div>
                 </div>
                 <div class="row my-1">
@@ -40,14 +40,14 @@
                         Quantity :
                     </div>
                     <div class="my-value">
-                        {{jobCardDetail.Quality || "-"}}
+                        {{jobCardDetail?.Quality || "-"}}
                     </div>
 
                     <div class="my-label">
                         Uom :
                     </div>
                     <div class="my-value">
-                        {{jobCardDetail.UnitsMeasureString || "-"}}
+                        {{jobCardDetail?.UnitsMeasureString || "-"}}
                     </div>
                 </div>
 
@@ -74,14 +74,14 @@
                         Quantity :
                     </div>
                     <div class="my-value">
-                        {{displayValue.CurrentQuantity || "-"}}
+                        {{displayValue.TotalQuantity || "-"}}
                     </div>
 
                     <div class="my-label">
                         Production :
                     </div>
                     <div class="my-value">
-                        {{displayValue.TotalQuantity || "-"}}
+                        {{displayValue.CurrentQuantity || "-"}}
                     </div>
                 </div>
 
@@ -143,7 +143,7 @@
                 </div>
             </div>
         </md-tab>
-        <md-tab>
+        <!--<md-tab>
             <ng-template md-tab-label>
                 <b>Over-Time</b>
             </ng-template>
@@ -156,7 +156,7 @@
                                [rowHeight]="50">
                 </ngx-datatable>
             </div>
-        </md-tab>
+        </md-tab>-->
         <md-tab>
             <ng-template md-tab-label>
                 <b>Attach File</b>

@@ -14,15 +14,15 @@
                       [header]="column.header" [style]="column.style" [sortable]="true">
                 <ng-template *ngIf="column.isButton" let-col let-data1="rowData" pTemplate="body">
                     <div *ngIf="data1[col.field]">
-                        <i>{{data1[col.field]}}</i>
+                        <i>{{data1[col.field] | slice:0:28}}</i>
                         <button type="button" md-icon-button color="primary" mdTooltip="More detail"
                                 (click)="onSelectData(data1[col.field])">
                             <i class="fa fa-2x fa-search" aria-hidden="true"></i>
                         </button>
-                        <button type="button" md-icon-button color="warn" mdTooltip="Cancel required"
+                        <!--<button type="button" md-icon-button color="warn" mdTooltip="Cancel required"
                                 (click)="onCancelData(data1[col.field])">
                             <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
-                        </button>
+                        </button>-->
                     </div>
                     <div *ngIf="!data1[col.field]">
                         -

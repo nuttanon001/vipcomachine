@@ -33,6 +33,14 @@ export class JobCardMasterComponent
 
     // holla! {{"column.name" | translate }}
 
+    // property
+    get StatusJobCardMaster(): boolean {
+        if (this.displayValue) {
+            return this.displayValue.JobCardMasterStatus === 3;
+        }
+        return true;
+    }
+
     constructor(
         service: JobCardMasterService,
         serviceCom: JobCardMasterServiceCommunicate,

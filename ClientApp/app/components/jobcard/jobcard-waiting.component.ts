@@ -32,6 +32,7 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
         private service: JobCardMasterService,
         private serviceDialogs: DialogsService,
         private viewContainerRef: ViewContainerRef,
+        private router: Router,
     ) { }
 
     // called by Angular after jobcard-waiting component initialized
@@ -117,8 +118,13 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
                 this.serviceDialogs.dialogSelectedJobCardDetailForWait(this.viewContainerRef, data)
                     .subscribe(jobCardDetail => {
                         if (jobCardDetail) {
-                            //debug here
-                            console.log("JobCardDetail: ", jobCardDetail);
+                            if (jobCardDetail.JobCardDetailId === -99) {
+                                this.onGetJobCardWaitData();
+                            } else {
+                                //debug here
+                                //console.log("JobCardDetail: ", jobCardDetail);
+                                this.router.navigate(["task-machine/jobcard-detail/" + jobCardDetail.JobCardDetailId]);
+                            }
                         }
                     });
                 // wait for dev
@@ -131,34 +137,34 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
     // cancel data
     onCancelData(data: any):void {
         // split string
-        let splitArray: Array<string> = data.split("#");
-        if (splitArray.length > 0) {
-            // string to number
-            let jobCardKey: number = Number(splitArray[1]);
-            // check job card can cancel
-            this.service.getCheckJobCardCanCancel(jobCardKey)
-                .subscribe((result: boolean) => {
-                    if (result) {
-                        this.serviceDialogs.confirm("Question", "Are you want to cancel the MachineRequired ?", this.viewContainerRef)
-                            .subscribe(result => {
-                                if (result) {
-                                    this.service.getCancelJobCardMaster(jobCardKey)
-                                        .subscribe(dbUpdate => {
-                                            this.onGetJobCardWaitData();
-                                        }, error => {
-                                            this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
-                                        });
-                                }
-                            });
-                    } else {
-                        this.serviceDialogs.error("Error Message",
-                            "Cannot cancel requests from the MachineRequired in System !!!", this.viewContainerRef);
-                    }
-                }, error => {
-                    this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
-                });
-        } else {
-            this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
-        }
+        //let splitArray: Array<string> = data.split("#");
+        //if (splitArray.length > 0) {
+        //    // string to number
+        //    let jobCardKey: number = Number(splitArray[1]);
+        //    // check job card can cancel
+        //    this.service.getCheckJobCardCanCancel(jobCardKey)
+        //        .subscribe((result: boolean) => {
+        //            if (result) {
+        //                this.serviceDialogs.confirm("Question", "Are you want to cancel the MachineRequired ?", this.viewContainerRef)
+        //                    .subscribe(result => {
+        //                        if (result) {
+        //                            this.service.getCancelJobCardMaster(jobCardKey)
+        //                                .subscribe(dbUpdate => {
+        //                                    this.onGetJobCardWaitData();
+        //                                }, error => {
+        //                                    this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
+        //                                });
+        //                        }
+        //                    });
+        //            } else {
+        //                this.serviceDialogs.error("Error Message",
+        //                    "Cannot cancel requests from the MachineRequired in System !!!", this.viewContainerRef);
+        //            }
+        //        }, error => {
+        //            this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
+        //        });
+        //} else {
+        //    this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
+        //}
     }
 }

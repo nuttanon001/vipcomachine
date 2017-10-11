@@ -15,6 +15,7 @@ export { ProjectCodeMaster } from "./projectcode-master/projectcode-master.model
 export { PropertyMachine } from "./property-machine/prooerty-machine.model";
 export { StandardTime } from "./standard-time/standard-time.model";
 export { TaskMachine } from "./task-machine/task-machine.model";
+export { PlanViewModel } from "./task-machine/plan.model";
 export { TemplateProjectDetail } from "./template-project-detail/template-project-detail.model";
 export { TypeMachine } from "./type-machine/type-machine.model";
 export { TypeStandardTime } from "./type-standard-time/type-standard-time.model";

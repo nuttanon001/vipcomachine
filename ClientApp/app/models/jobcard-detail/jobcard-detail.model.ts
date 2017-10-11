@@ -1,5 +1,6 @@
 ﻿import {
-    UnitsMeasure,CuttingPlan
+    UnitsMeasure, CuttingPlan,
+    JobCardMaster
 } from "../model.index";
 
 export interface JobCardDetail {
@@ -18,6 +19,7 @@ export interface JobCardDetail {
     StandardTimeId?: number;
     CuttingPlanId?: number;
     // Model
+    JobCardMaster?: JobCardMaster;
     UnitsMeasure?: UnitsMeasure;
     CuttingPlan?: CuttingPlan;
     //ViewModel

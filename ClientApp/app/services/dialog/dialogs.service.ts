@@ -120,12 +120,13 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectMachine(viewContainerRef: ViewContainerRef): Observable<Machine> {
+    public dialogSelectMachine(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<Machine> {
         let dialogRef: MdDialogRef<MachineDialogComponent>;
         let config = new MdDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
+        config.data = mode;
         config.height = "650px";
         config.width = "1100px";
         config.hasBackdrop = true;
@@ -197,12 +198,13 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectedJobCardDetail(viewContainerRef: ViewContainerRef): Observable<JobCardDetail>{
+    public dialogSelectedJobCardDetail(viewContainerRef: ViewContainerRef,mode:number|undefined = undefined): Observable<JobCardDetail>{
         let dialogRef: MdDialogRef<JobcardDialogComponent>;
         let config = new MdDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
+        config.data = mode;
         config.height = "650px";
         config.width = "1100px";
         config.hasBackdrop = true;

@@ -19,15 +19,35 @@
             <div class="child-container">
                 <!--Center-->
                 <div class="center-content">
-                    <div class="card-body">
+                    <div class="card-body" *ngIf="!showContextCancel,else CancelDiv">
                         <!--Component-->
                         <jobcard-view-waiting [displayValue]="selected" [mode]="true" (selected)="onSelectedJobCardDetail($event)">
                         </jobcard-view-waiting>
                     </div>
+                    <ng-template #CancelDiv>
+                        <div class="child-left-container m-5">
+                            <div>
+                                <h5>Are you want to cancel the Machine-Required ?</h5>
+                            </div>
+                            <div class="mt-3 align-content-center">
+                                <button type="button" md-raised-button color="accent" (click)="onCancelJobCard()">Delete</button>
+                                <button type="button" md-raised-button color="warn" (click)="showContextCancel = !showContextCancel">Cancel</button>
+                            </div>
+                        </div>
+                    </ng-template>
                 </div>
                 <!--Right-->
                 <div class="right-content">
-                    <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
+                    <button type="button" md-icon-button color="primary" (click)="onSelectedClick()"
+                            [disabled]="!CanSelected" mdTooltip="Selected" mdTooltipPosition="left">
+                        <i class="fa fa-2x fa-hand-pointer-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" md-icon-button color="accent" (click)="showContextCancel = !showContextCancel"
+                            [disabled]="!onCancel" mdTooltip="Cancel Require Machine" mdTooltipPosition="left">
+                        <i class="fa fa-2x fa-times" aria-hidden="true"></i>
+                    </button>
+                    <hr />
+                    <button type="button" md-icon-button color="warn" (click)="onCancelDialog()"
                             mdTooltip="Cancel" mdTooltipPosition="left">
                         <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
                     </button>

@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, Inject } from "@angular/core";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";;
+import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
 // pipes
 import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 // models
@@ -24,6 +24,9 @@ import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-deta
 })
 // jobCard-wating-dialog component*/
 export class JobCardWatingDialogComponent implements OnInit {
+    onCancel: boolean;
+    showContextCancel: boolean;
+
     selected: JobCardMaster;
     columns: Array<TableColumn> = [
         { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
@@ -31,31 +34,60 @@ export class JobCardWatingDialogComponent implements OnInit {
     ];
     // jobCard-wating-dialog ctor */
     constructor(
+        private service : JobCardMasterService,
         public dialogRef: MdDialogRef<JobCardWatingDialogComponent>,
         @Inject(MD_DIALOG_DATA) public jobCardMasters: Array<JobCardMaster>
     ) { }
 
-    // Called by Angular after jobCard-wating-dialog component initialized */
+    // called by Angular after jobCard-wating-dialog component initialized */
     ngOnInit(): void {
         if (this.jobCardMasters) {
             this.selected = this.jobCardMasters[0];
+            this.onCheckCancel();
         }
     }
 
     // selected JobCardMaster
-    onSelectedJobCardMaster(selected: any) {
+    onSelectedJobCardMaster(selected: any): void {
         if (selected) {
             this.selected = selected.selected[0];
+            this.onCheckCancel();
         }
     }
 
     // selected JobCardDetail
     onSelectedJobCardDetail(jobCardDetail?: JobCardDetail): void {
+        // debug here
+        // console.log("JobCardDetail: ", jobCardDetail);
         this.dialogRef.close(jobCardDetail);
     }
 
-    // No Click
-    onCancelClick(): void {
+    // check Can Cancel
+    onCheckCancel(): void {
+        if (this.selected) {
+            this.service.getCheckJobCardCanCancel(this.selected.JobCardMasterId)
+                .subscribe((result: boolean) => this.onCancel = result, Error => this.onCancel = false);
+        } else {
+            this.onCancel = false;
+        }
+    }
+
+    // on Cancel JobCardDetail
+    onCancelJobCard(): void {
+        if (this.selected) {
+            this.service.getCancelJobCardMaster(this.selected.JobCardMasterId)
+                .subscribe(dbUpdate => {
+                    // send -99 for reload data
+                    let result1: JobCardDetail = {
+                        JobCardDetailId : -99
+                    }
+                    this.dialogRef.close(result1);
+                }, Error => console.error(Error));
+        }
+    }
+
+    // no Click
+    onCancelDialog(): void {
         this.dialogRef.close();
     }
 }
