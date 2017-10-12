@@ -28,13 +28,13 @@ export class TaskMachineMasterComponent
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
 
     columns: Array<TableColumn> = [
-        { prop: "TaskMachineName", name: "TaskMachineName", flexGrow :1 },
-        { prop: "MachineString", name: "Code", flexGrow: 1 },
-        { prop: "CuttingPlanNo", name: "CuttingPlan", flexGrow: 1 },
-        //{ prop: "ActualStartDate", name: "ActualDate", pipe: this.datePipe , flexGrow: 1 },
+        { prop: "TaskMachineName", name: "Code", flexGrow :1 },
+        { prop: "MachineString", name: "Machine", flexGrow: 2 },
+        { prop: "CuttingPlanNo", name: "CuttingPlan", flexGrow: 2 },
+        // { prop: "ActualStartDate", name: "ActualDate", pipe: this.datePipe , flexGrow: 1 },
     ];
 
-    /** task-machine-master ctor */
+    // task-machine-master ctor */
     constructor(
         service: TaskMachineService,
         serviceCom: TaskMachineServiceCommunicate,
@@ -116,11 +116,8 @@ export class TaskMachineMasterComponent
                     if (OverTime.ModifyDate) {
                         OverTime.ModifyDate = moment.tz(OverTime.ModifyDate, zone).toDate();
                     }
-                    if (OverTime.OverTimeStart) {
-                        OverTime.OverTimeStart = moment.tz(OverTime.OverTimeStart, zone).toDate();
-                    }
-                    if (OverTime.OverTimeEnd) {
-                        OverTime.OverTimeEnd = moment.tz(OverTime.OverTimeEnd, zone).toDate();
+                    if (OverTime.OverTimeDate) {
+                        OverTime.OverTimeDate = moment.tz(OverTime.OverTimeDate, zone).toDate();
                     }
 
                     if (value.TaskMachineHasOverTimes) {

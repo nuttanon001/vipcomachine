@@ -20,6 +20,8 @@ import { TaskMachineService, TaskMachineServiceCommunicate } from "../../service
 import { SelectItem } from "primeng/primeng";
 // 3rd party
 import { TableColumn } from "@swimlane/ngx-datatable"
+// pipes
+import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 
 @Component({
     selector: "task-machine-edit",
@@ -30,6 +32,8 @@ import { TableColumn } from "@swimlane/ngx-datatable"
 export class TaskMachineEditComponent
     extends BaseEditComponent<TaskMachine, TaskMachineService>
 {
+    // paramater
+    datePipe: DateOnlyPipe = new DateOnlyPipe("it");
     jobCardDetail: JobCardDetail = {
         JobCardDetailId: 0,
         FullNameString: "",
@@ -93,6 +97,10 @@ export class TaskMachineEditComponent
                         if (this.editValue.TaskMachineId) {
                             this.serviceOverTime.getByMasterId(this.editValue.TaskMachineId)
                                 .subscribe(dbOperator => {
+                                    dbOperator.forEach(item => {
+                                        item.OverTimeDate = new Date(item.OverTimeDate || new Date);
+                                    });
+
                                     this.editValue.TaskMachineHasOverTimes = dbOperator.slice();
                                     this.editValueForm.patchValue({
                                         TaskMachineHasOverTimes: this.editValue.TaskMachineHasOverTimes.slice(),
@@ -119,6 +127,7 @@ export class TaskMachineEditComponent
                     this.editValue = {
                         TaskMachineId: 0,
                         JobCardDetailId: value.JobCardDetailId,
+                        PlannedStartDate: new Date()
                     };
                     this.defineData();
                     // get jobcard-detail
@@ -141,7 +150,8 @@ export class TaskMachineEditComponent
             }
         } else {
             this.editValue = {
-                TaskMachineId: 0
+                TaskMachineId: 0,
+                PlannedStartDate: new Date()
             };
             this.defineData();
         }
@@ -224,26 +234,55 @@ export class TaskMachineEditComponent
 
     // new OverTime
     onNewOrEditOverTime(overTime?: TaskMachineHasOverTime): void {
-        if (overTime) {
-            if (this.editValue.TaskMachineHasOverTimes) {
-                this.indexOverTime = this.editValue.TaskMachineHasOverTimes.indexOf(overTime);
-            } else {
-                this.indexOverTime = -1;
+        const control: AbstractControl | null = this.editValueForm.get("MachineId");
+        if (control) {
+            if (control.value) {
+                if (overTime) {
+                    if (this.editValue.TaskMachineHasOverTimes) {
+                        this.indexOverTime = this.editValue.TaskMachineHasOverTimes.indexOf(overTime);
+                    } else {
+                        this.indexOverTime = -1;
+                    }
+                    this.overTime = Object.assign({}, overTime);
+                } else {
+                    this.overTime = {
+                        OverTimeId: 0,
+                        OverTimeDate: new Date,
+                        TaskMachineId: this.editValue.TaskMachineId
+                    };
+                    this.indexOverTime = -1;
+                }
+                return;
             }
-            this.overTime = Object.assign({}, overTime);
-        } else {
-            this.overTime = {
-                OverTimeId: 0,
-                OverTimeStart: new Date,
-            };
-            this.indexOverTime = -1;
         }
+        this.serviceDialogs.error("Not Found MachineNo.", "Plase selected machine befor set OverTime.", this.viewContainerRef);
     }
 
     // edit OverTime
     onComplateOrCancel(overTime?: TaskMachineHasOverTime): void {
         if (!this.editValue.TaskMachineHasOverTimes) {
             this.editValue.TaskMachineHasOverTimes = new Array;
+        } else {
+            // debug here
+            console.log("Check overtime");
+            if (this.editValue.TaskMachineHasOverTimes.find(
+                (item) => {
+                    if (item && overTime) {
+                        console.log("Data", item, overTime);
+                        if (item.EmpCode === overTime.EmpCode) {
+                            if (item.OverTimeDate && overTime.OverTimeDate) {
+                                return item.OverTimeDate.toLocaleDateString === overTime.OverTimeDate.toLocaleDateString;
+                            }
+                        }
+                    }
+                    return false;
+                })) {
+
+                this.serviceDialogs.error("Error Message",
+                    "OverTime for this employee already has in system.",
+                    this.viewContainerRef);
+                return;
+           }
         }
 
         if (overTime && this.editValue.TaskMachineHasOverTimes) {

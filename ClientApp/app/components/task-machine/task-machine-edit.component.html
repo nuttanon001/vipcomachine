@@ -8,6 +8,21 @@
 
                 <div *ngIf="jobCardDetail">
                     <div class="my-form">
+                        <label for="JobMasterNoString" class="my-label">Require/McNo :</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input-click" [value]="jobCardDetail.JobMasterNoString"
+                                   (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
+                                   id="JobMasterNoString" readonly>
+                        </div>
+                        <label for="TypeMachineString" class="my-label">Type Machine:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input-click" [value]="jobCardDetail.TypeMachineString"
+                                   (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
+                                   id="TypeMachineString" readonly>
+                        </div>
+                    </div>
+
+                    <div class="my-form">
                         <label for="FullNameString" class="my-label">Job Level2/3 :</label>
                         <div class="col-sm-4">
                             <input type="text" class="my-input-click" [value]="jobCardDetail.FullNameString"
@@ -146,7 +161,7 @@
                 </form>
             </div>
         </md-tab>
-        <!--<md-tab>
+        <md-tab>
             <ng-template md-tab-label>
                 <b>Over-Time</b>
             </ng-template>
@@ -163,8 +178,9 @@
                                [headerHeight]="50"
                                [footerHeight]="0"
                                [rowHeight]="50">
-                    <ngx-datatable-column name="StartTime" prop="OverTimeStart" [flexGrow]="1"></ngx-datatable-column>
+                    <ngx-datatable-column name="OT/Date" prop="OverTimeDate" [pipe]="datePipe" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="Hour" prop="OverTimePerDate" [flexGrow]="1"></ngx-datatable-column>
+                    <ngx-datatable-column name="Employee" prop="NameThai" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
                             <button md-button (click)="onNewOrEditOverTime(row)" color="accent">Edit</button>
@@ -179,10 +195,12 @@
             </div>
             <ng-template #editDetail>
                 <div class="m-2" style="border:1px solid #e16958">
-                    <over-time-edit (ComplateOrCancel)="onComplateOrCancel($event)" [EditValueOverTime]="overTime"></over-time-edit>
+                    <over-time-edit (ComplateOrCancel)="onComplateOrCancel($event)"
+                                    [EditValueOverTime]="overTime"
+                                    [machineId]="editValueForm.controls.MachineId.value"></over-time-edit>
                 </div>
             </ng-template>
-        </md-tab>-->
+        </md-tab>
         <md-tab>
             <ng-template md-tab-label>
                 <b>Attach File</b>

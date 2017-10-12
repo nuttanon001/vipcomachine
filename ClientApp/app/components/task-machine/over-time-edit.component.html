@@ -6,14 +6,30 @@
     </div>
     <form [formGroup]="editValueForm">
         <div class="my-form">
-            <label for="OverTimeStart" class="my-label">OverTimeDate:</label>
+            <label for="EmpCode" class="my-label">Employee:</label>
             <div class="col-sm-4">
-                <p-calendar formControlName="OverTimeStart" [showIcon]="true"
-                            [showTime]="true"  [hourFormat]="24"
-                            id="OverTimeStart" dateFormat="dd/mm/yy" placeholder="  Choose a date">
+                <p-dropdown class="my-input-combobox" [options]="operators" filter="filter" [style]="{'width':'100%'}"
+                            id="EmpCode" formControlName="EmpCode" required>
+                </p-dropdown>
+                <validation-messages [control]="editValueForm.controls.EmpCode"></validation-messages>
+            </div>
+
+            <label for="Description" class="my-label">Description:</label>
+            <div class="col-sm-4">
+                <input type="text" class="my-input" placeholder="insert description here."
+                       id="Description" formControlName="Description">
+                <validation-messages [control]="editValueForm.controls.Description"></validation-messages>
+            </div>
+        </div>
+
+        <div class="my-form">
+            <label for="OverTimeDate" class="my-label">OverTimeDate:</label>
+            <div class="col-sm-4">
+                <p-calendar formControlName="OverTimeDate" [showIcon]="true"
+                            id="OverTimeDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
                 </p-calendar>
                 <span class="is-request-date">**</span>
-                <validation-messages [control]="editValueForm.controls.OverTimeStart"></validation-messages>
+                <validation-messages [control]="editValueForm.controls.OverTimeDate"></validation-messages>
             </div>
 
             <label for="OverTimePerDate" class="my-label">Hour:</label>

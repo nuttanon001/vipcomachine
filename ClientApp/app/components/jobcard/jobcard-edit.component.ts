@@ -129,7 +129,6 @@ export class JobCardEditComponent
             JobCardMasterId: [this.editValue.JobCardMasterId],
             JobCardMasterNo: [this.editValue.JobCardMasterNo,
                 [
-                    Validators.required,
                     Validators.maxLength(50),
                 ]
             ],
@@ -149,7 +148,11 @@ export class JobCardEditComponent
                     Validators.required,
                 ]
             ],
-            DueDate: [this.editValue.DueDate],
+            DueDate: [this.editValue.DueDate,
+                [
+                    Validators.required,
+                ]
+            ],
             Creator: [this.editValue.Creator],
             CreateDate: [this.editValue.CreateDate],
             Modifyer: [this.editValue.Modifyer],
@@ -367,7 +370,7 @@ export class JobCardEditComponent
         //    "is-cancel": value === "Cancel"
         // };
 
-        if (value === "Complate") {
+        if (value === "Task") {
             return { "is-complate": true };
         } else if (value === "Cancel") {
             return { "is-cancel": true };

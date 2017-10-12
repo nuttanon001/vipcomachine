@@ -1,8 +1,7 @@
 ﻿export interface TaskMachineHasOverTime {
     OverTimeId: number;
     Description?: string;
-    OverTimeStart?: Date;
-    OverTimeEnd?: Date;
+    OverTimeDate?: Date;
     OverTimePerDate?: number;
     Creator?: string;
     CreateDate?: Date;
@@ -10,4 +9,7 @@
     ModifyDate?: Date;
     /** FK */
     TaskMachineId?: number;
+    EmpCode?: string;
+    // ViewModel
+    NameThai?: string;
 }

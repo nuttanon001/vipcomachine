@@ -8,7 +8,7 @@
                     <data-table (selected)="onSelectedEmp($event)" [columns]="columns" [height]="'calc(100vh - 400px)'">
                     </data-table>
                 </split-area>
-                <split-area [size]="50" [order]="2">
+                <split-area [size]="50" [order]="2" *ngIf="Show2ndTable">
                     <div style="margin-top:65px;">
                         <ngx-datatable class="material"
                                        [rows]="selectEmployee"

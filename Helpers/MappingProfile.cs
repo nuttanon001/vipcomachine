@@ -63,6 +63,12 @@ namespace VipcoMachine.Helpers
 
             //JobCardDetail
             CreateMap<JobCardDetail, JobCardDetailViewModel>()
+                // TypeMachine
+                .ForMember(x => x.TypeMachineString,
+                           o => o.MapFrom(s => s.JobCardMaster == null ? "-" : s.JobCardMaster.TypeMachine.TypeMachineCode))
+                // JobMasterNo
+                .ForMember(x => x.JobMasterNoString,
+                           o => o.MapFrom(s => s.JobCardMaster == null ? "-" : s.JobCardMaster.JobCardMasterNo))
                 // FullName
                 .ForMember(x => x.FullNameString,
                            o => o.MapFrom(s => s.JobCardMaster.ProjectCodeDetail.ProjectCodeMaster.ProjectCode + "/ " +
@@ -158,6 +164,15 @@ namespace VipcoMachine.Helpers
 
             CreateMap<TaskMachineViewModel, TaskMachine>();
 
+            #endregion
+
+            #region TaskMachineHasOverTime
+            //TaskMachineHasOverTime
+            CreateMap<TaskMachineHasOverTime, OverTimeViewModel>()
+                // CuttingPlanNo
+                .ForMember(x => x.NameThai,
+                           o => o.MapFrom(s => s.Employee == null ? "-" : s.Employee.NameThai))
+                .ForMember(x => x.Employee, o => o.Ignore());
             #endregion
         }
     }

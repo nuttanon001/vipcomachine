@@ -9,5 +9,6 @@ namespace VipcoMachine.ViewModels
 {
     public class OverTimeViewModel:TaskMachineHasOverTime
     {
+        public string NameThai { get; set; }
     }
 }

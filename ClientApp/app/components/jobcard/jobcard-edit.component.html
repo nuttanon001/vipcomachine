@@ -7,13 +7,22 @@
             <div class="edit-container mx-3">
                 <form [formGroup]="editValueForm">
                     <div class="my-form">
-                        <label for="JobCardMasterNo" class="my-label">Code No:</label>
+                        <label for="JobCardMasterNo" class="my-label">Require/McNo:</label>
                         <div class="col-sm-4">
-                            <input type="text" class="my-input" placeholder="Insert code for work here"
-                                   id="JobCardMasterNo" formControlName="JobCardMasterNo" required>
+                            <input type="text" class="my-input" placeholder="Code will automatically generated."
+                                   id="JobCardMasterNo" formControlName="JobCardMasterNo" readonly>
                             <validation-messages [control]="editValueForm.controls.JobCardMasterNo"></validation-messages>
                         </div>
 
+                        <label for="Description" class="my-label">Description:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input" placeholder="Insert for description"
+                                   id="Description" formControlName="Description">
+                            <validation-messages [control]="editValueForm.controls.Description"></validation-messages>
+                        </div>
+                    </div>
+
+                    <div class="my-form">
                         <label for="JobCardDate" class="my-label">Date:</label>
                         <div class="col-sm-4">
                             <p-calendar formControlName="JobCardDate" [showIcon]="true" required
@@ -21,6 +30,16 @@
                             </p-calendar>
                             <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.JobCardDate"></validation-messages>
+                        </div>
+
+                        <label for="DueDate" class="my-label">DueDate:</label>
+                        <div class="col-sm-4">
+                            <p-calendar formControlName="DueDate" [showIcon]="true"
+                                        id="DueDate" dateFormat="dd/mm/yy" placeholder="  Choose a due date" required
+                                        [minDate]="editValueForm.controls.JobCardDate.value">
+                            </p-calendar>
+                            <span class="is-request-date">**</span>
+                            <validation-messages [control]="editValueForm.controls.DueDate"></validation-messages>
                         </div>
                     </div>
 
@@ -43,7 +62,7 @@
                     </div>
 
                     <div class="my-form">
-                        <label for="EmployeeWriteString" class="my-label">Employee Create:</label>
+                        <label for="EmployeeWriteString" class="my-label">Creator:</label>
                         <div class="col-sm-4">
                             <input type="text" class="my-input" placeholder="Choose employee create"
                                    (click)="onEmployeeWriteClick('W')" style="cursor:pointer;"
@@ -51,7 +70,7 @@
                             <validation-messages [control]="editValueForm.controls.EmployeeWriteString"></validation-messages>
                         </div>
 
-                        <label for="EmployeeRequireString" class="my-label">Employee Require:</label>
+                        <label for="EmployeeRequireString" class="my-label">Require:</label>
                         <div class="col-sm-4">
                             <input type="text" class="my-input" placeholder="Choose employee require machine"
                                    (click)="onEmployeeWriteClick('R')" style="cursor:pointer;"
@@ -61,11 +80,10 @@
                     </div>
 
                     <div class="my-form">
-                        <label for="Description" class="my-label">Description:</label>
-                        <div class="col-sm-4">
-                            <input type="text" class="my-input" placeholder="Insert for description"
-                                   id="Description" formControlName="Description">
-                            <validation-messages [control]="editValueForm.controls.Description"></validation-messages>
+                        <label for="AttactFile" class="my-label">AttactFile:</label>
+                        <div class="col-4">
+                            <attact-file id="AttactFile" (results)="onUpdateAttachResults($event)">
+                            </attact-file>
                         </div>
 
                         <label for="Remark" class="my-label">Remark:</label>
@@ -75,27 +93,8 @@
                             <validation-messages [control]="editValueForm.controls.Remark"></validation-messages>
                         </div>
                     </div>
-
-                    <div class="my-form">
-                        <label for="DueDate" class="my-label">DueDate:</label>
-                        <div class="col-sm-4">
-                            <p-calendar formControlName="DueDate" [showIcon]="true"
-                                        id="DueDate" dateFormat="dd/mm/yy" placeholder="  Choose a due date">
-                            </p-calendar>
-                            <validation-messages [control]="editValueForm.controls.DueDate"></validation-messages>
-                        </div>
-                    </div>
                 </form>
                 <div class="mb-2">
-                    <div class="my-form">
-                        <label for="AttactFile" class="my-label">AttactFile:</label>
-                        <div class="col-4">
-                            <attact-file id="AttactFile" (results)="onUpdateAttachResults($event)">
-                            </attact-file>
-                        </div>
-                    </div>
-
-
                     <hr />
                     <h5>List of File {{editValue.AttachFile?.length || 0}}</h5>
                     <p style="color:red;">** 5MB Maximum for Attachment File Size **</p>

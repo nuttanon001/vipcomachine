@@ -63,7 +63,7 @@ export class JobCardViewComponent extends BaseViewComponent<JobCardMaster>
         //    'is-cancel': value === 'Cancel'
         //};
 
-        if (value === "Complate") {
+        if (value === "Task") {
             return { "is-complate": true };
         } else if (value === "Cancel") {
             return { "is-cancel": true };

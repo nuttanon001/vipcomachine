@@ -120,6 +120,8 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
                         if (jobCardDetail) {
                             if (jobCardDetail.JobCardDetailId === -99) {
                                 this.onGetJobCardWaitData();
+                            } else if (jobCardDetail.JobCardDetailId === -88) {
+                                this.router.navigate(["jobcard/jobcard-waiting-edit/" + jobCardDetail.JobCardMasterId]);
                             } else {
                                 //debug here
                                 //console.log("JobCardDetail: ", jobCardDetail);

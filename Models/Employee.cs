@@ -30,6 +30,7 @@ namespace VipcoMachine.Models
         public ICollection<User> Users { get; set; }
         public ICollection<MachineHasOperator> MachineHasOperators { get; set; }
         public ICollection<TaskMachine> TaskMachines { get; set; }
+        public ICollection<TaskMachineHasOverTime> TaskMachineHasOverTimes { get; set; }
     }
     public enum TypeEmployee
     {

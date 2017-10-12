@@ -9,6 +9,8 @@ namespace VipcoMachine.ViewModels
 {
     public class JobCardDetailViewModel:JobCardDetail
     {
+        public string TypeMachineString { get; set; }
+        public string JobMasterNoString { get; set; }
         public string UnitsMeasureString { get; set; }
         public string CuttingPlanString { get; set; }
         public string StandardTimeString { get; set; }

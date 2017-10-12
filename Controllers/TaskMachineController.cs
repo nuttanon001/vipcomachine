@@ -222,8 +222,7 @@ namespace VipcoMachine.Controllers
                     {
                         var tempDetail = helperEdit.AddHourMethod(nDetail);
                         //Update date
-                        nDetail.OverTimeStart = tempDetail.OverTimeStart;
-                        nDetail.OverTimeEnd = tempDetail.OverTimeEnd;
+                        nDetail.OverTimeDate = tempDetail.OverTimeDate;
                         //Set Create
                         nDetail.CreateDate = nTaskMachine.CreateDate;
                         nDetail.Creator = nTaskMachine.Creator;
@@ -268,8 +267,7 @@ namespace VipcoMachine.Controllers
                     {
                         var tempDetail = helperEdit.AddHourMethod(overTime);
                         //Update date
-                        overTime.OverTimeStart = tempDetail.OverTimeStart;
-                        overTime.OverTimeEnd = tempDetail.OverTimeEnd;
+                        overTime.OverTimeDate = tempDetail.OverTimeDate;
 
                         if (overTime.OverTimeId > 0)
                         {

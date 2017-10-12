@@ -59,6 +59,7 @@ namespace VipcoMachine.Controllers
         {
             var Includes = new List<string> {
                 "JobCardMaster.ProjectCodeDetail.ProjectCodeMaster",
+                "JobCardMaster.TypeMachine",
                 "CuttingPlan",
                 "UnitsMeasure",
                 "StandardTime.TypeStandardTime",
@@ -76,6 +77,7 @@ namespace VipcoMachine.Controllers
         {
             var Includes = new List<string> {
                 "JobCardMaster.ProjectCodeDetail.ProjectCodeMaster",
+                "JobCardMaster.TypeMachine",
                 "CuttingPlan",
                 "UnitsMeasure",
                 "StandardTime.TypeStandardTime",

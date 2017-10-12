@@ -72,7 +72,9 @@ namespace VipcoMachine.Controllers
         public async Task<IActionResult> GetByMaster(int MasterId)
         {
             var QueryData = this.repository.GetAllAsQueryable()
-                                .Where(x => x.TaskMachineId == MasterId);
+                                .Where(x => x.TaskMachineId == MasterId)
+                                .Include(x => x.Employee);
+
             return new JsonResult(
                 this.ConverterTableToViewModel<OverTimeViewModel, TaskMachineHasOverTime>(await QueryData.AsNoTracking().ToListAsync()),
                 this.DefaultJsonSettings);

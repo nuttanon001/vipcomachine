@@ -43,6 +43,13 @@ export class EmployeeDialogComponent implements OnInit, OnDestroy
         return false;
     }
 
+    get Show2ndTable(): boolean {
+        if (this.mode) {
+            return false;
+        }
+        return true;
+    }
+
     /** employee-dialog ctor */
     constructor(
         private service: EmployeeService,
@@ -101,6 +108,8 @@ export class EmployeeDialogComponent implements OnInit, OnDestroy
             } else {
                 this.selectEmployee = new Array;
                 this.selectEmployee.push(Object.assign({}, employee));
+                // send to master
+                this.onSelectedClick();
             }
         }
     }

@@ -15,6 +15,10 @@ const jobcardRoutes: Routes = [
                 component: JobCardWaitingComponent,
             },
             {
+                path: "jobcard-waiting-edit/:condition",
+                component: JobCardMasterComponent,
+            },
+            {
                 path: "",
                 component: JobCardMasterComponent,
             }

@@ -114,6 +114,7 @@ export class JobcardDialogComponent
     onSelectedDetail(selected?: any): void {
         if (selected) {
             this.selectedDetail = selected.selected[0];
+            this.onSelectedClick();
         }
     }
 

@@ -7,12 +7,27 @@
             <div class="view-container">
                 <div class="row my-1">
                     <div class="my-label">
-                        Work No :
+                        Require/McNo :
                     </div>
                     <div class="my-value">
                         {{displayValue.JobCardMasterNo || "-"}}
                     </div>
 
+                    <div class="my-label">
+                        Description :
+                    </div>
+                    <div class="my-value">
+                        {{displayValue.Description || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        DueDate :
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.DueDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
                     <div class="my-label">
                         Date :
                     </div>
@@ -39,14 +54,14 @@
 
                 <div class="row my-1">
                     <div class="my-label">
-                        Emp Write :
+                        Creator :
                     </div>
                     <div class="my-value">
                         {{displayValue?.EmployeeWriteString || "-"}}
                     </div>
 
                     <div class="my-label">
-                        Emp Require :
+                        Require :
                     </div>
                     <div class="my-value">
                         {{displayValue?.EmployeeRequireString || "-"}}
@@ -54,12 +69,7 @@
                 </div>
 
                 <div class="row my-1">
-                    <div class="my-label">
-                        Description :
-                    </div>
-                    <div class="my-value">
-                        {{displayValue.Description || "-"}}
-                    </div>
+
 
                     <div class="my-label">
                         Remark :
@@ -70,13 +80,6 @@
                 </div>
 
                 <div class="row my-1">
-                    <div class="my-label">
-                        DueDate :
-                    </div>
-                    <div class="my-value">
-                        {{(displayValue.DueDate | date:'dd/MM/yyyy') || "-"}}
-                    </div>
-
                     <div class="my-label">
                         Status :
                     </div>

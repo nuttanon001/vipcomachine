@@ -24,7 +24,7 @@ import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-deta
 })
 // jobCard-wating-dialog component*/
 export class JobCardWatingDialogComponent implements OnInit {
-    onCancel: boolean;
+    onCancel: boolean = false;
     showContextCancel: boolean;
 
     selected: JobCardMaster;
@@ -66,7 +66,10 @@ export class JobCardWatingDialogComponent implements OnInit {
     onCheckCancel(): void {
         if (this.selected) {
             this.service.getCheckJobCardCanCancel(this.selected.JobCardMasterId)
-                .subscribe((result: boolean) => this.onCancel = result, Error => this.onCancel = false);
+                .subscribe(result => {
+                    console.log(result);
+                    this.onCancel = result.Result;
+                }, Error => this.onCancel = false);
         } else {
             this.onCancel = false;
         }
@@ -83,6 +86,17 @@ export class JobCardWatingDialogComponent implements OnInit {
                     }
                     this.dialogRef.close(result1);
                 }, Error => console.error(Error));
+        }
+    }
+
+    // on Add or Edit JobCard
+    onAddOrEditJobCard(): void {
+        if (this.selected) {
+            let result1: JobCardDetail = {
+                JobCardDetailId: -88,
+                JobCardMasterId:this.selected.JobCardMasterId
+            }
+            this.dialogRef.close(result1);
         }
     }
 

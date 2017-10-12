@@ -30,9 +30,9 @@ export class TaskMachineViewComponent extends BaseViewComponent<TaskMachine>
     overtimes: Array<TaskMachineHasOverTime> = new Array;
     attachFiles: Array<AttachFile> = new Array;
     columns: Array<TableColumn> = [
-        { prop: "OverTimeStart", name: "Start", pipe:this.datePipe, flexGrow: 1 },
-        { prop: "OverTimeEnd", name: "End", pipe: this.datePipe, flexGrow: 1 },
-        { prop: "OverTimePerDate", name: "Hours", flexGrow:1 }
+        { prop: "OverTimeDate", name: "OT/Date", pipe:this.datePipe, flexGrow: 1 },
+        { prop: "OverTimePerDate", name: "Hours", flexGrow: 1 },
+        { prop: "NameThai", name : "Employee",flexGrow:1 },
     ];
 
     /** task-machine-view ctor */

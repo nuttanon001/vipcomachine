@@ -107,6 +107,7 @@ export class ProjectDialogComponent
     onSelectedDetail(selected?: any): void {
         if (selected) {
             this.selectedDetails = selected.selected[0];
+            this.onSelectedClick();
         }
     }
 

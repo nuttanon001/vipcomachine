@@ -30,6 +30,8 @@ namespace VipcoMachine.Controllers
         private IRepository<UnitsMeasure> repositoryUom;
         private IRepository<CuttingPlan> repositoryCut;
         private IRepository<AttachFile> repositoryAtt;
+        private IRepository<ProjectCodeDetail> repositoryProDetail;
+        private IRepository<TypeMachine> repositoryTypeMachine;
         private IMapper mapper;
         private IHostingEnvironment appEnvironment;
         private HelpersClass<JobCardMaster> helpers;
@@ -50,6 +52,32 @@ namespace VipcoMachine.Controllers
             return listData;
         }
 
+        private async Task<string> GeneratedCode(int ProjectDetailId,int TypeMachineId)
+        {
+            if (ProjectDetailId > 0 && TypeMachineId > 0)
+            {
+                ProjectCodeDetail proDetail = await this.repositoryProDetail.GetAsynvWithIncludes
+                                                        (
+                                                            ProjectDetailId,
+                                                            "ProjectCodeDetailId",
+                                                            new List<string> { "ProjectCodeMaster" }
+                                                        );
+
+                TypeMachine typeMachine = await this.repositoryTypeMachine.GetAsync(TypeMachineId);
+
+                if (proDetail != null && typeMachine != null)
+                {
+                    var Runing = await this.repository.GetAllAsQueryable()
+                                                      .CountAsync(x => x.ProjectCodeDetail.ProjectCodeMasterId == proDetail.ProjectCodeMasterId &&
+                                                                       x.TypeMachineId == TypeMachineId) + 1;
+
+                    return $"{proDetail.ProjectCodeMaster.ProjectCode}/{typeMachine.TypeMachineCode}/{Runing.ToString("0000")}";
+                }
+            }
+
+            return "xxxx/xx/xx";
+        }
+
         #endregion PrivateMenbers
 
         #region Constructor
@@ -58,6 +86,8 @@ namespace VipcoMachine.Controllers
             IRepository<JobCardMaster> repo,
             IRepository<JobCardMasterHasAttach> repoHasAttach,
             IRepository<JobCardDetail> repoDetail,
+            IRepository<TypeMachine> repoTypeMac,
+            IRepository<ProjectCodeDetail> repoProDetail,
             IRepository<UnitsMeasure> repoUom,
             IRepository<CuttingPlan> repoCut,
             IRepository<AttachFile> repoAtt,
@@ -67,6 +97,8 @@ namespace VipcoMachine.Controllers
             this.repository = repo;
             this.repositoryHasAttach = repoHasAttach;
             this.repositoryDetail = repoDetail;
+            this.repositoryTypeMachine = repoTypeMac;
+            this.repositoryProDetail = repoProDetail;
             this.repositoryUom = repoUom;
             this.repositoryCut = repoCut;
             this.repositoryAtt = repoAtt;
@@ -104,13 +136,20 @@ namespace VipcoMachine.Controllers
         [HttpGet("JobCardCanCancel/{key}")]
         public async Task<IActionResult> GetJobCardCanCancel(int key)
         {
-            var QueryData = this.repository.GetAllAsQueryable()
-                                           .Where(x => x.JobCardMasterId == key)
-                                           .Include(x => x.JobCardDetails);
+            var Includes = new List<string> { "JobCardDetails"};
+            var HasData = await this.repository.GetAsynvWithIncludes(key, "JobCardMasterId", Includes);
+            var CanCancel = false;
+            if (HasData != null)
+            {
+                if (HasData.JobCardDetails.Any())
+                {
+                    CanCancel = !HasData.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Task);
+                }
+                else
+                    CanCancel = true;
+            }
 
-            return new JsonResult(await QueryData.AnyAsync(x =>
-                                        x.JobCardDetails.Any(z => z.JobCardDetailStatus != JobCardDetailStatus.Task)),
-                                        this.DefaultJsonSettings);
+            return new JsonResult(new { Result = CanCancel } , this.DefaultJsonSettings);
         }
 
         [HttpGet("JobCardHasWait")]
@@ -322,6 +361,8 @@ namespace VipcoMachine.Controllers
         {
             if (nJobCardMaster != null)
             {
+                nJobCardMaster.JobCardMasterNo = await this.GeneratedCode(nJobCardMaster.ProjectCodeDetailId ?? 0,
+                                                                          nJobCardMaster.TypeMachineId ?? 0);
                 // add hour to DateTime to set Asia/Bangkok
                 nJobCardMaster = helpers.AddHourMethod(nJobCardMaster);
 

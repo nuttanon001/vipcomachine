@@ -3,11 +3,14 @@ import { Component, Input, Output } from "@angular/core";
 import { OnInit, ViewContainerRef, EventEmitter } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms";
 // model
-import { TaskMachineHasOverTime } from "../../models/model.index";
+import { TaskMachineHasOverTime,MachineHasOperator } from "../../models/model.index";
 // service
 import { DialogsService } from "../../services/dialog/dialogs.service";
+import { MachineHasOperatorService } from "../../services/machine-has-operator/machine-has-operator.service";
 // rxjs
 import { Subscription } from "rxjs/Subscription";
+// prme
+import { SelectItem } from "primeng/primeng";
 
 @Component({
     selector: "over-time-edit",
@@ -18,10 +21,15 @@ import { Subscription } from "rxjs/Subscription";
 export class OverTimeEditComponent implements OnInit
 {
     editValueForm: FormGroup;
+    operators: Array<SelectItem>;
+    operatorsEmp: Array<MachineHasOperator>;
+
     @Output("ComplateOrCancel") ComplateOrCancel = new EventEmitter<any>();
     @Input("EditValueOverTime") EditValueOverTime: TaskMachineHasOverTime;
+    @Input("machineId") machineId: number;
     /** over-time-edit ctor */
     constructor(
+        private serviceOperator: MachineHasOperatorService,
         private viewContainerRef: ViewContainerRef,
         private serviceDialogs: DialogsService,
         private fb: FormBuilder
@@ -30,18 +38,33 @@ export class OverTimeEditComponent implements OnInit
     /** Called by Angular after over-time-edit component initialized */
     ngOnInit(): void {
         this.buildForm();
+        if (this.machineId) {
+            this.serviceOperator.getByMasterId(this.machineId)
+                .subscribe(dbOperator => {
+                    this.operatorsEmp = dbOperator.slice();
+                    this.operators = new Array;
+
+                    this.operators.push({ label: "-", value: undefined });
+                    for (let item of dbOperator) {
+                        this.operators.push({ label: `${(item.EmpCode || "")} ${(item.EmployeeName || "")} `, value: item.EmpCode });
+                    }
+                });
+        }
     }
 
     buildForm(): void {
         this.editValueForm = this.fb.group({
             JobCardDetailId: [this.EditValueOverTime.OverTimeId],
-            Description: [this.EditValueOverTime.Description],
-            OverTimeStart: [this.EditValueOverTime.OverTimeStart,
+            Description: [this.EditValueOverTime.Description,
+                [
+                    Validators.maxLength(200)
+                ]
+            ],
+            OverTimeDate: [this.EditValueOverTime.OverTimeDate,
                 [
                     Validators.required
                 ]
             ],
-            OverTimeEnd: [this.EditValueOverTime.OverTimeEnd],
             OverTimePerDate: [this.EditValueOverTime.OverTimePerDate,
                 [
                     Validators.required
@@ -52,7 +75,12 @@ export class OverTimeEditComponent implements OnInit
             Modifyer: [this.EditValueOverTime.Modifyer],
             ModifyDate: [this.EditValueOverTime.ModifyDate],
             //FK
-            TaskMachineId: [this.EditValueOverTime.TaskMachineId]
+            TaskMachineId: [this.EditValueOverTime.TaskMachineId],
+            EmpCode: [this.EditValueOverTime.EmpCode,
+                [
+                    Validators.required
+                ]
+            ]
         });
     }
 
@@ -60,7 +88,8 @@ export class OverTimeEditComponent implements OnInit
     onNewOrUpdateClick() {
         if (this.editValueForm) {
             let newOrUpdate: TaskMachineHasOverTime = this.editValueForm.value;
-            this.ComplateOrCancel.emit(this.editValueForm.value);
+            newOrUpdate.NameThai = this.operatorsEmp.filter(item => item.EmpCode === newOrUpdate.EmpCode)[0].EmployeeName || "";
+            this.ComplateOrCancel.emit(newOrUpdate);
         }
     }
 

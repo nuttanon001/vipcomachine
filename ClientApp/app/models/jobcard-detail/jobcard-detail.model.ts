@@ -27,6 +27,8 @@ export interface JobCardDetail {
     CuttingPlanString?: string;
     StandardTimeString?: string;
     FullNameString?: string;
+    JobMasterNoString?: string;
+    TypeMachineString?: string;
     //ReadOnly
     StatusString?: string;
 }

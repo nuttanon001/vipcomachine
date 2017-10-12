@@ -21,7 +21,7 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
     }
 
     // get check jobcard can cancel
-    getCheckJobCardCanCancel(JobCardMasterId: number): Observable<boolean> {
+    getCheckJobCardCanCancel(JobCardMasterId: number): Observable<any> {
         let url: string = `${this.actionUrl}JobCardCanCancel/${JobCardMasterId}`;
         return this.http.get(url)
             .map(this.extractData).catch(this.handleError);
