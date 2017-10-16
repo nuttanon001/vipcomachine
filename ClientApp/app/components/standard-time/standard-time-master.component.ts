@@ -7,6 +7,7 @@ import { TypeStandardTime, Scroll, ScrollData } from "../../models/model.index";
 import { DialogsService } from "../../services/dialog/dialogs.service";
 import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
 import { TypeStandardTimeService, TypeStandardTimeServiceCommunicate } from "../../services/type-standard-time/type-standard-time.service";
+import { AuthService } from "../../services/auth/auth.service";
 // timezone
 import * as moment from "moment-timezone";
 // 3rd Party
@@ -34,6 +35,7 @@ export class StandardTimeMasterComponent
         serviceComDataTable: DataTableServiceCommunicate<TypeStandardTime>,
         dialogsService: DialogsService,
         viewContainerRef: ViewContainerRef,
+        private serverAuth: AuthService,
     ) {
         super(
             service,
@@ -84,6 +86,9 @@ export class StandardTimeMasterComponent
 
     // on insert data
     onInsertToDataBase(value: TypeStandardTime): void {
+        if (this.serverAuth.getAuth) {
+            value.Creator = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // insert data
@@ -103,6 +108,9 @@ export class StandardTimeMasterComponent
 
     // on update data
     onUpdateToDataBase(value: TypeStandardTime): void {
+        if (this.serverAuth.getAuth) {
+            value.Modifyer = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // update data

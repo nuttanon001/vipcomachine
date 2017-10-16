@@ -1,6 +1,6 @@
 ﻿// angular
 import { Component, ViewContainerRef } from "@angular/core";
-import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
 import {
     trigger,state,style,
     animate,transition
@@ -189,26 +189,39 @@ export class JobCardEditComponent
     }
 
     // new Detail
-    onNewOrEditDetail(detail?: JobCardDetail):void {
-        if (detail) {
-            if (detail.JobCardDetailStatus === 2) {
-                this.serviceDialogs.context("Warning Message","คุณไม่สามารถแก้ไขข้อมูล ที่ดำเนินการแล้วได้ !!!",this.viewContainerRef);
-                return;
-            }
+    onNewOrEditDetail(detail?: JobCardDetail): void {
+        const typeMachine: AbstractControl | null = this.editValueForm.get("TypeMachineId");
+        const projectDetail: AbstractControl | null = this.editValueForm.get("ProjectCodeDetailId");
 
-            if (this.editValue.JobCardDetails) {
-                this.indexJobDetail = this.editValue.JobCardDetails.indexOf(detail);
+        let canOpen = false;
+
+        if (typeMachine && projectDetail) {
+            canOpen = typeMachine.value && projectDetail.value;
+        }
+
+        if (canOpen) {
+            if (detail) {
+                if (detail.JobCardDetailStatus === 2) {
+                    this.serviceDialogs.context("Warning Message", "คุณไม่สามารถแก้ไขข้อมูล ที่ดำเนินการแล้วได้ !!!", this.viewContainerRef);
+                    return;
+                }
+
+                if (this.editValue.JobCardDetails) {
+                    this.indexJobDetail = this.editValue.JobCardDetails.indexOf(detail);
+                } else {
+                    this.indexJobDetail = -1;
+                }
+                this.jobDetail = Object.assign({}, detail);
             } else {
+                this.jobDetail = {
+                    JobCardDetailId: 0,
+                    JobCardDetailStatus: 1,
+                    StatusString: "Wait"
+                };
                 this.indexJobDetail = -1;
             }
-            this.jobDetail = Object.assign({}, detail);
         } else {
-            this.jobDetail = {
-                JobCardDetailId: 0,
-                JobCardDetailStatus: 1,
-                StatusString: "Wait"
-            };
-            this.indexJobDetail = -1;
+            this.serviceDialogs.error("Error Message", "Not found TypeMachine and JobLevel2/3 !!!", this.viewContainerRef);
         }
     }
 

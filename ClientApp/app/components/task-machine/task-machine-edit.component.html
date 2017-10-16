@@ -72,8 +72,9 @@
                     <div class="my-form">
                         <label for="TaskMachineName" class="my-label">Task Code:</label>
                         <div class="col-sm-4">
-                            <input type="text" class="my-input" placeholder="Insert code for task here"
-                                   id="TaskMachineName" formControlName="TaskMachineName">
+                            <input type="text" class="my-input" placeholder="Code will automatically generated."
+                                   id="TaskMachineName" formControlName="TaskMachineName"
+                                   readonly>
                             <validation-messages [control]="editValueForm.controls.TaskMachineName"></validation-messages>
                         </div>
 

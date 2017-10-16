@@ -217,7 +217,8 @@
             <ng-template #editDetail >
                 <div class="m-2" style="border:1px solid #e16958" [@flyInOut]="'in'">
                     <jobcard-detail-edit (ComplateOrCancel)="onComplateOrCancel($event)" [EditValueDetail]="jobDetail"
-                                         [MachineTypeId]="editValueForm.controls.TypeMachineId.value"></jobcard-detail-edit>
+                                         [MachineTypeId]="editValueForm.controls.TypeMachineId.value"
+                                         [ProjectDetailId]="editValueForm.controls.ProjectCodeDetailId.value"></jobcard-detail-edit>
                 </div>
             </ng-template>
         </md-tab>

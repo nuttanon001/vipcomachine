@@ -44,6 +44,7 @@ export class CuttingPlanDialogComponent
         public serviceDataTable: DataTableServiceCommunicate<CuttingPlan>,
         public dialogRef: MdDialogRef<CuttingPlanDialogComponent>,
         private serviceProDetail: ProjectCodeDetailEditService,
+        @Inject(MD_DIALOG_DATA) public mode: number,
         // private viewContainerRef: ViewContainerRef,
         // private serviceDialogs: DialogsService,
         private fb: FormBuilder
@@ -63,10 +64,16 @@ export class CuttingPlanDialogComponent
             { prop: "MaterialSize", name: "Material", flexGrow: 1 },
             { prop: "Quantity", name: "Quantity", flexGrow: 1 },
         ];
+
+        this.fastSelectd = true;
     }
 
     // on get data with lazy load
     loadDataScroll(scroll: Scroll): void {
+        if (this.mode) {
+            scroll.Where = this.mode.toString();
+        }
+
         this.service.getAllWithScroll(scroll)
             .subscribe(scrollData => {
                 if (scrollData) {

@@ -2,6 +2,9 @@
     <split direction="horizontal" [gutterSize]="7" [visibleTransition]="true">
         <split-area [size]="35" [visible]="hideleft" [order]="1">
             <div class="child-left-container">
+                <md-checkbox formControlName="filterUser" style="margin-left:20px;">
+                    Filter Only User
+                </md-checkbox>
                 <data-table (selected)="onDetailView($event)" [columns]="columns">
                 </data-table>
             </div>

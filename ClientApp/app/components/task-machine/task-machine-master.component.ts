@@ -8,6 +8,7 @@ import { TaskMachine, Scroll, ScrollData } from "../../models/model.index";
 import { DialogsService } from "../../services/dialog/dialogs.service";
 import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
 import { TaskMachineService, TaskMachineServiceCommunicate } from "../../services/task-machine/task-machine.service";
+import { AuthService } from "../../services/auth/auth.service";
 // timezone
 import * as moment from "moment-timezone";
 // 3rd party
@@ -19,7 +20,10 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
     selector: "task-machine-master",
     templateUrl: "./task-machine-master.component.html",
     styleUrls: ["../../styles/master.style.scss"],
-    providers: [DataTableServiceCommunicate]
+    providers: [
+        DataTableServiceCommunicate,
+        TaskMachineServiceCommunicate
+    ]
 })
 // task-machine-master component*/
 export class TaskMachineMasterComponent
@@ -43,6 +47,7 @@ export class TaskMachineMasterComponent
         viewContainerRef: ViewContainerRef,
         private router: Router,
         private route: ActivatedRoute,
+        private serverAuth: AuthService,
     ) {
         super(
             service,
@@ -53,26 +58,28 @@ export class TaskMachineMasterComponent
         );
     }
 
+    // on inti override
     ngOnInit(): void {
         // debug here
         // console.log("Task-Machine ngOnInit");
 
         // override class
         super.ngOnInit();
-            this.route.params.subscribe((params: any) => {
-                let key: number = params["condition"];
 
-                if (key) {
-                    let newTaskMachine: TaskMachine = {
-                        TaskMachineId: 0,
-                        JobCardDetailId: key
-                    };
-                    setTimeout(() => {
-                        this.onDetailEdit(newTaskMachine);
-                    }, 1500);
+        this.route.params.subscribe((params: any) => {
+            let key: number = params["condition"];
 
-                }
-            }, error => console.error(error));
+            if (key) {
+                let newTaskMachine: TaskMachine = {
+                    TaskMachineId: 0,
+                    JobCardDetailId: key
+                };
+                setTimeout(() => {
+                    this.onDetailEdit(newTaskMachine);
+                }, 500);
+
+            }
+        }, error => console.error(error));
     }
 
     // on get data with lazy load
@@ -131,6 +138,9 @@ export class TaskMachineMasterComponent
 
     // on insert data
     onInsertToDataBase(value: TaskMachine): void {
+        if (this.serverAuth.getAuth) {
+            value.Creator = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // insert data
@@ -151,6 +161,9 @@ export class TaskMachineMasterComponent
 
     // on update data
     onUpdateToDataBase(value: TaskMachine): void {
+        if (this.serverAuth.getAuth) {
+            value.Modifyer = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // update data

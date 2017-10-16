@@ -91,6 +91,7 @@ export class MachineDialogComponent
     onSelectedMachine(selected?: any): void {
         if (selected) {
             this.selectedMachine = selected.selected[0];
+            this.onSelectedClick();
         }
     }
 

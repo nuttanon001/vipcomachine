@@ -12,46 +12,31 @@
     <div class="collapse navbar-collapse pl-4" id="Mynavbars" style="z-index:1500;">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/task-machine/task-machine-schedule','1']" routerLinkActive="active">
+                    <i class="fa fa-calendar-o" aria-hidden="true"></i>
+                    <span>Machine Schedule</span>
+                </a>
+            </li>
+            <li class="nav-item" *ngIf="GetLevel1">
                 <a #mainMenu="mdMenuTrigger" [mdMenuTriggerFor]="menu1"
                    (onMenuOpen)="menuOnCloseMenu1()" (mouseover)="menuOnOpenMenu1()"
                    class="nav-link">
-                    <i class="fa fa-map-signs" aria-hidden="true"></i>
-                    Main Menu
+                    <i class="fa fa-flag" aria-hidden="true"></i>
+                    Require Machine
                 </a>
                 <md-menu #menu1="mdMenu" [overlapTrigger]="false">
                     <button md-menu-item [routerLink]="['/jobcard']" routerLinkActive="active">
-                        <i class="fa fa-hacker-news" aria-hidden="true"></i>
+                        <i class="fa fa-flag" aria-hidden="true"></i>
                         <span>Require Machine</span>
-                    </button>
-                    <button md-menu-item [routerLink]="['/task-machine']" routerLinkActive="active">
-                        <i class="fa fa-tachometer" aria-hidden="true"></i>
-                        <span>Task Machine</span>
-                    </button>
-                    <hr />
-                    <button md-menu-item [routerLink]="['/machine']" routerLinkActive="active">
-                        <i class="fa fa-plug" aria-hidden="true"></i>
-                        <span>Machine</span>
-                    </button>
-                    <button md-menu-item [routerLink]="['/project']" routerLinkActive="active">
-                        <i class="fa fa-product-hunt" aria-hidden="true"></i>
-                        <span>Job Master</span>
-                    </button>
-                    <button md-menu-item [routerLink]="['/cutting-plan']" routerLinkActive="active">
-                        <i class="fa fa-cube" aria-hidden="true"></i>
-                        <span>Cutting Plan</span>
-                    </button>
-                    <button md-menu-item [routerLink]="['/standard-time']" routerLinkActive="active">
-                        <i class="fa fa-hourglass-end" aria-hidden="true"></i>
-                        <span>StandardTime</span>
                     </button>
                 </md-menu>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" *ngIf="GetLevel2">
                 <a #subMenu="mdMenuTrigger" [mdMenuTriggerFor]="menu2"
                    (onMenuOpen)="menuOnCloseMenu2()" (mouseover)="menuOnOpenMenu2()"
                    class="nav-link">
                     <i class="fa fa-comments-o" aria-hidden="true"></i>
-                    Main Menu 2
+                    For Machine
                 </a>
                 <md-menu #menu2="mdMenu" [overlapTrigger]="false">
                     <div>
@@ -59,15 +44,40 @@
                             <i class="fa fa-history" aria-hidden="true"></i>
                             <span>Require Machine Waiting</span>
                         </button>
+                        <button md-menu-item [routerLink]="['/task-machine']" routerLinkActive="active">
+                            <i class="fa fa-tachometer" aria-hidden="true"></i>
+                            <span>Task Machine</span>
+                        </button>
+                        <hr />
+                        <button md-menu-item [routerLink]="['/machine']" routerLinkActive="active">
+                            <i class="fa fa-plug" aria-hidden="true"></i>
+                            <span>Machine</span>
+                        </button>
+                        <button md-menu-item [routerLink]="['/project']" routerLinkActive="active">
+                            <i class="fa fa-product-hunt" aria-hidden="true"></i>
+                            <span>Job Master</span>
+                        </button>
+                        <button md-menu-item [routerLink]="['/cutting-plan']" routerLinkActive="active">
+                            <i class="fa fa-cube" aria-hidden="true"></i>
+                            <span>Cutting Plan</span>
+                        </button>
+                        <button md-menu-item [routerLink]="['/standard-time']" routerLinkActive="active">
+                            <i class="fa fa-hourglass-end" aria-hidden="true"></i>
+                            <span>StandardTime</span>
+                        </button>
                         <hr/>
                         <button md-menu-item [routerLink]="['/cutting-plan/import-csv']" routerLinkActive="active">
                             <i class="fa fa-inbox" aria-hidden="true"></i>
                             <span>Cutting Plan Import</span>
                         </button>
-                        <button md-menu-item [routerLink]="['/developer']" routerLinkActive="active">
+                        <button md-menu-item [routerLink]="['/task-machine/task-machine-schedule','2']" routerLinkActive="active">
+                            <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
+                            <span>Machine Schedule</span>
+                        </button>
+                        <!--<button md-menu-item [routerLink]="['/developer']" routerLinkActive="active">
                             <i class="fa fa-university" aria-hidden="true"></i>
                             <span>Developer</span>
-                        </button>
+                        </button>-->
                     </div>
                 </md-menu>
             </li>
@@ -83,11 +93,11 @@
                         <a class="username">
                             Welcome <i>{{authService.userName}}</i>
                         </a>-->
-                    <!--<a (click)="onLogOut()">
+                    <a class="mx-1">Welcome <i>{{userName}}</i>  </a>
+                    <a (click)="onLogOut()">
                         <i class="fa fa-sign-out" aria-hidden="true"></i>
-                         Logout
-                    </a>-->
-                    <a class="username">Welcome <i>{{authService.userName}}</i></a>
+                        Logout
+                    </a>
                 </ng-template>
             </li>
         </ul>

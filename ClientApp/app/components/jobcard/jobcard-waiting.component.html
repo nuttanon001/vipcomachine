@@ -9,7 +9,7 @@
     </div>
     <div class="center-content my-2">
         <p-dataTable [value]="jobCardMasters" sortField="GroupMachine" rowGroupMode="rowspan"
-                     [scrollHeight]="scrollHeight" scrollWidth="98.5vw" scrollable="true">
+                     [scrollHeight]="scrollHeight" [scrollWidth]="'98.5vw'" [scrollable]="true">
             <p-column *ngFor="let column of columns" [field]="column.field" [styleClass]="column.styleclass"
                       [header]="column.header" [style]="column.style" [sortable]="true">
                 <ng-template *ngIf="column.isButton" let-col let-data1="rowData" pTemplate="body">

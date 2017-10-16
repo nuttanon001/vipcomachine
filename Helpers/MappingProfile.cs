@@ -174,6 +174,16 @@ namespace VipcoMachine.Helpers
                            o => o.MapFrom(s => s.Employee == null ? "-" : s.Employee.NameThai))
                 .ForMember(x => x.Employee, o => o.Ignore());
             #endregion
+
+            #region User
+            //User
+            CreateMap<User, UserViewModel>()
+                // CuttingPlanNo
+                .ForMember(x => x.NameThai,
+                           o => o.MapFrom(s => s.Employee == null ? "-" : s.Employee.NameThai))
+                .ForMember(x => x.Employee, o => o.Ignore());
+
+            #endregion
         }
     }
 }

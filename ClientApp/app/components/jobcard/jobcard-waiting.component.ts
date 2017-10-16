@@ -123,8 +123,8 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
                             } else if (jobCardDetail.JobCardDetailId === -88) {
                                 this.router.navigate(["jobcard/jobcard-waiting-edit/" + jobCardDetail.JobCardMasterId]);
                             } else {
-                                //debug here
-                                //console.log("JobCardDetail: ", jobCardDetail);
+                                // debug here
+                                // console.log("JobCardDetail: ", jobCardDetail);
                                 this.router.navigate(["task-machine/jobcard-detail/" + jobCardDetail.JobCardDetailId]);
                             }
                         }
@@ -139,8 +139,8 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
     // cancel data
     onCancelData(data: any):void {
         // split string
-        //let splitArray: Array<string> = data.split("#");
-        //if (splitArray.length > 0) {
+        // let splitArray: Array<string> = data.split("#");
+        // if (splitArray.length > 0) {
         //    // string to number
         //    let jobCardKey: number = Number(splitArray[1]);
         //    // check job card can cancel
@@ -165,8 +165,8 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
         //        }, error => {
         //            this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
         //        });
-        //} else {
+        // } else {
         //    this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
-        //}
+        // }
     }
 }

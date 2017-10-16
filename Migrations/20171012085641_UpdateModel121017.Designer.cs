@@ -11,9 +11,10 @@ using VipcoMachine.Models;
 namespace VipcoMachine.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20171012085641_UpdateModel121017")]
+    partial class UpdateModel121017
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -710,8 +711,6 @@ namespace VipcoMachine.Migrations
                     b.Property<string>("Creator");
 
                     b.Property<string>("EmpCode");
-
-                    b.Property<int>("LevelUser");
 
                     b.Property<string>("MailAddress")
                         .HasMaxLength(100);

@@ -75,6 +75,9 @@ export abstract class BaseMasterComponent<Model, Service> implements OnInit, OnD
     }
     // on detail edit
     onDetailEdit(editValue?: Model): void {
+        // debug here
+        console.log("onDetailEdit on Base Master Component");
+
         this.displayValue = editValue;
         this.ShowEdit = true;
         setTimeout(() => this.serviceCom.toChildEdit(this.displayValue), 1000);

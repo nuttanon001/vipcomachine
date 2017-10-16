@@ -1,6 +1,6 @@
 ﻿import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 // 3rd party
 import "hammerjs";
 // component
@@ -9,6 +9,7 @@ import { TaskMachineCenterComponent } from "../../components/task-machine/task-m
 import { TaskMachineEditComponent } from "../../components/task-machine/task-machine-edit.component";
 import { TaskMachineMasterComponent } from "../../components/task-machine/task-machine-master.component";
 import { TaskMachineViewComponent } from "../../components/task-machine/task-machine-view.component";
+import { TaskMachineScheduleComponent } from "../../components/task-machine/task-machine-schedule.component";
 // module
 import { TaskMachineRouters } from "./task-machine.routing";
 import {
@@ -27,14 +28,15 @@ import {
         TaskMachineCenterComponent,
         TaskMachineEditComponent,
         TaskMachineMasterComponent,
-        TaskMachineViewComponent
+        TaskMachineViewComponent,
+        TaskMachineScheduleComponent
     ],
     imports: [
-        //Angular
+        // angular
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        //Custom
+        // custom
         CustomMaterialModule,
         ValidationModule,
         TaskMachineRouters,
@@ -43,7 +45,7 @@ import {
         TaskMachineService,
         JobCardMasterService,
         JobCardDetailService,
-        TaskMachineServiceCommunicate,
+        // mark TaskMachineServiceCommunicate,
         TaskMachineHasOverTimeService,
     ]
 })

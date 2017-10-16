@@ -16,6 +16,7 @@ using VipcoMachine.Models;
 using VipcoMachine.Helpers;
 using VipcoMachine.ViewModels;
 using VipcoMachine.Services.Interfaces;
+using System.Dynamic;
 
 namespace VipcoMachine.Controllers
 {
@@ -26,6 +27,7 @@ namespace VipcoMachine.Controllers
         #region PrivateMenbers
         private IRepository<TaskMachine> repository;
         private IRepository<TaskMachineHasOverTime> repositoryOverTime;
+        private IRepository<Machine> repositoryMachine;
         private IRepository<JobCardDetail> repositoryJobDetail;
         private IRepository<JobCardMaster> repositoryJobMaster;
         private IMapper mapper;
@@ -87,6 +89,36 @@ namespace VipcoMachine.Controllers
 
             return false;
         }
+        private IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
+        {
+            for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
+                yield return day;
+        }
+        private async Task<string> GeneratedCode(int JobDetailId, int MachineId)
+        {
+            if (MachineId > 0 && MachineId > 0)
+            {
+                JobCardDetail jobDetail = await this.repositoryJobDetail.GetAsynvWithIncludes
+                                                        (
+                                                            JobDetailId,
+                                                            "JobCardDetailId",
+                                                            new List<string> { "JobCardMaster" }
+                                                        );
+
+                Machine machine = await this.repositoryMachine.GetAsync(MachineId);
+
+                if (jobDetail != null && machine != null)
+                {
+                    var date = DateTime.Today;
+                    var Runing = await this.repository.GetAllAsQueryable()
+                                                      .CountAsync(x => x.CreateDate.Value.Year == date.Year) + 1;
+
+                    return $"{jobDetail.JobCardMaster.JobCardMasterNo}_{machine.MachineCode}/{date.ToString("dd/MM/yy")}/{Runing.ToString("0000")}";
+                }
+            }
+
+            return "xxxx/xx/xx_xx-xx/xx/xx/xx/xxxx";
+        }
 
         #endregion PrivateMenbers
 
@@ -95,6 +127,7 @@ namespace VipcoMachine.Controllers
         public TaskMachineController(
                 IRepository<TaskMachine> repo,
                 IRepository<TaskMachineHasOverTime> repoOverTime,
+                IRepository<Machine> repoMachine,
                 IRepository<JobCardMaster> repoMaster,
                 IRepository<JobCardDetail> repoDetail,
                 IMapper map)
@@ -103,6 +136,7 @@ namespace VipcoMachine.Controllers
             this.repositoryOverTime = repoOverTime;
             this.repositoryJobMaster = repoMaster;
             this.repositoryJobDetail = repoDetail;
+            this.repositoryMachine = repoMachine;
             this.mapper = map;
             this.helpers = new HelpersClass<TaskMachine>();
         }
@@ -136,6 +170,173 @@ namespace VipcoMachine.Controllers
         #endregion
 
         #region POST
+        // GET: api/TaskMachine/TaskMachineWaitAndProcess
+        [HttpPost("TaskMachineWaitAndProcess")]
+        public async Task<IActionResult> TaskMachineWaitAndProcess([FromBody] OptionScheduleViewModel Scehdule)
+        {
+            string Message = "";
+
+            try
+            {
+                var QueryData = this.repository.GetAllAsQueryable()
+                                               .Include(x => x.Machine)
+                                               .Include(x => x.JobCardDetail.JobCardMaster.ProjectCodeDetail.ProjectCodeMaster)
+                                               .Include(x => x.JobCardDetail.CuttingPlan)
+                                               .AsQueryable();
+                int TotalRow;
+
+                if (Scehdule != null)
+                {
+                    if (!string.IsNullOrEmpty(Scehdule.Filter))
+                    {
+                        QueryData = QueryData.Where(x => x.JobCardDetail.JobCardMaster.JobCardMasterNo.ToLower().Contains(Scehdule.Filter.ToLower().Trim()) ||
+                                        x.TaskMachineName.ToLower().Contains(Scehdule.Filter.ToLower().Trim()));
+                    }
+
+                    // Option JobNo
+                    if (Scehdule.JobNo.HasValue)
+                    {
+                        QueryData = QueryData.Where(x =>
+                            x.JobCardDetail.JobCardMaster.ProjectCodeDetail.ProjectCodeMasterId == Scehdule.JobNo);
+                    }
+                    // Option Level
+                    if (Scehdule.Level2.HasValue)
+                    {
+                        QueryData = QueryData.Where(x =>
+                            x.JobCardDetail.JobCardMaster.ProjectCodeDetail.ProjectCodeDetailId == Scehdule.Level2);
+                    }
+                    // Option TypeMachineId
+                    if (Scehdule.TypeMachineId.HasValue)
+                    {
+                        QueryData = QueryData.Where(x =>
+                            x.Machine.TypeMachineId == Scehdule.TypeMachineId);
+                    }
+                    // Option Mode
+                    if (Scehdule.Mode != null)
+                    {
+                        if (Scehdule.Mode == 2)
+                            QueryData = QueryData.Where(x => x.TaskMachineStatus == TaskMachineStatus.Wait ||
+                                                             x.TaskMachineStatus == TaskMachineStatus.Process);
+                    }
+
+                    TotalRow = await QueryData.CountAsync();
+
+                    // Option Skip and Task
+                    if (Scehdule.Skip.HasValue && Scehdule.Take.HasValue)
+                        QueryData = QueryData.Skip(Scehdule.Skip ?? 0).Take(Scehdule.Take ?? 10);
+                }
+                else
+                {
+                    TotalRow = await QueryData.CountAsync();
+                }
+
+                var GetData = await QueryData.ToListAsync();
+                if (GetData.Any())
+                {
+                    IDictionary<string, int> ColumnGroupTop = new Dictionary<string, int>();
+                    IDictionary<DateTime, string> ColumnGroupBtm = new Dictionary<DateTime, string>();
+                    List<string> ColumnsAll = new List<string>();
+
+                    var MinDate = GetData.Min(x => x.PlannedStartDate);
+                    var MaxDate = GetData.Max(x => x.PlannedEndDate);
+
+                    if (MinDate == null && MaxDate == null)
+                    {
+                        return NotFound(new { Error = "Data not found" });
+                    }
+
+                    int countCol = 1;
+                    foreach (DateTime day in EachDay(MinDate, MaxDate))
+                    {
+                        // Get Month
+                        if (ColumnGroupTop.Any(x => x.Key == day.ToString("MMMM")))
+                            ColumnGroupTop[day.ToString("MMMM")] += 1;
+                        else
+                        {
+                            ColumnGroupTop.Add(day.ToString("MMMM"), 1);
+                        }
+
+                        ColumnGroupBtm.Add(day.Date, $"Col{countCol.ToString("00")}");
+                        countCol++;
+                    }
+
+                    var DataTable = new List<IDictionary<String, Object>>();
+
+                    foreach (var Data in GetData.OrderBy(x => x.Machine.TypeMachineId).ThenBy(x => x.Machine.MachineCode))
+                    {
+                        IDictionary<String, Object> rowData = new ExpandoObject();
+                        var Pro = Data.CurrentQuantity ?? 0;
+                        var Qty = Data.TotalQuantity ?? 0;
+                        var JobNo = $"{Data?.JobCardDetail?.JobCardMaster?.ProjectCodeDetail?.ProjectCodeMaster.ProjectCode ?? "-"}/{Data?.JobCardDetail?.JobCardMaster?.ProjectCodeDetail?.ProjectCodeDetailCode ?? "-"}";
+                        // add column time
+                        rowData.Add("MachineNo", Data?.Machine?.MachineCode ?? "-");
+                        rowData.Add("JobNo", JobNo);
+                        rowData.Add("CT/SD", Data?.JobCardDetail?.CuttingPlan?.CuttingPlanNo +
+                            (Data?.JobCardDetail == null ? "" : " | " + Data?.JobCardDetail?.Material ?? ""));
+                        rowData.Add("Qty", Qty);
+                        rowData.Add("Pro", Pro);
+                        rowData.Add("Progess", Math.Round(((double)(Pro * 100) / Qty), 1) + "%");
+                        rowData.Add("TaskMachineId", Data?.TaskMachineId ?? 1);
+
+                        // Data is 1:Plan,2:Actual,3:PlanAndActual
+                        // For Plan
+                        if (Data.PlannedStartDate != null && Data.PlannedEndDate != null)
+                        {
+                            foreach (DateTime day in EachDay(Data.PlannedStartDate, Data.PlannedEndDate))
+                            {
+                                if (ColumnGroupBtm.Any(x => x.Key == day.Date))
+                                    rowData.Add(ColumnGroupBtm.FirstOrDefault(x => x.Key == day.Date).Value, 1);
+                            }
+                        }
+                        //For Actual
+                        if (Data.ActualStartDate != null)
+                        {
+                            var EndDate = Data.ActualEndDate ?? (MaxDate > DateTime.Today ? DateTime.Today : MaxDate);
+
+                            foreach (DateTime day in EachDay(Data.ActualStartDate.Value, EndDate))
+                            {
+                                if (ColumnGroupBtm.Any(x => x.Key == day.Date))
+                                {
+                                    var Col = ColumnGroupBtm.FirstOrDefault(x => x.Key == day.Date);
+
+                                    // if Have Plan change value to 3
+                                    if (rowData.Keys.Any(x => x == Col.Value))
+                                        rowData[Col.Value] = 3;
+                                    else // else Don't have plan value is 2
+                                        rowData.Add(Col.Value, 2);
+                                }
+                            }
+                        }
+
+                        DataTable.Add(rowData);
+                    }
+
+                    if (DataTable.Any())
+                        ColumnGroupBtm.OrderBy(x => x.Value).Select(x => x.Value)
+                            .ToList().ForEach(item => ColumnsAll.Add(item));
+
+                    return new JsonResult(new
+                    {
+                        TotalRow = TotalRow,
+                        ColumnsTop = ColumnGroupTop.Select(x => new
+                        {
+                            Name = x.Key,
+                            Value = x.Value
+                        }),
+                        ColumnsLow = ColumnGroupBtm.OrderBy(x => x.Value).Select(x => x.Key.Day),
+                        ColumnsAll = ColumnsAll,
+                        DataTable = DataTable
+                    }, this.DefaultJsonSettings);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+
+            return NotFound(new { Error = Message });
+        }
 
         // POST: api/TaskMachine/GetScroll
         [HttpPost("GetScroll")]
@@ -208,11 +409,18 @@ namespace VipcoMachine.Controllers
         {
             if (nTaskMachine != null)
             {
+                nTaskMachine.TaskMachineName = await this.GeneratedCode(nTaskMachine.JobCardDetailId, nTaskMachine.MachineId ?? 0);
                 // add hour to DateTime to set Asia/Bangkok
                 nTaskMachine = helpers.AddHourMethod(nTaskMachine);
 
                 nTaskMachine.CreateDate = DateTime.Now;
                 nTaskMachine.Creator = nTaskMachine.Creator ?? "Someone";
+
+                // Check TaskMachineStatus
+                if (nTaskMachine.ActualStartDate.HasValue && nTaskMachine.ActualEndDate.HasValue)
+                    nTaskMachine.TaskMachineStatus = TaskMachineStatus.Complate;
+                else if (nTaskMachine.ActualStartDate.HasValue && !nTaskMachine.ActualEndDate.HasValue)
+                    nTaskMachine.TaskMachineStatus = TaskMachineStatus.Process;
 
                 var helperEdit = new HelpersClass<TaskMachineHasOverTime>();
 
@@ -237,7 +445,6 @@ namespace VipcoMachine.Controllers
                         await this.UpdateJobCard(InsertComplate.JobCardDetailId, InsertComplate.Creator);
                     }
                 }
-
                 return new JsonResult(InsertComplate, this.DefaultJsonSettings);
             }
 
@@ -258,6 +465,11 @@ namespace VipcoMachine.Controllers
 
                 uTaskMachine.ModifyDate = DateTime.Now;
                 uTaskMachine.Modifyer = uTaskMachine.Modifyer ?? "Someone";
+                // Check TaskMachineStatus
+                if (uTaskMachine.ActualStartDate.HasValue && uTaskMachine.ActualEndDate.HasValue)
+                    uTaskMachine.TaskMachineStatus = TaskMachineStatus.Complate;
+                else if (uTaskMachine.ActualStartDate.HasValue && !uTaskMachine.ActualEndDate.HasValue)
+                    uTaskMachine.TaskMachineStatus = TaskMachineStatus.Process;
 
                 var helperEdit = new HelpersClass<TaskMachineHasOverTime>();
 

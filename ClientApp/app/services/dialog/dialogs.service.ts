@@ -152,12 +152,15 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectCuttingPlan(viewContainerRef: ViewContainerRef): Observable<CuttingPlan> {
+    public dialogSelectCuttingPlan(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<CuttingPlan> {
         let dialogRef: MdDialogRef<CuttingPlanDialogComponent>;
         let config = new MdDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
+        if (mode) {
+            config.data = mode;
+        }
         config.height = "650px";
         config.width = "1000px";
         config.hasBackdrop = true;

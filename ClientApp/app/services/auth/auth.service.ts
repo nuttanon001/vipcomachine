@@ -2,10 +2,11 @@
 import { Http, Headers, Response, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs/Observable";
 import 'rxjs/Rx';
+// model
+import { User } from "../../models/model.index";
 
 @Injectable()
 export class AuthService {
-    isLoggedIn: boolean = false;
     userName: string;
     authKey = "auth";
     // store the URL so we can redirect after logging in
@@ -13,13 +14,9 @@ export class AuthService {
 
     constructor(private http: Http) { }
 
-    login(username: string, password: string): Observable<any> {
-        let data = {
-            UserName: username,
-            Password: password
-        };
+    login(user:User): Observable<any> {
 
-        return this.http.post("api/LoginName/Login", data
+        return this.http.post("api/User/Login", user
             , new RequestOptions({
                 headers: new Headers({
                     // for urlencoded
@@ -29,16 +26,15 @@ export class AuthService {
             }))
             .map((response: Response) => {
                 let auth = response.json();
-                this.setAuth(auth);
-                this.isLoggedIn = true;
+                console.log(auth);
+                this.setAuth = auth;
                 this.userName = auth.UserName; //data.UserName;
                 return auth;
             });
     }
 
     logout(): boolean {
-        this.setAuth(null);
-        this.isLoggedIn = false;
+        this.setAuth = null;
         this.userName = "";
         return false;
     }
@@ -56,23 +52,38 @@ export class AuthService {
         return body;
     }
     // Persist auth into localStorage or removes it if a NULL argument is given
-    setAuth(auth: any): boolean {
+    set setAuth(auth: any) {
         if (auth) {
             localStorage.setItem(this.authKey, JSON.stringify(auth));
         }
         else {
             localStorage.removeItem(this.authKey);
         }
-        return true;
     }
     // Retrieves the auth JSON object (or NULL if none)
-    getAuth(): any {
-        var i = localStorage.getItem(this.authKey);
+    get getAuth(): User | undefined {
+        let i = localStorage.getItem(this.authKey);
         if (i) {
             return JSON.parse(i);
         }
         else {
-            return null;
+            return undefined;
         }
+    }
+
+    //get getUser(): User {
+    //    let user = localStorage.getItem("userData");
+    //    if (user)
+    //        return JSON.parse(user);
+    //    else
+    //        return null;
+    //}
+
+    get isLoggedIn(): boolean {
+        if (this.getAuth) {
+            return true;
+        }
+        else
+            return false;
     }
 }

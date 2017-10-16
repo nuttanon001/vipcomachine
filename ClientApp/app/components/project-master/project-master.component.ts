@@ -8,7 +8,7 @@ import {
     DialogsService,
     DataTableServiceCommunicate,
 } from "../../services/service.index";
-
+import { AuthService } from "../../services/auth/auth.service";
 import {
     ProjectCodeMasterService,
     ProjectCodeMasterServiceCommunicate
@@ -45,6 +45,7 @@ export class ProjectMasterComponent
         dataTableServiceCom: DataTableServiceCommunicate<ProjectCodeMaster>,
         dialogsService: DialogsService,
         viewContainerRef: ViewContainerRef,
+        private serverAuth: AuthService,
     ) {
         super(
             service,
@@ -101,6 +102,9 @@ export class ProjectMasterComponent
 
     // on insert data
     onInsertToDataBase(value: ProjectCodeMaster): void {
+        if (this.serverAuth.getAuth) {
+            value.Creator = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // insert data
@@ -120,6 +124,9 @@ export class ProjectMasterComponent
 
     // on update data
     onUpdateToDataBase(value: ProjectCodeMaster): void {
+        if (this.serverAuth.getAuth) {
+            value.Modifyer = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // update data

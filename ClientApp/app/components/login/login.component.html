@@ -17,7 +17,7 @@
                         <input class="form-control" type="text" name="username" placeholder="username" required autofocus
                                id="UserName" formControlName="UserName" />
                     </div>
-                    <validation-messages [control]="loginForm.controls.UserName"></validation-messages>
+                    <!--<validation-messages [control]="loginForm.controls.UserName"></validation-messages>-->
                     <br>
                     <!-- Row 2 -->
                     <div class="input-group">
@@ -27,12 +27,15 @@
                         <input class="form-control" type="password" name="password" placeholder="password"
                                id="PassWord" formControlName="PassWord" />
                     </div>
-                    <validation-messages [control]="loginForm.controls.PassWord"></validation-messages>
+                    <!--<validation-messages [control]="loginForm.controls.PassWord"></validation-messages>-->
                 </form>
             </div>
-            <div class="card-footer text-center">
-                <button type="submit" class="btn btn-success w-50" [disabled]="!loginForm.valid">
+            <div class="card-footer child-row-container">
+                <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid" (click)="onLogin()">
                     Login
+                </button>
+                <button type="button" class="btn btn-info mx-2">
+                    Register
                 </button>
             </div>
         </div>

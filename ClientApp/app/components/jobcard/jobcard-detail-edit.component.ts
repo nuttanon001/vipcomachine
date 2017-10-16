@@ -21,6 +21,7 @@ export class JobcardDetailEditComponent implements OnInit {
     @Output("ComplateOrCancel") ComplateOrCancel = new EventEmitter<any>();
     @Input("EditValueDetail") EditValueDetail: JobCardDetail;
     @Input("MachineTypeId") MachineTypeId: number | undefined;
+    @Input("ProjectDetailId") ProjectDetailId: number | undefined;
 
     tempMaterials: Array<string>;
     materials: Array<string>;
@@ -109,7 +110,7 @@ export class JobcardDetailEditComponent implements OnInit {
 
     // on CuttingPlan click
     onCuttingPlanClick(): void {
-        this.serviceDialogs.dialogSelectCuttingPlan(this.viewContainerRef)
+        this.serviceDialogs.dialogSelectCuttingPlan(this.viewContainerRef, this.ProjectDetailId)
             .subscribe(resultCutting => {
                 if (resultCutting) {
                     this.editValueForm.patchValue({

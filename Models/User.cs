@@ -16,6 +16,7 @@ namespace VipcoMachine.Models
         [Required]
         [StringLength(50)]
         public string PassWord { get; set; }
+        public LevelUser LevelUser { get; set; }
         [StringLength(100)]
         public string MailAddress { get; set; }
         public string Creator { get; set; }
@@ -26,5 +27,12 @@ namespace VipcoMachine.Models
         // FK
         public string EmpCode { get; set; }
         public Employee Employee { get; set; }
+    }
+
+    public enum LevelUser
+    {
+        RequiredLevel = 1,
+        MachineLevel = 2,
+        Administrator = 3,
     }
 }

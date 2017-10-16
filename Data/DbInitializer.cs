@@ -11,8 +11,50 @@ namespace VipcoMachine.Data
         {
             Context.Database.EnsureCreated();
 
+            if (!Context.Users.Any())
+            {
+                //User
+                Context.Users.Add(new User()
+                {
+                    CreateDate = DateTime.Today,
+                    Creator = "Admin",
+                    EmpCode = "592381",
+                    LevelUser = LevelUser.Administrator,
+                    MailAddress = "to.nuttanon@vipco-thai.com",
+                    PassWord = "qwer",
+                    UserName = "Admin"
+                });
+
+                Context.SaveChanges();
+            }
+
             if (Context.Machines.Any())
                 return; // DB has been seeded
+
+            if (Context.UnitsMeasures.Any())
+            {
+                var Template = new List<UnitsMeasure>()
+                {
+                    new UnitsMeasure{UnitMeasureName="เส้น",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="แผ่น",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="เมตร",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="ม้วน",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="ลัง",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="ต้น",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="ถุง",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="กล่อง",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="ท่อน",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="ตัว",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="ก้อน",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="ฟุต",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="อัน",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="กระป๋อง",Creator="Admin",CreateDate=DateTime.Now},
+                    new UnitsMeasure{UnitMeasureName="แกลลอน",Creator="Admin",CreateDate=DateTime.Now},
+                };
+
+                Template.ForEach(item => Context.UnitsMeasures.Add(item));
+                Context.SaveChanges();
+            }
 
             if (Context.ProjectCodeMasters.Count() < 5)
             {
@@ -58,18 +100,7 @@ namespace VipcoMachine.Data
                 Context.SaveChanges();
             }
 
-            //User
-            Context.Users.Add(new User()
-            {
-                CreateDate = DateTime.Today,
-                Creator = "Admin",
-                EmpCode = "592381",
-                MailAddress = "to.nuttanon@vipco-thai.com",
-                PassWord = "qwer",
-                UserName = "Admin"
-            });
 
-            Context.SaveChanges();
 
             var CM = Context.TypeMachines.Add(new TypeMachine { TypeMachineCode = "CM", Name = "กลุ่มเครื่องจักรประเภท ตัด Steel Section", Description = "กลุ่มเครื่องจักรประเภท ตัด Steel Section", CreateDate = DateTime.Now, Creator = "Admin" }).Entity;
             var GM = Context.TypeMachines.Add(new TypeMachine { TypeMachineCode = "GM", Name = "กลุ่มเครื่องจักรประเภท ตัด Plate CNC", Description = "กลุ่มเครื่องจักรประเภท ตัด Plate CNC", CreateDate = DateTime.Now, Creator = "Admin" }).Entity;

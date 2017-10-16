@@ -71,6 +71,23 @@ namespace VipcoMachine.Controllers
         #endregion
 
         #region POST
+        // POST: api/LoginName/Login
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([FromBody] User login)
+        {
+
+            var HasData = await this.repository.GetAllAsQueryable()
+                                               .Include(x => x.Employee)
+                                               .AsNoTracking()
+                                               .FirstOrDefaultAsync(m => m.UserName.ToLower() == login.UserName.ToLower() &&
+                                                                         m.PassWord.ToLower() == login.PassWord.ToLower());
+            if (HasData != null)
+                return new JsonResult(this.mapper.Map<User,UserViewModel>(HasData), this.DefaultJsonSettings);
+            else
+                return NotFound(new { Error = "user or password not match" });
+        }
+
+
         // POST: api/User
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]User nUser)

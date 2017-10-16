@@ -1,4 +1,5 @@
-﻿import { Component, ViewContainerRef,PipeTransform } from "@angular/core";
+﻿import { Component, ViewContainerRef, PipeTransform } from "@angular/core";
+import { Router, ActivatedRoute } from "@angular/router";
 // components
 import { BaseMasterComponent } from "../base-component/base-master.component";
 // models
@@ -6,8 +7,9 @@ import { JobCardMaster, Page, PageData, Scroll, ScrollData } from "../../models/
 // services
 import {
     DialogsService, JobCardMasterService, JobCardDetailService,
-    DataTableServiceCommunicate , JobCardMasterServiceCommunicate
+    DataTableServiceCommunicate, JobCardMasterServiceCommunicate
 } from "../../services/service.index";
+import { AuthService } from "../../services/auth/auth.service";
 // timezone
 import * as moment from "moment-timezone";
 // pipes
@@ -22,13 +24,13 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 
 export class JobCardMasterComponent
     extends BaseMasterComponent<JobCardMaster, JobCardMasterService> {
-    datePipe: DateOnlyPipe  = new DateOnlyPipe("it");
+    datePipe: DateOnlyPipe = new DateOnlyPipe("it");
     // parameter
     columns = [
-        { prop: "JobCardMasterNo", name: "No.", flexGrow: 1},
-        { prop: "ProjectDetailString", name: "Job Level2/3", flexGrow: 1},
-        { prop: "EmployeeRequireString", name: "Require", flexGrow: 1},
-        { prop: "JobCardDate", name: "Date", pipe: this.datePipe, flexGrow: 1}
+        { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
+        { prop: "ProjectDetailString", name: "Job Level2/3", flexGrow: 1 },
+        { prop: "EmployeeRequireString", name: "Require", flexGrow: 1 },
+        { prop: "JobCardDate", name: "Date", pipe: this.datePipe, flexGrow: 1 }
     ];
 
     // holla! {{"column.name" | translate }}
@@ -47,6 +49,9 @@ export class JobCardMasterComponent
         dataTableServiceCom: DataTableServiceCommunicate<JobCardMaster>,
         dialogsService: DialogsService,
         viewContainerRef: ViewContainerRef,
+        private router: Router,
+        private route: ActivatedRoute,
+        private serverAuth: AuthService,
     ) {
         super(
             service,
@@ -55,6 +60,28 @@ export class JobCardMasterComponent
             dialogsService,
             viewContainerRef
         );
+    }
+
+    // on inti override
+    ngOnInit(): void {
+        // debug here
+        // console.log("Task-Machine ngOnInit");
+
+        // override class
+        super.ngOnInit();
+
+        this.route.params.subscribe((params: any) => {
+            let key: number = params["condition"];
+
+            if (key) {
+                this.service.getOneKeyNumber(key)
+                    .subscribe(dbData => {
+                        setTimeout(() => {
+                            this.onDetailEdit(dbData);
+                        }, 500);
+                    }, error => this.displayValue = undefined);
+            }
+        }, error => console.error(error));
     }
 
     // on get data with lazy load
@@ -69,7 +96,7 @@ export class JobCardMasterComponent
 
     // on change time zone befor update to webapi
     changeTimezone(value: JobCardMaster): JobCardMaster {
-        let zone:string = "Asia/Bangkok";
+        let zone: string = "Asia/Bangkok";
         if (value !== null) {
             if (value.CreateDate !== null) {
                 value.CreateDate = moment.tz(value.CreateDate, zone).toDate();
@@ -89,6 +116,9 @@ export class JobCardMasterComponent
 
     // on insert data
     onInsertToDataBase(value: JobCardMaster): void {
+        if (this.serverAuth.getAuth) {
+            value.Creator = this.serverAuth.getAuth.UserName || "";
+        }
         let attachs: FileList | undefined = value.AttachFile;
         // change timezone
         value = this.changeTimezone(value);
@@ -113,6 +143,9 @@ export class JobCardMasterComponent
 
     // on update data
     onUpdateToDataBase(value: JobCardMaster): void {
+        if (this.serverAuth.getAuth) {
+            value.Modifyer = this.serverAuth.getAuth.UserName || "";
+        }
         let attachs: FileList | undefined = value.AttachFile;
 
         // console.log("ATT: ", attachs);
@@ -146,7 +179,7 @@ export class JobCardMasterComponent
     }
 
     // on detail view
-    onDetailView(value:JobCardMaster): void {
+    onDetailView(value: JobCardMaster): void {
         if (this.ShowEdit) {
             return;
         }
@@ -155,7 +188,7 @@ export class JobCardMasterComponent
             this.service.getOneKeyNumber(value.JobCardMasterId)
                 .subscribe(dbData => {
                     this.displayValue = dbData;
-                },error => this.displayValue = undefined);
+                }, error => this.displayValue = undefined);
         } else {
             this.displayValue = undefined;
         }

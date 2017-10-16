@@ -126,6 +126,7 @@ export class TaskMachineEditComponent
                 if (value.JobCardDetailId) {
                     this.editValue = {
                         TaskMachineId: 0,
+                        TaskMachineStatus: 1,
                         JobCardDetailId: value.JobCardDetailId,
                         PlannedStartDate: new Date()
                     };
@@ -151,6 +152,7 @@ export class TaskMachineEditComponent
         } else {
             this.editValue = {
                 TaskMachineId: 0,
+                TaskMachineStatus: 1,
                 PlannedStartDate: new Date()
             };
             this.defineData();
@@ -193,6 +195,7 @@ export class TaskMachineEditComponent
             ActualStartDate: [this.editValue.ActualStartDate],
             ActualEndDate: [this.editValue.ActualEndDate],
             ActualManHours: [this.editValue.ActualManHours],
+            TaskMachineStatus: [this.editValue.TaskMachineStatus],
             Creator: [this.editValue.Creator],
             CreateDate: [this.editValue.CreateDate],
             Modifyer: [this.editValue.Modifyer],

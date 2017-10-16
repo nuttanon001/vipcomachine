@@ -3,6 +3,7 @@ import { Routes, RouterModule } from "@angular/router";
 // componentes
 import { TaskMachineCenterComponent } from "../../components/task-machine/task-machine-center.component";
 import { TaskMachineMasterComponent } from "../../components/task-machine/task-machine-master.component";
+import { TaskMachineScheduleComponent } from "../../components/task-machine/task-machine-schedule.component";
 
 const taskMachineRoutes: Routes = [
     {
@@ -12,6 +13,14 @@ const taskMachineRoutes: Routes = [
             {
                 path: "jobcard-detail/:condition",
                 component: TaskMachineMasterComponent,
+            },
+            {
+                path: "task-machine-schedule/:condition",
+                component: TaskMachineScheduleComponent,
+            },
+            {
+                path: "task-machine-schedule",
+                component: TaskMachineScheduleComponent,
             },
             {
                 path: "",

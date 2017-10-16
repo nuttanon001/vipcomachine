@@ -51,8 +51,10 @@ export class UomDialogComponent
     // on init
     onInit(): void {
         this.columns = [
-            { prop: "UnitMeasureName", name: "uom.", flexGrow: 1 },
+            { prop: "UnitMeasureName", name: "uom.", flexGrow: 3 },
         ];
+
+        this.fastSelectd = true;
     }
 
     // on get data with lazy load

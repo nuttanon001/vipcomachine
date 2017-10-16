@@ -12,6 +12,7 @@ export interface TaskMachine {
     ActualStartDate?: Date;
     ActualEndDate?: Date;
     ActualManHours?: number;
+    TaskMachineStatus?: number;
     Creator?: string;
     CreateDate?: Date;
     Modifyer?: string;

@@ -14,6 +14,7 @@ import { DatatableComponent, TableColumn } from "@swimlane/ngx-datatable";
 export abstract class BaseDialogComponent
     <Model,Service> implements OnInit {
     selected: Model | undefined;
+    fastSelectd: boolean = false;
     //Subscription
     subscription: Subscription;
     //Column
@@ -48,6 +49,9 @@ export abstract class BaseDialogComponent
     onSelectedValue(value?: Model): void {
         if (value) {
             this.selected = value;
+            if (this.fastSelectd) {
+                this.onSelectedClick();
+            }
         }
     }
 

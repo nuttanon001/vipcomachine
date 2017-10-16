@@ -4,30 +4,24 @@ import { BaseMasterComponent } from "../base-component/base-master.component";
 // models
 import { Machine,Scroll,ScrollData } from "../../models/model.index";
 // services
-//import {
-//    DialogsService,
-//    DataTableServiceCommunicate,
-//    MachineService,
-//    MachineServiceCommunicate,
-//} from "../../services/service.index";
 import { DialogsService } from "../../services/dialog/dialogs.service";
 import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
 import { MachineService , MachineServiceCommunicate } from "../../services/machine/machine.service";
+import { AuthService } from "../../services/auth/auth.service";
 // timezone
 import * as moment from "moment-timezone";
 // 3rd Party
 import { TableColumn } from "@swimlane/ngx-datatable";
 
 @Component({
-    selector: 'machine-master',
-    templateUrl: './machine-master.component.html',
+    selector: "machine-master",
+    templateUrl: "./machine-master.component.html",
     styleUrls: ["../../styles/master.style.scss"],
     providers:[DataTableServiceCommunicate]
 })
-/** machine-master component*/
+// machine-master component*/
 export class MachineMasterComponent
-    extends BaseMasterComponent<Machine, MachineService>
-{
+    extends BaseMasterComponent<Machine, MachineService> {
     columns:Array<TableColumn> = [
         { prop: "MachineCode", name: "Code", flexGrow: 1 },
         { prop: "MachineName", name: "Name", flexGrow: 2 },
@@ -41,6 +35,7 @@ export class MachineMasterComponent
         serviceComDataTable: DataTableServiceCommunicate<Machine>,
         dialogsService: DialogsService,
         viewContainerRef: ViewContainerRef,
+        private serverAuth: AuthService,
     ) {
         super(
             service,
@@ -63,7 +58,7 @@ export class MachineMasterComponent
 
     // on change time zone befor update to webapi
     changeTimezone(value: Machine): Machine {
-        var zone = "Asia/Bangkok";
+        let zone:string = "Asia/Bangkok";
         if (value !== null) {
             if (value.CreateDate !== null) {
                 value.CreateDate = moment.tz(value.CreateDate, zone).toDate();
@@ -84,8 +79,9 @@ export class MachineMasterComponent
                         Operator.ModifyDate = moment.tz(Operator.ModifyDate, zone).toDate();
                     }
 
-                    if (value.MachineHasOperators)
+                    if (value.MachineHasOperators) {
                         value.MachineHasOperators[index] = Operator;
+                    }
                 });
             }
         }
@@ -94,6 +90,9 @@ export class MachineMasterComponent
 
     // on insert data
     onInsertToDataBase(value: Machine): void {
+        if (this.serverAuth.getAuth) {
+            value.Creator = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // insert data
@@ -106,13 +105,17 @@ export class MachineMasterComponent
                 console.error(error);
                 this.editValue.Creator = undefined;
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !",
+                    "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef);
             }
         );
     }
 
     // on update data
     onUpdateToDataBase(value: Machine): void {
+        if (this.serverAuth.getAuth) {
+            value.Modifyer = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // update data
@@ -124,7 +127,8 @@ export class MachineMasterComponent
             (error: any) => {
                 console.error(error);
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !",
+                    "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef);
             }
         );
     }

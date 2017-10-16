@@ -7,6 +7,7 @@ import { CuttingPlan, Scroll, ScrollData } from "../../models/model.index";
 import { DialogsService } from "../../services/dialog/dialogs.service";
 import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
 import { CuttingPlanService, CuttingPlanServiceCommunicate } from "../../services/cutting-plan/cutting-plan.service";
+import { AuthService } from "../../services/auth/auth.service";
 // timezone
 import * as moment from "moment-timezone";
 // 3rd party
@@ -35,6 +36,7 @@ export class CuttingMasterComponent
         serviceComDataTable: DataTableServiceCommunicate<CuttingPlan>,
         dialogsService: DialogsService,
         viewContainerRef: ViewContainerRef,
+        private serverAuth: AuthService,
     ) {
         super(
             service,
@@ -71,6 +73,9 @@ export class CuttingMasterComponent
 
     // on insert data
     onInsertToDataBase(value: CuttingPlan): void {
+        if (this.serverAuth.getAuth) {
+            value.Creator = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // insert data
@@ -90,6 +95,9 @@ export class CuttingMasterComponent
 
     // on update data
     onUpdateToDataBase(value: CuttingPlan): void {
+        if (this.serverAuth.getAuth) {
+            value.Modifyer = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // update data

@@ -15,6 +15,7 @@ namespace VipcoMachine.Models
         public string TaskMachineName { get; set; }
         [StringLength(200)]
         public string Description { get; set; }
+        public TaskMachineStatus? TaskMachineStatus { get; set; }
         public int? Priority { get; set; }
         // Quantity of material is send to task
         public double? TotalQuantity { get; set; }
@@ -48,5 +49,13 @@ namespace VipcoMachine.Models
         public TaskMachine PrecedingTaskMachine { get; set; }
         // TaskMachineHasOverTime
         public ICollection<TaskMachineHasOverTime> TaskMachineHasOverTimes { get; set; }
+    }
+
+    public enum TaskMachineStatus
+    {
+        Wait = 1,
+        Process = 2,
+        Complate = 3,
+        Cancel = 4
     }
 }

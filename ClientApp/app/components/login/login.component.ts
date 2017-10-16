@@ -9,7 +9,7 @@ import {
 } from "../../services/service.index";
 
 // classes
-import { IUser } from "../../models/model.index";
+import { User } from "../../models/model.index";
 
 @Component({
     templateUrl: "./login.component.html",
@@ -18,7 +18,7 @@ import { IUser } from "../../models/model.index";
 export class LoginComponent implements OnInit {
 
     loginForm: FormGroup;
-    user: IUser;
+    user: User;
 
     constructor(
         private authService: AuthService,
@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
     // init
     ngOnInit(): void {
         this.user = {
+            UserId : 0,
             PassWord : "",
             UserName : ""
         };
@@ -40,6 +41,7 @@ export class LoginComponent implements OnInit {
     // build form
     buildForm(): void {
         this.loginForm = this.fb.group({
+            UserId: [this.user.UserId],
             UserName: [this.user.UserName,
                 [
                     Validators.required,
@@ -57,13 +59,12 @@ export class LoginComponent implements OnInit {
 
     // login
     onLogin(): void {
+        console.log("On Login");
+
         this.user = this.loginForm.value;
-        let username = this.user.UserName;
-        let password = this.user.PassWord;
-        this.authService.login(username, password)
+        this.authService.login(this.user)
             .subscribe((data) => {
                 // login successful
-                let auth = this.authService.getAuth();
                 // no more alert Token
                 // alert("Our Token is: " + auth.access_token);
                 let redirect = this.authService.redirectUrl ? this.authService.redirectUrl : "/home";

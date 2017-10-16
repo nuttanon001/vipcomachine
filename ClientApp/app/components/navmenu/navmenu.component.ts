@@ -4,7 +4,8 @@ import { MdMenuTrigger } from "@angular/material";
 // service
 // unmark this if AuthService complete
 import { AuthService } from "../../services/service.index";
-
+// model
+import { User } from "../../models/model.index";
 @Component({
     selector: "nav-menu",
     templateUrl: "./navmenu.component.html",
@@ -20,6 +21,31 @@ export class NavMenuComponent implements OnInit {
         private router: Router
     ) { }
 
+    // Propertires
+    //=============================================\\
+    get GetLevel3(): boolean {
+        if (this.authService.getAuth) {
+            return (this.authService.getAuth.LevelUser || 0) > 3
+        }
+
+        else
+            return false;
+    }
+
+    get GetLevel2(): boolean {
+        if (this.authService.getAuth)
+            return (this.authService.getAuth.LevelUser || 0) > 1;
+        else
+            return false;
+    }
+
+    get GetLevel1(): boolean {
+        if (this.authService.getAuth)
+            return (this.authService.getAuth.LevelUser || 0) > 0;
+        else
+            return false;
+    }
+
     ngOnInit(): void {
     }
 
@@ -27,6 +53,13 @@ export class NavMenuComponent implements OnInit {
         //return false;
         // unmark this if AuthService complete
         return !this.authService.isLoggedIn;
+    }
+
+    get userName(): string {
+        if (this.authService.getAuth) {
+            return this.authService.getAuth.NameThai || "";
+        }
+        return "";
     }
 
     // On menu close
@@ -51,9 +84,7 @@ export class NavMenuComponent implements OnInit {
     }
     //=============================================\\
     onLogOut(): void {
-        // this.router.navigate(["home"]);
-
-        // unmark this if AuthService complete
         this.authService.logout();
+        this.router.navigate(["home"]);
     }
 }

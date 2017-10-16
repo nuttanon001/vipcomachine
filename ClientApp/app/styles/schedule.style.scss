@@ -17,6 +17,27 @@
     flex-grow:0;
 }
 
+.bottom-container {
+    order: 2;
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    height: 70vh;
+    overflow: scroll;
+}
+
+.form-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-top: solid 1px lightsteelblue;
+    border-bottom: solid 1px lightsteelblue;
+
+    i {
+        margin-left: 15px;
+    }
+}
+
 .center-content {
     display: flex;
     flex-grow: 1;
@@ -81,3 +102,19 @@ h4 {
     font-size: 20px;
 }
 
+.plan-col {
+    background-color: forestgreen;
+    color: forestgreen;
+    border-bottom:solid 1px black;
+}
+
+.actual-col {
+    background-color: steelblue;
+    color: steelblue;
+    /*border-top: solid 1px black;*/
+}
+
+.empty-col {
+    background-color: transparent;
+    color: transparent;
+}

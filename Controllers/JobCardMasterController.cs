@@ -288,6 +288,13 @@ namespace VipcoMachine.Controllers
                                     .Include(x => x.TypeMachine)
                                     .Include(x => x.ProjectCodeDetail.ProjectCodeMaster)
                                     .AsQueryable();
+
+                // Where
+                if (!string.IsNullOrEmpty(Scroll.Where))
+                {
+                    QueryData = QueryData.Where(x => x.Creator == Scroll.Where);
+                }
+
                 // Filter
                 var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
                                     : Scroll.Filter.ToLower().Split(null);
