@@ -22,3 +22,4 @@ export { UnitMeasureService, UnitMeasureServiceCommunicate } from "./units-measu
 export { CuttingPlanService, CuttingPlanServiceCommunicate } from "./cutting-plan/cutting-plan.service";
 export { TemplateProjectDetailService, TemplateProjectDetailServiceCommunicate } from "./template-project-detail/template-project-detail.service";
 export { DataTableServiceCommunicate } from "./data-table/data-table.service";
+export { UserService } from "./user/user.service";

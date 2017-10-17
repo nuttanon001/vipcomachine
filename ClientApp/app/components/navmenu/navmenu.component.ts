@@ -47,17 +47,26 @@ export class NavMenuComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        // reset login status
+        this.authService.logout();
     }
 
     get showLogin(): boolean {
         //return false;
         // unmark this if AuthService complete
-        return !this.authService.isLoggedIn;
+        if (this.authService) {
+            if (this.authService.isLoggedIn) {
+                return !this.authService.isLoggedIn;
+            }
+        }
+        return true;
     }
 
     get userName(): string {
         if (this.authService.getAuth) {
-            return this.authService.getAuth.NameThai || "";
+            if (this.authService.getAuth.NameThai) {
+                return " " + this.authService.getAuth.NameThai + " ";
+            }
         }
         return "";
     }
@@ -65,7 +74,9 @@ export class NavMenuComponent implements OnInit {
     // On menu close
     //=============================================\\
     menuOnCloseMenu1(): void {
-        this.subMenu.closeMenu();
+        if (this.subMenu) {
+            this.subMenu.closeMenu();
+        }
     }
 
     menuOnCloseMenu2(): void {
@@ -80,11 +91,13 @@ export class NavMenuComponent implements OnInit {
     }
 
     menuOnOpenMenu2(): void {
-        this.subMenu.openMenu();
+        if (this.subMenu) {
+            this.subMenu.openMenu();
+        }
     }
     //=============================================\\
     onLogOut(): void {
         this.authService.logout();
-        this.router.navigate(["home"]);
+        this.router.navigate(["login"]);
     }
 }

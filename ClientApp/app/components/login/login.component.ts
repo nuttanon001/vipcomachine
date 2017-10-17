@@ -33,7 +33,8 @@ export class LoginComponent implements OnInit {
         this.user = {
             UserId : 0,
             PassWord : "",
-            UserName : ""
+            UserName: "",
+            LevelUser: 1,
         };
         this.buildForm();
     }
@@ -59,7 +60,7 @@ export class LoginComponent implements OnInit {
 
     // login
     onLogin(): void {
-        console.log("On Login");
+        // console.log("On Login");
 
         this.user = this.loginForm.value;
         this.authService.login(this.user)

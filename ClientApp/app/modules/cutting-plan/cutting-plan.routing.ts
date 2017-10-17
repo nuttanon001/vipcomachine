@@ -4,11 +4,14 @@ import { Routes, RouterModule } from "@angular/router";
 import { CuttingCenterComponent } from "../../components/cutting-plan/cutting-center.component";
 import { CuttingMasterComponent } from "../../components/cutting-plan/cutting-master.component";
 import { ImportCsvComponent } from "../../components/cutting-plan/import-csv.component";
+// service
+import { AuthGuard } from "../../services/auth/auth-guard.service";
 
 const cuttingPlanRoutes: Routes = [
     {
         path: "cutting-plan",
         component: CuttingCenterComponent,
+        canActivate: [AuthGuard],
         children: [
             {
                 path: "import-csv",

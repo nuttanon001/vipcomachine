@@ -36,11 +36,9 @@
   <ItemGroup>
     <None Remove="ClientApp\app\components\base-component\base-dialog.component.ts" />
     <None Remove="ClientApp\app\components\base-component\base-edit.component.ts" />
-    <None Remove="ClientApp\app\components\base-component\base-input.component.ts" />
     <None Remove="ClientApp\app\components\base-component\base-master.component.ts" />
     <None Remove="ClientApp\app\components\base-component\base-view.component.ts" />
     <None Remove="ClientApp\app\components\base-component\data-table.component.ts" />
-    <None Remove="ClientApp\app\components\base-component\textarea-expanded.component.ts" />
     <None Remove="ClientApp\app\components\developer\developer-center.component.ts" />
     <None Remove="ClientApp\app\components\developer\developer-jobcard.component.ts" />
     <None Remove="ClientApp\app\components\developer\developer-machine-type.component.ts" />
@@ -48,7 +46,6 @@
     <None Remove="ClientApp\app\components\developer\developer-master.component.ts" />
     <None Remove="ClientApp\app\components\developer\developer.index.ts" />
     <None Remove="ClientApp\app\components\dialog\dialog.index.ts" />
-    <None Remove="ClientApp\app\components\dialog\temp-cutting-plan-dialog.component.ts" />
     <None Remove="ClientApp\app\components\jobcard\jobcard-center.component.ts" />
     <None Remove="ClientApp\app\components\jobcard\jobcard-master.component.ts" />
     <None Remove="ClientApp\app\components\jobcard\jobcard-view-waiting.component.ts" />
@@ -115,6 +112,7 @@
     <None Remove="ClientApp\app\services\type-machine\type-machine.service.ts" />
     <None Remove="ClientApp\app\services\type-standard-time\type-standard-time.service.ts" />
     <None Remove="ClientApp\app\services\units-measure\units-measure.service.ts" />
+    <None Remove="ClientApp\app\services\user\user.service.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -125,12 +123,9 @@
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\app\components\base-component\base-dialog.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\base-component\base-edit.component.ts" />
-    <TypeScriptCompile Include="ClientApp\app\components\base-component\base-input.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\base-component\base-master.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\base-component\base-view.component.ts" />
-    <TypeScriptCompile Include="ClientApp\app\components\base-component\data-table-temp.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\base-component\data-table.component.ts" />
-    <TypeScriptCompile Include="ClientApp\app\components\base-component\textarea-expanded.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\cutting-plan\cutting-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\developer\developer-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\developer\developer-jobcard.component.ts" />
@@ -139,7 +134,6 @@
     <TypeScriptCompile Include="ClientApp\app\components\developer\developer-master.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\developer\developer.index.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\dialog\dialog.index.ts" />
-    <TypeScriptCompile Include="ClientApp\app\components\dialog\temp-cutting-plan-dialog.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\jobcard\jobcard-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\jobcard\jobcard-master.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\jobcard\jobcard-view-waiting.component.ts" />
@@ -211,6 +205,7 @@
     <TypeScriptCompile Include="ClientApp\app\services\type-machine\type-machine.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\type-standard-time\type-standard-time.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\units-measure\units-measure.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\user\user.service.ts" />
   </ItemGroup>
 
   <ItemGroup>

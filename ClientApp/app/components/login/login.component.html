@@ -28,15 +28,15 @@
                                id="PassWord" formControlName="PassWord" />
                     </div>
                     <!--<validation-messages [control]="loginForm.controls.PassWord"></validation-messages>-->
+				  <div class="card-footer child-row-container">
+					<button type="submit" class="btn btn-success" [disabled]="!loginForm.valid" (click)="onLogin()">
+						Login
+					</button>
+					<button type="button" class="btn btn-info mx-2" [routerLink]="['/register']" routerLinkActive="active">
+						Register
+					</button>
+				</div>
                 </form>
-            </div>
-            <div class="card-footer child-row-container">
-                <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid" (click)="onLogin()">
-                    Login
-                </button>
-                <button type="button" class="btn btn-info mx-2">
-                    Register
-                </button>
             </div>
         </div>
     </div>

@@ -4,11 +4,14 @@ import { Routes, RouterModule } from "@angular/router";
 import { JobCardCenterComponent } from "../../components/jobcard/jobcard-center.component";
 import { JobCardMasterComponent } from "../../components/jobcard/jobcard-master.component";
 import { JobCardWaitingComponent } from "../../components/jobcard/jobcard-waiting.component";
+// service
+import { AuthGuard } from "../../services/auth/auth-guard.service";
 
 const jobcardRoutes: Routes = [
     {
         path: "jobcard",
         component: JobCardCenterComponent,
+        canActivate: [AuthGuard],
         children: [
             {
                 path: "jobcard-waiting",

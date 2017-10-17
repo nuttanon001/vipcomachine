@@ -9,6 +9,7 @@ import { AppComponent } from "./components/app/app.component";
 import { NavMenuComponent } from "./components/navmenu/navmenu.component";
 import { HomeComponent } from "./components/home/home.component";
 import { LoginComponent } from "./components/login/login.component";
+import { RegisterComponent } from "./components/login/register.component";
 import { ProjectMasterComponent } from "./components/project-master/project-master.component";
 import { JobCardViewComponent } from "./components/jobcard/jobcard-view.component";
 // modules
@@ -31,6 +32,7 @@ import "popper.js";
         HomeComponent,
         LoginComponent,
         NavMenuComponent,
+        RegisterComponent,
         // JobCardViewComponent,
         // ProjectMasterComponent,
     ],
@@ -44,6 +46,7 @@ import "popper.js";
             { path: "", redirectTo: "home", pathMatch: "full" },
             { path: "home", component: HomeComponent },
             { path: "login", component: LoginComponent },
+            { path: "register", component: RegisterComponent },
             // { path: "project", component: ProjectMasterComponent },
             { path: "**", redirectTo: "home" }
         ]),

@@ -3890,9 +3890,9 @@
       "resolved": "https://registry.npmjs.org/preserve/-/preserve-0.2.0.tgz"
     },
     "primeng": {
-      "version": "4.2.0-rc.1",
-      "from": "primeng@latest",
-      "resolved": "https://registry.npmjs.org/primeng/-/primeng-4.2.0-rc.1.tgz"
+      "version": "4.2.0",
+      "from": "primeng@4.2.0",
+      "resolved": "https://registry.npmjs.org/primeng/-/primeng-4.2.0.tgz"
     },
     "private": {
       "version": "0.1.7",

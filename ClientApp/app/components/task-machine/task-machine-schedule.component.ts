@@ -117,7 +117,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
     onValueChanged(data?: any): void {
         if (!this.reportForm) { return; }
 
-        console.log("onValueChanged:", data);
+        // console.log("onValueChanged:", data);
 
         this.schedule = this.reportForm.value;
         if (this.schedule.JobNo) {
@@ -301,7 +301,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
 
         //imitate db connection over a network
 
-        console.log("Lazy:", event);
+        // console.log("Lazy:", event);
 
         this.reportForm.patchValue({
             Skip: event.first,

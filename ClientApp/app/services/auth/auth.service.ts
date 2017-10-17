@@ -26,7 +26,7 @@ export class AuthService {
             }))
             .map((response: Response) => {
                 let auth = response.json();
-                console.log(auth);
+                // console.log(auth);
                 this.setAuth = auth;
                 this.userName = auth.UserName; //data.UserName;
                 return auth;

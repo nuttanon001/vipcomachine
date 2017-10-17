@@ -68,6 +68,19 @@ namespace VipcoMachine.Controllers
             return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
         }
 
+        // GET: api/User/EmployeeAlready
+        [HttpGet("EmployeeAlready/{EmpCode}")]
+        public async Task<IActionResult> EmployeeAlready(string EmpCode)
+        {
+            Expression<Func<User, bool>> condition = u => u.EmpCode == EmpCode;
+            if (await this.repository.AnyDataAsync(condition))
+            {
+                return NotFound(new { Error = " this employee was already in system." });
+            }
+
+            return new JsonResult(new { Result = true }, this.DefaultJsonSettings);
+        }
+
         #endregion
 
         #region POST
@@ -92,10 +105,20 @@ namespace VipcoMachine.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]User nUser)
         {
-            nUser.CreateDate = DateTime.Now;
-            nUser.Creator = nUser.Creator ?? "Someone";
+            if (nUser != null)
+            {
+                Expression<Func<User, bool>> condition = u => u.UserName.ToLower() == nUser.UserName.ToLower();
+                if (await this.repository.AnyDataAsync(condition))
+                {
+                    return NotFound(new { Error = " this username was already in system." });
+                }
 
-            return new JsonResult(await this.repository.AddAsync(nUser), this.DefaultJsonSettings);
+                nUser.CreateDate = DateTime.Now;
+                nUser.Creator = nUser.Creator ?? "Someone";
+
+                return new JsonResult(await this.repository.AddAsync(nUser), this.DefaultJsonSettings);
+            }
+            return NotFound(new { Error = "Not found user data !!!" });
         }
         #endregion
 
@@ -104,10 +127,14 @@ namespace VipcoMachine.Controllers
         [HttpPut("{key}")]
         public async Task<IActionResult> PutByNumber(int key, [FromBody]User uUser)
         {
-            uUser.ModifyDate = DateTime.Now;
-            uUser.Modifyer = uUser.Modifyer ?? "Someone";
+            if (uUser != null)
+            {
+                uUser.ModifyDate = DateTime.Now;
+                uUser.Modifyer = uUser.Modifyer ?? "Someone";
 
-            return new JsonResult(await this.repository.UpdateAsync(uUser, key), this.DefaultJsonSettings);
+                return new JsonResult(await this.repository.UpdateAsync(uUser, key), this.DefaultJsonSettings);
+            }
+            return NotFound(new { Error = "Not found user data !!!" });
         }
         #endregion
 

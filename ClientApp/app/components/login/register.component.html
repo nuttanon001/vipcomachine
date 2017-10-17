@@ -1,1 +1,65 @@
-﻿<div>register Component</div>
+﻿<div class="edit-container">
+    <div class="mb-3 mx-5">
+        <h4>
+            Register new user.
+        </h4>
+        <p>
+            Please fill out this form completely and save it.
+        </p>
+    </div>
+
+
+    <form [formGroup]="userForm">
+        <div class="my-form">
+            <label for="UserName" class="my-label">Username:</label>
+            <div class="col-sm-4">
+                <input type="text" class="my-input" placeholder="Insert username here"
+                       id="UserName" formControlName="UserName" required>
+                <validation-messages [control]="userForm.controls.UserName"></validation-messages>
+            </div>
+
+            <label for="PassWord" class="my-label">Password:</label>
+            <div class="col-sm-4">
+                <input type="password" class="my-input" placeholder="Insert password here"
+                       id="PassWord" formControlName="PassWord" required>
+                <validation-messages [control]="userForm.controls.PassWord"></validation-messages>
+            </div>
+        </div>
+
+        <div class="my-form">
+            <label for="MailAddress" class="my-label">Mail address:</label>
+            <div class="col-sm-4">
+                <input type="text" class="my-input" placeholder="Insert mail address here"
+                       id="MailAddress" formControlName="MailAddress">
+                <validation-messages [control]="userForm.controls.MailAddress"></validation-messages>
+            </div>
+        </div>
+
+        <div class="my-form">
+            <label for="EmpCode" class="my-label">Employee Number:</label>
+            <div class="col-sm-4">
+                <input type="text" class="my-input" placeholder="Insert employee number here"
+                       id="EmpCode" formControlName="EmpCode" required>
+                <validation-messages [control]="userForm.controls.EmpCode"></validation-messages>
+            </div>
+
+            <label for="NameThai" class="my-label">Employee Name:</label>
+            <div class="col-sm-4">
+                <input type="text" class="my-input" placeholder="Name display after you insert employee number."
+                       id="NameThai" formControlName="NameThai" readonly required>
+                <validation-messages [control]="userForm.controls.NameThai"></validation-messages>
+            </div>
+        </div>
+    </form>
+
+    <div class="chlid-edit-container-center m-5">
+        <button type="button" md-raised-button color="primary" [disabled]="!userForm.valid" (click)="onSubmit()">
+            <i class="fa fa-registered" aria-hidden="true" ></i>
+            Register User
+        </button>
+        <button type="button" class="mx-2" md-raised-button color="warn" (click)="onGoBack()">
+            <i class="fa fa-minus" aria-hidden="true" ></i>
+            Cencel
+        </button>
+    </div>
+</div>

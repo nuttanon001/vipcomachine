@@ -13,7 +13,8 @@ import { BaseEditComponent } from "../base-component/base-edit.component";
 import { TypeMachineService } from "../../services/type-machine/type-machine.service";
 import {
     JobCardMasterService, JobCardDetailService,
-    JobCardMasterServiceCommunicate, DialogsService
+    JobCardMasterServiceCommunicate, DialogsService,
+    AuthService
 } from "../../services/service.index";
 // 3rd party
 import { TableColumn } from "@swimlane/ngx-datatable";
@@ -61,6 +62,7 @@ export class JobCardEditComponent
         private serviceMachineType: TypeMachineService,
         private viewContainerRef : ViewContainerRef,
         private fb: FormBuilder,
+        private serviceAuth: AuthService
     ) {
         super(
             service,
@@ -101,6 +103,12 @@ export class JobCardEditComponent
                 JobCardMasterStatus: 1,
                 JobCardDate: new Date(),
             };
+
+            if (this.serviceAuth.getAuth){
+                this.editValue.EmpWrite = this.serviceAuth.getAuth.EmpCode || "";
+                this.editValue.EmployeeWriteString = this.serviceAuth.getAuth.NameThai || "";
+            }
+
             this.defineData();
         }
     }

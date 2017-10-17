@@ -4,6 +4,8 @@ import { Routes, RouterModule } from "@angular/router";
 import { TaskMachineCenterComponent } from "../../components/task-machine/task-machine-center.component";
 import { TaskMachineMasterComponent } from "../../components/task-machine/task-machine-master.component";
 import { TaskMachineScheduleComponent } from "../../components/task-machine/task-machine-schedule.component";
+// service
+import { AuthGuard } from "../../services/auth/auth-guard.service";
 
 const taskMachineRoutes: Routes = [
     {
@@ -13,6 +15,7 @@ const taskMachineRoutes: Routes = [
             {
                 path: "jobcard-detail/:condition",
                 component: TaskMachineMasterComponent,
+                canActivate: [AuthGuard],
             },
             {
                 path: "task-machine-schedule/:condition",
@@ -25,6 +28,7 @@ const taskMachineRoutes: Routes = [
             {
                 path: "",
                 component: TaskMachineMasterComponent,
+                canActivate: [AuthGuard],
             }
         ],
     }

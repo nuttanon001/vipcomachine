@@ -38,6 +38,14 @@
     overflow:scroll;
 }
 
+.chlid-edit-container-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    text-align: center;
+}
+
 .container {
     margin: 0;
     padding: 0;

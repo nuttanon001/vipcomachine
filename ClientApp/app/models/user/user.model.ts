@@ -3,7 +3,7 @@
     UserName?: string;
     PassWord?: string;
     MailAddress?: string;
-    LevelUser?: number;
+    LevelUser: number;
     Creator?: string;
     CreateDate?: Date;
     Modifyer?: string;

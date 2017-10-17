@@ -10,6 +10,7 @@ import { TaskMachineEditComponent } from "../../components/task-machine/task-mac
 import { TaskMachineMasterComponent } from "../../components/task-machine/task-machine-master.component";
 import { TaskMachineViewComponent } from "../../components/task-machine/task-machine-view.component";
 import { TaskMachineScheduleComponent } from "../../components/task-machine/task-machine-schedule.component";
+import { TaskMachineProgressComponent } from "../../components/task-machine/task-machine-progress.component";
 // module
 import { TaskMachineRouters } from "./task-machine.routing";
 import {
@@ -29,7 +30,8 @@ import {
         TaskMachineEditComponent,
         TaskMachineMasterComponent,
         TaskMachineViewComponent,
-        TaskMachineScheduleComponent
+        TaskMachineScheduleComponent,
+        TaskMachineProgressComponent
     ],
     imports: [
         // angular
