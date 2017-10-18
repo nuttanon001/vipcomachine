@@ -1,5 +1,5 @@
 ﻿// angular
-import { Component, ViewContainerRef } from "@angular/core";
+import { Component, ViewContainerRef, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
 import {
     trigger,state,style,
@@ -49,10 +49,13 @@ export class JobCardEditComponent
     //    { prop: "Quality", name: "Quality", flexGrow: 1 },
     //    { prop: "UnitsMeasureString", name: "Uom", flexGrow: 1 },
     // ];
+
     jobDetail?: JobCardDetail;
     indexJobDetail: number;
     machineTypes: Array<SelectItem>;
     attachFiles: Array<AttachFile> = new Array;
+    lockSave: boolean = false;
+    index: number = 0;
     // jobcard-edit ctor
     constructor(
         service: JobCardMasterService,
@@ -73,6 +76,10 @@ export class JobCardEditComponent
     // on get data by key
     onGetDataByKey(value?: JobCardMaster): void {
         if (value) {
+            if (value.MachineUser) {
+                //console.log(this.tabGroup);
+            }
+
             this.service.getOneKeyNumber(value.JobCardMasterId)
                 .subscribe(dbJobCardMaster => {
                     this.editValue = dbJobCardMaster;
@@ -90,6 +97,18 @@ export class JobCardEditComponent
                     if (this.editValue.JobCardMasterId) {
                         this.serviceDetail.getByMasterId(this.editValue.JobCardMasterId)
                             .subscribe(dbDetail => {
+
+                                let level: number = 1;
+                                if (this.serviceAuth.getAuth) {
+                                    level = this.serviceAuth.getAuth.LevelUser;
+                                }
+                                if (level < 2) {
+                                    if (dbDetail.find(item => item.JobCardDetailStatus === 2)) {
+                                        this.serviceDialogs.context("Warning Message", "คุณไม่สามารถแก้ไขข้อมูล ที่ดำเนินการแล้วได้ !!!", this.viewContainerRef);
+                                        this.lockSave = true;
+                                    }
+                                }
+
                                 this.editValue.JobCardDetails = dbDetail.slice();
                                 this.editValueForm.patchValue({
                                     JobCardDetails: this.editValue.JobCardDetails.slice(),
@@ -398,5 +417,11 @@ export class JobCardEditComponent
         } else {
             return { "is-wait": true };
         }
+    }
+
+    // on valid data override
+    onFormValid(isValid: boolean): void {
+        this.editValue = this.editValueForm.value;
+        this.communicateService.toParent([this.editValue, (isValid && !this.lockSave)]);
     }
 }

@@ -106,7 +106,8 @@
                         <label for="PlannedStartDate" class="my-label">PlannedStart:</label>
                         <div class="col-sm-4">
                             <p-calendar formControlName="PlannedStartDate" [showIcon]="true"
-                                        id="PlannedStartDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
+                                        id="PlannedStartDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        [maxDate]="editValueForm.controls.PlannedEndDate.value">
                             </p-calendar>
                             <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.PlannedStartDate"></validation-messages>
@@ -115,7 +116,8 @@
                         <label for="PlannedEndDate" class="my-label">PlannedEnd:</label>
                         <div class="col-sm-4">
                             <p-calendar formControlName="PlannedEndDate" [showIcon]="true"
-                                        id="PlannedEndDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
+                                        id="PlannedEndDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        [minDate]="editValueForm.controls.PlannedStartDate.value">
                             </p-calendar>
                             <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.PlannedEndDate"></validation-messages>
@@ -126,7 +128,9 @@
                         <label for="ActualStartDate" class="my-label">ActualStart:</label>
                         <div class="col-sm-4">
                             <p-calendar formControlName="ActualStartDate" [showIcon]="true"
-                                        id="ActualStartDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
+                                        id="ActualStartDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        [minDate]="editValueForm.controls.PlannedStartDate.value"
+                                        [maxDate]="editValueForm.controls.ActualEndDate.value">
                             </p-calendar>
                             <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.ActualStartDate"></validation-messages>
@@ -135,7 +139,8 @@
                         <label for="ActualEndDate" class="my-label">ActualEnd:</label>
                         <div class="col-sm-4">
                             <p-calendar formControlName="ActualEndDate" [showIcon]="true"
-                                        id="ActualEndDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
+                                        id="ActualEndDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        [minDate]="editValueForm.controls.ActualStartDate.value">
                             </p-calendar>
                             <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.ActualEndDate"></validation-messages>

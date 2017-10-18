@@ -28,6 +28,7 @@ namespace VipcoMachine.Controllers
         private IRepository<TaskMachine> repository;
         private IRepository<TaskMachineHasOverTime> repositoryOverTime;
         private IRepository<Machine> repositoryMachine;
+        private IRepository<MachineHasOperator> repositoryOperator;
         private IRepository<JobCardDetail> repositoryJobDetail;
         private IRepository<JobCardMaster> repositoryJobMaster;
         private IMapper mapper;
@@ -62,24 +63,20 @@ namespace VipcoMachine.Controllers
                     if (jobCardDetail.JobCardMasterId != null)
                     {
                         var jobCardMaster = await this.repositoryJobMaster.GetAsynvWithIncludes(jobCardDetail.JobCardMasterId.Value, "JobCardMasterId", Includes);
-                        if (!jobCardMaster.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Wait))
+
+                        if (jobCardMaster != null)
                         {
-                            jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Complete;
+                            if (!jobCardMaster.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Wait))
+                                jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Complete;
+                            else
+                            {
+                                if (jobCardMaster.JobCardMasterStatus == JobCardMasterStatus.Complete)
+                                    jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Wait;
+                            }
+
                             jobCardMaster.ModifyDate = DateTime.Now;
                             jobCardMaster.Modifyer = Create;
-
                             await this.repositoryJobMaster.UpdateAsync(jobCardMaster, jobCardMaster.JobCardMasterId);
-                        }
-                        else
-                        {
-                            if (jobCardMaster.JobCardMasterStatus == JobCardMasterStatus.Complete)
-                            {
-                                jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Wait;
-                                jobCardMaster.ModifyDate = DateTime.Now;
-                                jobCardMaster.Modifyer = Create;
-
-                                await this.repositoryJobMaster.UpdateAsync(jobCardMaster, jobCardMaster.JobCardMasterId);
-                            }
                         }
                     }
 
@@ -120,6 +117,45 @@ namespace VipcoMachine.Controllers
             return "xxxx/xx/xx_xx-xx/xx/xx/xx/xxxx";
         }
 
+        private async Task<double> CalculatorManHour(TaskMachine taskMachine)
+        {
+            if (taskMachine != null)
+            {
+                if (taskMachine.ActualStartDate.HasValue && taskMachine.ActualEndDate.HasValue
+                    && taskMachine.MachineId.HasValue)
+                {
+                    var Operator = await this.repositoryOperator.GetAllAsQueryable()
+                                                .CountAsync(x => x.MachineId == taskMachine.MachineId);
+                    Operator = Operator == 0 ? 1 : Operator;
+
+                    double ManHour = 0;
+                    int TotalDay = (taskMachine.ActualEndDate.Value.Date - taskMachine.ActualStartDate.Value.Date).Days;
+                    TotalDay = TotalDay == 0 ? 1 : TotalDay;
+
+                    // Day x Hour x Operator
+                    ManHour = (TotalDay * 8) * Operator;
+
+                    // OverTime
+                    var OverTimes = await this.repositoryOverTime.GetAllAsQueryable()
+                                                            .Where(x => x.TaskMachineId == taskMachine.TaskMachineId)
+                                                            .ToListAsync();
+
+                    if (OverTimes != null)
+                    {
+                        OverTimes.ForEach(item =>
+                        {
+                            ManHour += item.OverTimePerDate ?? 0;
+                        });
+                    }
+
+                    return ManHour;
+                }
+
+            }
+
+            return 0;
+        }
+
         #endregion PrivateMenbers
 
         #region Constructor
@@ -128,6 +164,7 @@ namespace VipcoMachine.Controllers
                 IRepository<TaskMachine> repo,
                 IRepository<TaskMachineHasOverTime> repoOverTime,
                 IRepository<Machine> repoMachine,
+                IRepository<MachineHasOperator> repoOperator,
                 IRepository<JobCardMaster> repoMaster,
                 IRepository<JobCardDetail> repoDetail,
                 IMapper map)
@@ -137,6 +174,7 @@ namespace VipcoMachine.Controllers
             this.repositoryJobMaster = repoMaster;
             this.repositoryJobDetail = repoDetail;
             this.repositoryMachine = repoMachine;
+            this.repositoryOperator = repoOperator;
             this.mapper = map;
             this.helpers = new HelpersClass<TaskMachine>();
         }
@@ -445,6 +483,13 @@ namespace VipcoMachine.Controllers
                         await this.UpdateJobCard(InsertComplate.JobCardDetailId, InsertComplate.Creator);
                     }
                 }
+
+                if (InsertComplate.TaskMachineStatus == TaskMachineStatus.Complate)
+                {
+                    InsertComplate.ActualManHours = await this.CalculatorManHour(InsertComplate);
+                    await this.repository.UpdateAsync(InsertComplate, InsertComplate.TaskMachineId);
+                }
+
                 return new JsonResult(InsertComplate, this.DefaultJsonSettings);
             }
 
@@ -538,6 +583,12 @@ namespace VipcoMachine.Controllers
 
                             await this.repositoryOverTime.AddAsync(uOvertime);
                         }
+                    }
+
+                    if (updateComplate.TaskMachineStatus == TaskMachineStatus.Complate)
+                    {
+                        updateComplate.ActualManHours = await this.CalculatorManHour(updateComplate);
+                        await this.repository.UpdateAsync(updateComplate, updateComplate.TaskMachineId);
                     }
                 }
                 return new JsonResult(updateComplate, this.DefaultJsonSettings);

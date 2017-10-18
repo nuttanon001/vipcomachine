@@ -13,6 +13,7 @@ import {
     StandardTime,
     UnitsMeasure,
     JobCardMaster,
+    TaskMachine,
 } from '../../models/model.index';
 
 // components
@@ -23,7 +24,7 @@ import {
     MachineDialogComponent, StandardTimeDialogComponent,
     StdtimeSelectDialogComponent, CuttingPlanDialogComponent,
     UomDialogComponent, JobcardDialogComponent,
-    JobCardWatingDialogComponent
+    JobCardWatingDialogComponent, TaskMachineDialogComponent
  } from "../../components/dialog/dialog.index";
 
 @Injectable()
@@ -230,6 +231,22 @@ export class DialogsService {
 
         // open dialog
         dialogRef = this.dialog.open(JobCardWatingDialogComponent, config);
+        return dialogRef.afterClosed();
+    }
+
+    public dialogUpdateProgessTaskMachine(viewContainerRef: ViewContainerRef, TaskMachineId: number): Observable<TaskMachine> {
+        let dialogRef: MdDialogRef<TaskMachineDialogComponent>;
+        let config = new MdDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        config.data = TaskMachineId;
+        config.height = "650px";
+        config.width = "1200px";
+        config.hasBackdrop = true;
+
+        // open dialog
+        dialogRef = this.dialog.open(TaskMachineDialogComponent, config);
         return dialogRef.afterClosed();
     }
 }

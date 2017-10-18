@@ -368,7 +368,7 @@ export class TaskMachineEditComponent
                     this.editValueForm.patchValue({
                         MachineId: machine.MachineId,
                         MachineString: `${machine.MachineCode}/${machine.MachineName}`
-                    })
+                    });
                 }
             });
     }

@@ -30,4 +30,6 @@ export interface JobCardMaster {
     //Attach
     AttachFile?: FileList;
     RemoveAttach?: Array<number>;
+    // Option
+    MachineUser?: boolean;
 }

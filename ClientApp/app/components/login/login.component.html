@@ -3,12 +3,13 @@
     </div>
     <div class="col-md-auto">
         <div *ngIf="user" class="card" style="width: 30rem;">
-            <div class="card-header text-success">
-                <h4 class="card-title">Login</h4>
-                <h6 class="card-subtitle mb-2 text-muted">this vipco machine system need authentication user.</h6>
-            </div>
-            <div class="card-body">
-                <form [formGroup]="loginForm" id="loginForm" (ngSubmit)="onLogin()">
+            <form [formGroup]="loginForm" id="loginForm" (ngSubmit)="onLogin()">
+
+                <div class="card-header text-success">
+                    <h4 class="card-title">Login</h4>
+                    <h6 class="card-subtitle mb-2 text-muted">this vipco machine system need authentication user.</h6>
+                </div>
+                <div class="card-body">
                     <!-- Row 1 -->
                     <div class="input-group">
                         <span class="input-group-addon alert-primary">
@@ -28,16 +29,16 @@
                                id="PassWord" formControlName="PassWord" />
                     </div>
                     <!--<validation-messages [control]="loginForm.controls.PassWord"></validation-messages>-->
-				  <div class="card-footer child-row-container">
-					<button type="submit" class="btn btn-success" [disabled]="!loginForm.valid" (click)="onLogin()">
-						Login
-					</button>
-					<button type="button" class="btn btn-info mx-2" [routerLink]="['/register']" routerLinkActive="active">
-						Register
-					</button>
-				</div>
-                </form>
-            </div>
+                </div>
+                <div class="card-footer chlid-edit-container-center">
+                    <button type="submit" class="btn btn-success" [disabled]="!loginForm.valid" (click)="onLogin()">
+                        Login
+                    </button>
+                    <button type="button" class="btn btn-info mx-2" [routerLink]="['/register']" routerLinkActive="active">
+                        Register
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
     <div class="col col-lg-2">

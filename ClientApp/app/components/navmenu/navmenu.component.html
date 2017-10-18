@@ -44,11 +44,17 @@
                             <i class="fa fa-history" aria-hidden="true"></i>
                             <span>Require Machine Waiting</span>
                         </button>
+
+                        <button md-menu-item [routerLink]="['/task-machine/task-machine-schedule','2']" routerLinkActive="active">
+                            <i class="fa fa-tasks" aria-hidden="true"></i>
+                            <span>Progress Machine</span>
+                        </button>
+                        <hr />
                         <button md-menu-item [routerLink]="['/task-machine']" routerLinkActive="active">
                             <i class="fa fa-tachometer" aria-hidden="true"></i>
                             <span>Task Machine</span>
                         </button>
-                        <hr />
+
                         <button md-menu-item [routerLink]="['/machine']" routerLinkActive="active">
                             <i class="fa fa-plug" aria-hidden="true"></i>
                             <span>Machine</span>
@@ -69,10 +75,6 @@
                         <button md-menu-item [routerLink]="['/cutting-plan/import-csv']" routerLinkActive="active">
                             <i class="fa fa-inbox" aria-hidden="true"></i>
                             <span>Cutting Plan Import</span>
-                        </button>
-                        <button md-menu-item [routerLink]="['/task-machine/task-machine-schedule','2']" routerLinkActive="active">
-                            <i class="fa fa-calendar-check-o" aria-hidden="true"></i>
-                            <span>Machine Schedule</span>
                         </button>
                         <!--<button md-menu-item [routerLink]="['/developer']" routerLinkActive="active">
                             <i class="fa fa-university" aria-hidden="true"></i>

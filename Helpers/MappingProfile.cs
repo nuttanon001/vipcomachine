@@ -180,7 +180,7 @@ namespace VipcoMachine.Helpers
             CreateMap<User, UserViewModel>()
                 // CuttingPlanNo
                 .ForMember(x => x.NameThai,
-                           o => o.MapFrom(s => s.Employee == null ? "-" : s.Employee.NameThai))
+                           o => o.MapFrom(s => s.Employee == null ? "-" : $"คุณ{s.Employee.NameThai}"))
                 .ForMember(x => x.Employee, o => o.Ignore());
 
             #endregion

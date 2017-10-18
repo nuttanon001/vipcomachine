@@ -13,7 +13,10 @@ import { User } from "../../models/model.index";
 
 @Component({
     templateUrl: "./login.component.html",
-    styleUrls: ["../../styles/login.style.scss"],
+    styleUrls: [
+        "../../styles/login.style.scss",
+        "../../styles/edit.style.scss"
+    ],
 })
 export class LoginComponent implements OnInit {
 

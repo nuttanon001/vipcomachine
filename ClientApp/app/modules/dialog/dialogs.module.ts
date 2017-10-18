@@ -15,7 +15,8 @@ import {
     ErrorDialog, MachineDialogComponent,
     MaterialDialogComponent, ProjectDialogComponent,
     StandardTimeDialogComponent, StdtimeSelectDialogComponent,
-    UomDialogComponent,JobcardDialogComponent,JobCardWatingDialogComponent
+    UomDialogComponent, JobcardDialogComponent,
+    JobCardWatingDialogComponent, TaskMachineDialogComponent,
 } from "../../components/dialog/dialog.index";
 import { JobCardViewWaitingComponent } from "../../components/jobcard/jobcard-view-waiting.component";
 // modules
@@ -49,6 +50,7 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         StdtimeSelectDialogComponent,
         JobCardWatingDialogComponent,
         JobcardDialogComponent,
+        TaskMachineDialogComponent,
     ],
     declarations: [
         ErrorDialog,
@@ -65,6 +67,7 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         JobCardWatingDialogComponent,
         JobcardDialogComponent,
         JobCardViewWaitingComponent,
+        TaskMachineDialogComponent,
     ],
     providers: [
         DialogsService,
@@ -88,6 +91,7 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         JobCardWatingDialogComponent,
         JobcardDialogComponent,
         JobCardViewWaitingComponent,
+        TaskMachineDialogComponent,
     ],
 })
 export class DialogsModule { }

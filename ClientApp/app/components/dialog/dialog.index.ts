@@ -12,3 +12,4 @@ export { StdtimeSelectDialogComponent } from "./stdtime-select-dialog.component"
 export { UomDialogComponent } from "./uom-dialog.component";
 export { JobcardDialogComponent } from "./jobcard-dialog.component";
 export { JobCardWatingDialogComponent } from "./jobcard-wating-dialog.component";
+export { TaskMachineDialogComponent } from "./task-machine-dialog.component";

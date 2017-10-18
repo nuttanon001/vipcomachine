@@ -21,29 +21,30 @@ export class NavMenuComponent implements OnInit {
         private router: Router
     ) { }
 
-    // Propertires
-    //=============================================\\
+    // propertires
+    // =============================================\\
     get GetLevel3(): boolean {
         if (this.authService.getAuth) {
-            return (this.authService.getAuth.LevelUser || 0) > 3
-        }
-
-        else
+            return (this.authService.getAuth.LevelUser || 0) > 3;
+        } else {
             return false;
+        }
     }
 
     get GetLevel2(): boolean {
-        if (this.authService.getAuth)
+        if (this.authService.getAuth) {
             return (this.authService.getAuth.LevelUser || 0) > 1;
-        else
+        } else {
             return false;
+        }
     }
 
     get GetLevel1(): boolean {
-        if (this.authService.getAuth)
+        if (this.authService.getAuth) {
             return (this.authService.getAuth.LevelUser || 0) > 0;
-        else
+        } else {
             return false;
+        }
     }
 
     ngOnInit(): void {
@@ -52,7 +53,7 @@ export class NavMenuComponent implements OnInit {
     }
 
     get showLogin(): boolean {
-        //return false;
+        // return false;
         // unmark this if AuthService complete
         if (this.authService) {
             if (this.authService.isLoggedIn) {
@@ -71,8 +72,8 @@ export class NavMenuComponent implements OnInit {
         return "";
     }
 
-    // On menu close
-    //=============================================\\
+    // on menu close
+    // =============================================\\
     menuOnCloseMenu1(): void {
         if (this.subMenu) {
             this.subMenu.closeMenu();
@@ -83,9 +84,9 @@ export class NavMenuComponent implements OnInit {
         this.mainMenu.closeMenu();
     }
 
-    //=============================================\\
-    // On menu open
-    //=============================================\\
+    // =============================================\\
+    // on menu open
+    // =============================================\\
     menuOnOpenMenu1(): void {
         this.mainMenu.openMenu();
     }
@@ -95,7 +96,7 @@ export class NavMenuComponent implements OnInit {
             this.subMenu.openMenu();
         }
     }
-    //=============================================\\
+    // =============================================\\
     onLogOut(): void {
         this.authService.logout();
         this.router.navigate(["login"]);

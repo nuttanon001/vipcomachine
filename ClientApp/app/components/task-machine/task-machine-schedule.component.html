@@ -102,7 +102,7 @@
                 </ng-template>
                 <ng-template *ngIf="column.isLink" let-col let-data1="rowData" pTemplate="body">
                     <div *ngIf="data1[col.field]">
-                        <i (click)="onSelectDate(data1['TaskMachineId'])" style="cursor:pointer;color:red;">
+                        <i (click)="onSelectTaskMachineId(data1['TaskMachineId'])" style="cursor:pointer;color:red;">
                             {{data1[col.field]}}
                         </i>
                     </div>

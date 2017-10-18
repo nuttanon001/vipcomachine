@@ -77,6 +77,7 @@ export class JobCardMasterComponent
                 this.service.getOneKeyNumber(key)
                     .subscribe(dbData => {
                         setTimeout(() => {
+                            dbData.MachineUser = true;
                             this.onDetailEdit(dbData);
                         }, 500);
                     }, error => this.displayValue = undefined);

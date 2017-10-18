@@ -72,7 +72,17 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
         this.route.params.subscribe((params: any) => {
             let key: number = params["condition"];
             if (key) {
-                this.mode = key;
+                if (this.mode) {
+                    if (this.mode !== key) {
+                        this.mode = key;
+
+                        this.taskMachines = new Array;
+                        this.schedule.Mode = this.mode;
+                        this.onGetTaskMachineWaitAndProcessData(this.schedule);
+                    }
+                } else {
+                    this.mode = key;
+                }
             }
         }, error => console.error(error));
 
@@ -124,6 +134,8 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
             this.getProjectDetailArray(this.schedule.JobNo);
         }
 
+
+        // console.log("onValueChanged:");
         this.onGetTaskMachineWaitAndProcessData(this.schedule);
     }
 
@@ -224,17 +236,26 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
                 });
                 this.columns.push({ header: "JobNo", field: "JobNo", style: { "width": JbNoWidth, } });
 
+                // debug here
+                // console.log("Mode is:", this.mode);
+
                 if (this.mode) {
-                    if (this.mode === 2) {
+                    if (this.mode > 1) {
+                        // debug here
+                        // console.log("Mode is 2:", this.mode);
                         this.columns.push({
                             header: "CT/SD", field: "CT/SD",
                             style: { "width": CtNoWidth, }, isLink: true
                         });
                     }
                     else {
+                        // debug here
+                        // console.log("Mode is 3:", this.mode);
                         this.columns.push({ header: "CT/SD", field: "CT/SD", style: { "width": CtNoWidth, } });
                     }
                 } else {
+                    // debug here
+                    // console.log("Mode is 4:", this.mode);
                     this.columns.push({ header: "CT/SD", field: "CT/SD", style: { "width": CtNoWidth, } });
                 }
                 this.columns.push({ header: "Qty", field: "Qty", style: { "width": NumWidth, } });
@@ -280,8 +301,18 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
     }
 
     // on selected data
-    onSelectDate(data: any): void {
-        console.log("Data is:", data);
+    onSelectTaskMachineId(TaskMachineId: any): void {
+        // debug here
+        // console.log("Data is:", TaskMachineId);
+        if (TaskMachineId) {
+            this.serviceDialogs.dialogUpdateProgessTaskMachine(this.viewContainerRef, TaskMachineId)
+                .subscribe(update => {
+                    if (update) {
+                        this.serviceDialogs.context("Update Complate", "Update progress was complated.", this.viewContainerRef);
+                        this.onGetTaskMachineWaitAndProcessData(this.schedule);
+                    }
+                });
+        }
     }
 
     // reset
