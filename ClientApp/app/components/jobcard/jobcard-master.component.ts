@@ -25,6 +25,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 export class JobCardMasterComponent
     extends BaseMasterComponent<JobCardMaster, JobCardMasterService> {
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
+    _OnlyMe: boolean = true;
     // parameter
     columns = [
         { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
@@ -41,6 +42,20 @@ export class JobCardMasterComponent
             return this.displayValue.JobCardMasterStatus === 3;
         }
         return true;
+    }
+
+    set OnlyMe(onlyMe: boolean) {
+        this._OnlyMe = onlyMe;
+
+        let scroll: Scroll = {
+            Reload: true,
+            Skip: 0,
+            Take: 13
+        }
+        this.loadPagedData(scroll);
+    }
+    get OnlyMe(): boolean {
+        return this._OnlyMe;
     }
 
     constructor(
@@ -87,6 +102,9 @@ export class JobCardMasterComponent
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
+        if (this.serverAuth.getAuth) {
+            scroll.Where = this.OnlyMe ? this.serverAuth.getAuth.UserName : "";
+        }
         this.service.getAllWithScroll(scroll)
             .subscribe((scrollData: ScrollData<JobCardMaster>) => {
                 if (scrollData) {
@@ -113,6 +131,26 @@ export class JobCardMasterComponent
             }
         }
         return value;
+    }
+
+    // on detail edit override
+    onDetailEdit(value?: JobCardMaster): void {
+        if (value) {
+            if (value.JobCardMasterStatus !== 1) {
+                this.dialogsService.error("Access Denied", "Status war not waited. you can't edit it.", this.viewContainerRef);
+                return;
+            }
+
+            if (this.serverAuth.getAuth) {
+                if (this.serverAuth.getAuth.LevelUser < 2) {
+                    if (this.serverAuth.getAuth.UserName !== value.Creator) {
+                        this.dialogsService.error("Access Denied", "You don't have permission to access.", this.viewContainerRef);
+                        return;
+                    }
+                }
+            }
+        }
+        super.onDetailEdit(value);
     }
 
     // on insert data

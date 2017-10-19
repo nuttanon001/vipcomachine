@@ -55,7 +55,6 @@ export class JobCardEditComponent
     machineTypes: Array<SelectItem>;
     attachFiles: Array<AttachFile> = new Array;
     lockSave: boolean = false;
-    index: number = 0;
     // jobcard-edit ctor
     constructor(
         service: JobCardMasterService,
