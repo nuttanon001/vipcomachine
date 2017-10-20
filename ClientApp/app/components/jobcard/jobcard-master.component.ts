@@ -1,5 +1,5 @@
 ﻿import { Component, ViewContainerRef, PipeTransform } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 // components
 import { BaseMasterComponent } from "../base-component/base-master.component";
 // models
@@ -10,6 +10,8 @@ import {
     DataTableServiceCommunicate, JobCardMasterServiceCommunicate
 } from "../../services/service.index";
 import { AuthService } from "../../services/auth/auth.service";
+// rxjs
+import "rxjs/add/operator/switchMap";
 // timezone
 import * as moment from "moment-timezone";
 // pipes
@@ -25,7 +27,6 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 export class JobCardMasterComponent
     extends BaseMasterComponent<JobCardMaster, JobCardMasterService> {
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
-    _OnlyMe: boolean = true;
     // parameter
     columns = [
         { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
@@ -42,20 +43,6 @@ export class JobCardMasterComponent
             return this.displayValue.JobCardMasterStatus === 3;
         }
         return true;
-    }
-
-    set OnlyMe(onlyMe: boolean) {
-        this._OnlyMe = onlyMe;
-
-        let scroll: Scroll = {
-            Reload: true,
-            Skip: 0,
-            Take: 13
-        }
-        this.loadPagedData(scroll);
-    }
-    get OnlyMe(): boolean {
-        return this._OnlyMe;
     }
 
     constructor(
@@ -84,27 +71,48 @@ export class JobCardMasterComponent
 
         // override class
         super.ngOnInit();
+        // this.route.paramMap.switchMap((params: ParamMap) => this.routeToEdit(0));
 
-        this.route.params.subscribe((params: any) => {
-            let key: number = params["condition"];
+        this.route.paramMap
+            .subscribe((params: ParamMap) => {
+                // console.log("params : ", params);
 
-            if (key) {
-                this.service.getOneKeyNumber(key)
-                    .subscribe(dbData => {
-                        setTimeout(() => {
-                            dbData.MachineUser = true;
-                            this.onDetailEdit(dbData);
-                        }, 500);
-                    }, error => this.displayValue = undefined);
-            }
-        }, error => console.error(error));
+                let key: number = Number(params.get("condition") || 0);
+                if (key) {
+                    this.service.getOneKeyNumber(key)
+                        .subscribe(dbData => {
+                            setTimeout(() => {
+                                dbData.MachineUser = true;
+                                this.onDetailEdit(dbData);
+                            }, 500);
+                        }, error => this.displayValue = undefined);
+                }
+            }, error => console.error(error));
+
+        // this.route.params.subscribe((params: any) => {
+        //        let key: number = params["condition"];
+        //        if (key) {
+        //            this.service.getOneKeyNumber(key)
+        //                .subscribe(dbData => {
+        //                    setTimeout(() => {
+        //                        dbData.MachineUser = true;
+        //                        this.onDetailEdit(dbData);
+        //                    }, 500);
+        //                }, error => this.displayValue = undefined);
+        //        }
+        // }, error => console.error(error));
     }
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
-        if (this.serverAuth.getAuth) {
-            scroll.Where = this.OnlyMe ? this.serverAuth.getAuth.UserName : "";
+        if (scroll.HasCondition) {
+            if (this.serverAuth.getAuth) {
+                scroll.Where = this.serverAuth.getAuth.UserName || "";
+            }
+        } else {
+            scroll.Where = "";
         }
+
         this.service.getAllWithScroll(scroll)
             .subscribe((scrollData: ScrollData<JobCardMaster>) => {
                 if (scrollData) {

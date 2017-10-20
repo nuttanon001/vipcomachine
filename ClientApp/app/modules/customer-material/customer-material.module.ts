@@ -41,7 +41,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         DataTableComponent,
         SearchBoxComponent,
         AttactFileComponent,
-        DateOnlyPipe
+        DateOnlyPipe,
     ],
     imports: [
         //Material
@@ -108,8 +108,9 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         DateOnlyPipe
     ],
     entryComponents: [
+        SearchBoxComponent,
         DataTableComponent,
-        AttactFileComponent
+        AttactFileComponent,
     ]
 })
 export class CustomMaterialModule { }

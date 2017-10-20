@@ -67,7 +67,7 @@ export class JobCardWatingDialogComponent implements OnInit {
         if (this.selected) {
             this.service.getCheckJobCardCanCancel(this.selected.JobCardMasterId)
                 .subscribe(result => {
-                    console.log(result);
+                    // console.log(result);
                     this.onCancel = result.Result;
                 }, Error => this.onCancel = false);
         } else {
@@ -90,10 +90,10 @@ export class JobCardWatingDialogComponent implements OnInit {
     }
 
     // on Add or Edit JobCard
-    onAddOrEditJobCard(): void {
+    onAddOrEditJobCard(mode: number): void {
         if (this.selected) {
             let result1: JobCardDetail = {
-                JobCardDetailId: -88,
+                JobCardDetailId: mode,
                 JobCardMasterId:this.selected.JobCardMasterId
             }
             this.dialogRef.close(result1);

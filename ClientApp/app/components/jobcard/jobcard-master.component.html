@@ -2,8 +2,8 @@
     <split direction="horizontal" [gutterSize]="7" [visibleTransition]="true">
         <split-area [size]="35" [visible]="hideleft" [order]="1">
             <div class="child-left-container">
-                <md-checkbox [(ngModel)]="OnlyMe"> Filter Only User </md-checkbox>
-                <data-table (selected)="onDetailView($event)" [columns]="columns">
+                <!--<md-checkbox [(ngModel)]="OnlyMe"> Filter Only User </md-checkbox>-->
+                <data-table (selected)="onDetailView($event)" [isDisabled]="false" [columns]="columns">
                 </data-table>
             </div>
         </split-area>

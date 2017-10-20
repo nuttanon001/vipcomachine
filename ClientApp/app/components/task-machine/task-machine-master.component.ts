@@ -1,5 +1,5 @@
 ﻿import { Component, ViewContainerRef } from "@angular/core";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute ,ParamMap} from "@angular/router";
 // components
 import { BaseMasterComponent } from "../base-component/base-master.component";
 // models
@@ -66,8 +66,8 @@ export class TaskMachineMasterComponent
         // override class
         super.ngOnInit();
 
-        this.route.params.subscribe((params: any) => {
-            let key: number = params["condition"];
+        this.route.paramMap.subscribe((param: ParamMap) => {
+            let key: number = Number(param.get("condition") || 0);
 
             if (key) {
                 let newTaskMachine: TaskMachine = {
@@ -80,6 +80,20 @@ export class TaskMachineMasterComponent
 
             }
         }, error => console.error(error));
+
+        //this.route.params.subscribe((params: any) => {
+        //    let key: number = params["condition"];
+
+        //    if (key) {
+        //        let newTaskMachine: TaskMachine = {
+        //            TaskMachineId: 0,
+        //            JobCardDetailId: key
+        //        };
+        //        setTimeout(() => {
+        //            this.onDetailEdit(newTaskMachine);
+        //        }, 500);
+        //    }
+        //}, error => console.error(error));
     }
 
     // on get data with lazy load

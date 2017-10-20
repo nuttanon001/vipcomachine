@@ -27,8 +27,8 @@ import {
         JobCardMasterComponent,
         JobCardViewComponent,
         JobCardEditComponent,
-        JobcardDetailEditComponent,
-        JobCardWaitingComponent
+        JobCardWaitingComponent,
+        JobcardDetailEditComponent
     ],
     imports: [
         // angular

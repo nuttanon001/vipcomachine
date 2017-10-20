@@ -76,7 +76,7 @@ export class JobCardEditComponent
     onGetDataByKey(value?: JobCardMaster): void {
         if (value) {
             if (value.MachineUser) {
-                //console.log(this.tabGroup);
+                // console.log(this.tabGroup);
             }
 
             this.service.getOneKeyNumber(value.JobCardMasterId)
@@ -103,7 +103,8 @@ export class JobCardEditComponent
                                 }
                                 if (level < 2) {
                                     if (dbDetail.find(item => item.JobCardDetailStatus === 2)) {
-                                        this.serviceDialogs.context("Warning Message", "คุณไม่สามารถแก้ไขข้อมูล ที่ดำเนินการแล้วได้ !!!", this.viewContainerRef);
+                                        this.serviceDialogs.context("Warning Message", "คุณไม่สามารถแก้ไขข้อมูล ที่ดำเนินการแล้วได้ !!!",
+                                            this.viewContainerRef);
                                         this.lockSave = true;
                                     }
                                 }
@@ -122,7 +123,7 @@ export class JobCardEditComponent
                 JobCardDate: new Date(),
             };
 
-            if (this.serviceAuth.getAuth){
+            if (this.serviceAuth.getAuth) {
                 this.editValue.EmpWrite = this.serviceAuth.getAuth.EmpCode || "";
                 this.editValue.EmployeeWriteString = this.serviceAuth.getAuth.NameThai || "";
             }
@@ -219,7 +220,7 @@ export class JobCardEditComponent
         const typeMachine: AbstractControl | null = this.editValueForm.get("TypeMachineId");
         const projectDetail: AbstractControl | null = this.editValueForm.get("ProjectCodeDetailId");
 
-        let canOpen = false;
+        let canOpen:boolean = false;
 
         if (typeMachine && projectDetail) {
             canOpen = typeMachine.value && projectDetail.value;
@@ -228,7 +229,8 @@ export class JobCardEditComponent
         if (canOpen) {
             if (detail) {
                 if (detail.JobCardDetailStatus === 2) {
-                    this.serviceDialogs.context("Warning Message", "คุณไม่สามารถแก้ไขข้อมูล ที่ดำเนินการแล้วได้ !!!", this.viewContainerRef);
+                    this.serviceDialogs.context("Warning Message", "คุณไม่สามารถแก้ไขข้อมูล ที่ดำเนินการแล้วได้ !!!",
+                        this.viewContainerRef);
                     return;
                 }
 

@@ -111,10 +111,16 @@ namespace VipcoMachine.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]JobCardDetail nJobCardDetail)
         {
-            nJobCardDetail.CreateDate = DateTime.Now;
-            nJobCardDetail.Creator = nJobCardDetail.Creator ?? "Someone";
+            if (nJobCardDetail != null)
+            {
+                nJobCardDetail.CreateDate = DateTime.Now;
+                nJobCardDetail.Creator = nJobCardDetail.Creator ?? "Someone";
 
-            return new JsonResult(await this.repository.AddAsync(nJobCardDetail), this.DefaultJsonSettings);
+                return new JsonResult(await this.repository.AddAsync(nJobCardDetail), this.DefaultJsonSettings);
+            }
+
+            return NotFound(new { Error = "Not found JobCard Detail." });
+
         }
         #endregion
 

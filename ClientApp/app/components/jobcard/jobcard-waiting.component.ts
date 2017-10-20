@@ -1,25 +1,43 @@
 ﻿import { Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
+import {
+    trigger, state, style,
+    animate, transition
+} from "@angular/animations";
 // rxjs
 import { Observable } from "rxjs/Rx";
 import { Subscription } from "rxjs/Subscription";
 // model
-import { JobCardMaster } from "../../models/model.index";
+import { JobCardMaster,JobCardDetail } from "../../models/model.index";
 // service
 import { JobCardMasterService } from "../../services/jobcard-master/jobcard-master.service";
+import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-detail.service";
 import { DialogsService } from "../../services/dialog/dialogs.service";
 
 @Component({
     selector: "jobcard-waiting",
     templateUrl: "./jobcard-waiting.component.html",
     styleUrls: ["../../styles/schedule.style.scss"],
+    animations: [
+        trigger("flyInOut", [
+            state("in", style({ transform: "translateX(0)" })),
+            transition("void => *", [
+                style({ transform: "translateX(-100%)" }),
+                animate(250)
+            ]),
+            transition("* => void", [
+                animate("0.2s 0.1s ease-out", style({ opacity: 0, transform: "translateX(100%)" }))
+            ])
+        ])
+    ]
 })
 // jobcard-waiting component
 export class JobCardWaitingComponent implements OnInit, OnDestroy {
     // model
     columns: Array<any>;
     jobCardMasters: Array<any>;
-
+    newJobDetail?: JobCardDetail;
+    jobCardMaster: JobCardMaster;
     scrollHeight: string;
     subscription: Subscription;
     // time
@@ -30,6 +48,7 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
     // jobcard-waiting ctor
     constructor(
         private service: JobCardMasterService,
+        private serviceDetail: JobCardDetailService,
         private serviceDialogs: DialogsService,
         private viewContainerRef: ViewContainerRef,
         private router: Router,
@@ -118,14 +137,17 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
                 this.serviceDialogs.dialogSelectedJobCardDetailForWait(this.viewContainerRef, data)
                     .subscribe(jobCardDetail => {
                         if (jobCardDetail) {
+                            // Calcel JobCardMaster
                             if (jobCardDetail.JobCardDetailId === -99) {
                                 this.onGetJobCardWaitData();
-                            } else if (jobCardDetail.JobCardDetailId === -88) {
-                                this.router.navigate(["jobcard/jobcard-waiting-edit/" + jobCardDetail.JobCardMasterId]);
+                            } else if (jobCardDetail.JobCardDetailId === -88) { // Edit JobCardMaster
+                                this.router.navigate(["jobcard/jobcard-waiting-edit/", jobCardDetail.JobCardMasterId]);
+                            } else if (jobCardDetail.JobCardDetailId === -77) {
+                                this.onNewJobCardDetail(jobCardDetail.JobCardMasterId || 0);
                             } else {
                                 // debug here
                                 // console.log("JobCardDetail: ", jobCardDetail);
-                                this.router.navigate(["task-machine/jobcard-detail/" + jobCardDetail.JobCardDetailId]);
+                                this.router.navigate(["task-machine/jobcard-detail/", jobCardDetail.JobCardDetailId]);
                             }
                         }
                     });
@@ -168,5 +190,52 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
         // } else {
         //    this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
         // }
+    }
+
+    // new JobCardDetail
+    onNewJobCardDetail(JobMasterId: number):void {
+        if (!JobMasterId) {
+            this.serviceDialogs.error("Error Message", "Can't found key !!!", this.viewContainerRef);
+            return;
+        }
+
+        this.service.getOneKeyNumber(JobMasterId)
+            .subscribe(dbData => {
+                if (dbData) {
+                    this.jobCardMaster = dbData;
+
+                    this.newJobDetail = {
+                        JobCardMasterId: dbData.JobCardMasterId,
+                        JobCardDetailId: 0,
+                        JobCardDetailStatus: 1,
+                        StatusString: "Wait"
+                    };
+                }
+            }, error => this.serviceDialogs.error("Error Message", "Can't found Machine Required !!!", this.viewContainerRef));
+    }
+
+    // on new JobCardDetail Complate or Cancel
+    onComplateOrCancel(jobDetail?: JobCardDetail): void {
+
+        if (jobDetail) {
+            if (jobDetail.CuttingPlanId || jobDetail.Quality || jobDetail.Material) {
+                this.serviceDetail.post(jobDetail)
+                    .subscribe(dbJobDetail => {
+                        this.serviceDialogs.confirm("What's next ?",
+                            "Save was Complated. Do you want to use this \"Machine Required Detail\" for Task Machine",
+                            this.viewContainerRef).subscribe(result => {
+                                if (result) {
+                                    // this.router.navigate(['/heroes', { id: heroId, foo: 'foo' }]);
+                                    this.router.navigate(["task-machine/jobcard-detail/", { condition: dbJobDetail.JobCardDetailId }]);
+                                }
+                            })
+                    }, Error => {
+                        this.serviceDialogs.error("Error Message", Error, this.viewContainerRef);
+                        return;
+                    });
+            }
+        }
+
+        this.newJobDetail = undefined;
     }
 }

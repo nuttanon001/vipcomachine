@@ -88,6 +88,8 @@ export class TaskMachineDialogComponent implements OnInit {
 
     // build form
     buildForm(): void {
+        console.log("Befor :", this.taskMachine);
+
         this.taskMachineForm = this.fb.group({
             TaskMachineId: [this.taskMachine.TaskMachineId],
             TaskMachineName: [this.taskMachine.TaskMachineName],
@@ -95,8 +97,8 @@ export class TaskMachineDialogComponent implements OnInit {
             Priority: [this.taskMachine.Priority],
             TotalQuantity: [this.taskMachine.TotalQuantity],
             CurrentQuantity: [this.taskMachine.CurrentQuantity],
-            PlannedStartDate: new FormControl({ value: this.taskMachine.PlannedStartDate, disabled: true }),
-            PlannedEndDate: new FormControl({ value: this.taskMachine.PlannedEndDate, disabled: true }),
+            PlannedStartDate:[this.taskMachine.PlannedStartDate],
+            PlannedEndDate: [this.taskMachine.PlannedEndDate],
             ActualStartDate: [this.taskMachine.ActualStartDate],
             ActualEndDate: [this.taskMachine.ActualEndDate],
             ActualManHours: [this.taskMachine.ActualManHours],
@@ -115,6 +117,9 @@ export class TaskMachineDialogComponent implements OnInit {
             CuttingPlanNo: [this.taskMachine.CuttingPlanNo],
             AssignedByString: [this.taskMachine.AssignedByString]
         });
+
+        console.log("Form :", this.taskMachineForm.value);
+
         this.taskMachineForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
     }
 
@@ -161,6 +166,7 @@ export class TaskMachineDialogComponent implements OnInit {
 
         if (this.taskMachineForm.valid) {
             this.taskMachine = this.taskMachineForm.value;
+            console.log("TaskMachine :", this.taskMachine);
 
             if (this.taskMachine.CurrentQuantity) {
                 if (!this.taskMachine.ActualStartDate) {
@@ -187,6 +193,9 @@ export class TaskMachineDialogComponent implements OnInit {
             }
 
             this.taskMachine = this.changeTimezone(this.taskMachine);
+
+            console.log("TaskMachine After :", this.taskMachine);
+
 
             this.service.putKeyNumber(this.taskMachine, this.taskMachine.TaskMachineId)
                 .subscribe(dbTaskMachine => this.onComplateClick(dbTaskMachine),

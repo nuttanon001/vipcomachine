@@ -1,6 +1,7 @@
 ﻿import {
     Component, Input, Output,
-    EventEmitter, OnInit, OnDestroy, ElementRef
+    EventEmitter, OnInit, OnDestroy,
+    ElementRef, ViewChild
 } from "@angular/core";
 // models
 import { Page, PageData, Scroll, ScrollData } from "../../models/model.index";
@@ -8,11 +9,17 @@ import { Page, PageData, Scroll, ScrollData } from "../../models/model.index";
 import { DataTableServiceCommunicate } from "../../services/service.index";
 // rxjs
 import { Subscription } from "rxjs/Subscription";
+import { MdCheckbox } from "@angular/material";
 
 @Component({
     selector: "data-table",
     template: `
-    <search-box (search)="onFilter($event)" class="w-100"></search-box>
+    <div class="upper-tool">
+        <search-box (search)="onFilter($event)" class="w-50"></search-box>
+        <md-checkbox id="checkBox" #checkBox [disabled]="isDisabled" (change)="onCondition($event)" class="w-50">
+            Filter Only User
+        </md-checkbox>
+    </div>
     <ngx-datatable
         class="material datatable-scrolling"
         [rows]="rows"
@@ -31,20 +38,24 @@ import { Subscription } from "rxjs/Subscription";
         [style.height]="height">
     </ngx-datatable>
   `,
-    styleUrls: ['./data-table.style.scss'],
+    styleUrls: ["./data-table.style.scss"],
 })
 
 export class DataTableComponent implements OnInit,OnDestroy {
     rows: Array<any> = new Array<any>();
+    // view chlid
+    @ViewChild("checkBox") checkBox: MdCheckbox;
+    // input and output
     @Output("selected") selected = new EventEmitter<any>();
     @Input("height") height: string = "calc(100vh - 165px)";
+    @Input("isDisabled") isDisabled: boolean = true;
+
+    // columns get set
     private _columns: any;
     @Input("columns")
     set columns(setColumns: any) {
         this._columns = setColumns;
         if (setColumns) {
-            //debug here
-            // console.log("Column :", setColumns);
             setTimeout(() => {
                 this.onScroll(0);
             }, 150);
@@ -60,7 +71,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
         Skip: 0,
         Take: 0,
     };
-    //boolean
+    // boolean
     isLoading: boolean;
     isFilter: boolean;
     isSort: boolean;
@@ -71,14 +82,14 @@ export class DataTableComponent implements OnInit,OnDestroy {
         private dataTableService: DataTableServiceCommunicate<any>,
         private el: ElementRef
     ) { }
-
+    // angular hook init
     ngOnInit(): void {
         // this.onScroll(0);
         // wait load data
         this.subscription = this.dataTableService.toChild$
             .subscribe((scrollData: ScrollData<any>) => {
                 // debug here
-                //console.log("Row", this.rows);
+                // console.log("Row", this.rows);
 
                 if (scrollData && scrollData.Data && scrollData.Data.length > 0) {
                     if (scrollData.Scroll) {
@@ -95,8 +106,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
                         }
                     }
                     this.rows.push(...scrollData.Data);
-                }
-                else {
+                } else {
                     if (this.isFilter) {
                         this.rows = new Array;
                         this.isFilter = false;
@@ -104,8 +114,14 @@ export class DataTableComponent implements OnInit,OnDestroy {
                 }
                 this.isLoading = false;
             });
+        if (this.checkBox) {
+            if (this.isDisabled === false) {
+                this.checkBox.checked = !this.isDisabled;
+                this.onCondition(this.checkBox);
+            }
+        }
     }
-
+    // angular hook destroy
     ngOnDestroy(): void {
         if (this.subscription) {
             // prevent memory leak when component destroyed
@@ -114,27 +130,27 @@ export class DataTableComponent implements OnInit,OnDestroy {
     }
 
     // emit row selected to output
-    onSelect(selected: any) {
+    onSelect(selected: any):void {
         if (selected) {
             this.selected.emit(selected.selected[0]);
         }
     }
     // on Scroll bar
-    onScroll(offsetY: number) {
+    onScroll(offsetY: number):void {
         // total height of all rows in the viewport
-        const viewHeight = this.el.nativeElement.getBoundingClientRect().height - this.headerHeight;
+        const viewHeight:number = this.el.nativeElement.getBoundingClientRect().height - this.headerHeight;
 
         // check if we scrolled to the end of the viewport
         if (!this.isLoading && offsetY + viewHeight >= this.rows.length * this.rowHeight) {
 
             // total number of results to load
-            let limit = this.pageLimit;
+            let limit:number = this.pageLimit;
 
             // check if we haven't fetched any results yet
             if (this.rows.length === 0) {
 
                 // calculate the number of rows that fit within viewport
-                const pageSize = Math.ceil(viewHeight / this.rowHeight);
+                const pageSize:number = Math.ceil(viewHeight / this.rowHeight);
 
                 // change the limit to pageSize such that we fill the first page entirely
                 // (otherwise, we won't be able to scroll past it)
@@ -144,7 +160,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
         }
     }
     // loadPage
-    private loadPage(limit: number) {
+    private loadPage(limit: number):void {
         // set the loading flag, which serves two purposes:
         // 1) it prevents the same page from being loaded twice
         // 2) it enables display of the loading indicator
@@ -152,40 +168,54 @@ export class DataTableComponent implements OnInit,OnDestroy {
         this.scroll.Skip = this.rows.length;
         this.scroll.Take = limit;
 
-        //debug here
-        //console.log("Scroll here :", this.scroll);
+        // debug here
+        // console.log("Scroll here :", this.scroll);
 
         this.dataTableService.toParent(this.scroll);
 
-        //this.serverResultsService.getResults(this.rows.length, limit).subscribe(results => {
+        // this.serverResultsService.getResults(this.rows.length, limit).subscribe(results => {
         //    this.rows.push(...results.data);
         //    this.isLoading = false;
-        //});
+        // });
     }
-
-    onSort(event:any) {
+    // on Sort data
+    onSort(event:any):void {
         // event was triggered, start sort sequence
         // console.log('Sort Event', event);
         this.isSort = true;
-        const sort = event.sorts[0];
+        const sort:any = event.sorts[0];
         this.scroll.Skip = 0;
         this.scroll.Take = this.rows.length;
         this.scroll.SortField = sort.prop;
         this.scroll.SortOrder = sort.dir === "desc" ? -1 : 1;
-        //LoadData
-        //debug here
+        // loadData
+        // debug here
         // console.log("Scroll here :", this.scroll);
         this.dataTableService.toParent(this.scroll);
     }
-
-    onFilter(search: string) {
+    // on Filter data
+    onFilter(search: string):void {
         this.isFilter = true;
         this.scroll.Skip = 0;
         this.scroll.Take = 13;
         this.scroll.Filter = search;
-        //LoadData
-        //debug here
+        // loadData
+        // debug here
         // console.log("Scroll here :", this.scroll);
         this.dataTableService.toParent(this.scroll);
+    }
+    // on More Codition
+    onCondition(event?:any): void {
+        // console.log("on Condition :", event);
+        if (event) {
+            this.isFilter = true;
+            this.scroll.Skip = 0;
+            this.scroll.Take = 13;
+            this.scroll.HasCondition = event.checked;
+            // loadData
+            // debug here
+            // console.log("Scroll here :", this.scroll);
+            this.dataTableService.toParent(this.scroll);
+        }
     }
 }

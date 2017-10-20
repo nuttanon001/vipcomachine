@@ -171,7 +171,7 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectStandardTime(viewContainerRef: ViewContainerRef, mode:number|undefined = undefined): Observable<StandardTime> {
+    public dialogSelectStandardTime(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<StandardTime> {
         let dialogRef: MdDialogRef<StdtimeSelectDialogComponent>;
         let config = new MdDialogConfig();
 
@@ -202,7 +202,7 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectedJobCardDetail(viewContainerRef: ViewContainerRef,mode:number|undefined = undefined): Observable<JobCardDetail>{
+    public dialogSelectedJobCardDetail(viewContainerRef: ViewContainerRef,mode:number = 0): Observable<JobCardDetail>{
         let dialogRef: MdDialogRef<JobcardDialogComponent>;
         let config = new MdDialogConfig();
 

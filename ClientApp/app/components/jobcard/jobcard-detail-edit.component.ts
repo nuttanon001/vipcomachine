@@ -14,6 +14,7 @@ import { Subscription } from "rxjs/Subscription";
     selector: "jobcard-detail-edit",
     templateUrl: "./jobcard-detail-edit.component.html",
     styleUrls: ["../../styles/edit.style.scss"],
+    providers: [MaterialService,]
 })
 // jobcard-detail-edit component
 export class JobcardDetailEditComponent implements OnInit {
@@ -126,6 +127,7 @@ export class JobcardDetailEditComponent implements OnInit {
 
     // on StandardTime click
     onStandardTimeClick(): void {
+        // console.log(this.MachineTypeId);
         this.serviceDialogs.dialogSelectStandardTime(this.viewContainerRef, this.MachineTypeId)
             .subscribe(resultStdTime => {
                 if (resultStdTime) {
@@ -152,12 +154,12 @@ export class JobcardDetailEditComponent implements OnInit {
     }
 
     // on search autocomplate
-    onSearchAutoComplate(event:any) {
+    onSearchAutoComplate(event:any):void {
         this.materials = new Array;
 
-        for (let i = 0; i < this.tempMaterials.length; i++) {
-            let material = this.tempMaterials[i];
-            if (material.toLowerCase().indexOf(event.query.toLowerCase()) == 0) {
+        for (let i:number = 0; i < this.tempMaterials.length; i++) {
+            let material:string = this.tempMaterials[i];
+            if (material.toLowerCase().indexOf(event.query.toLowerCase()) === 0) {
                 this.materials.push(material);
             }
         }

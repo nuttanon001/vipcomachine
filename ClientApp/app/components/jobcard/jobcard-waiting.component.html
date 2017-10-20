@@ -1,34 +1,43 @@
 ﻿<div class="master-container">
-    <div class="child-col-container">
-        <h4>Required Machine Work Wating...</h4><hr />
+    <div *ngIf="!newJobDetail;else newJobDetailBlock" >
+        <div class="child-col-container">
+            <h4>Required Machine Work Wating...</h4><hr />
             Reload data in {{message}} sec.
-        <div style="width:100%;">
-            <md-progress-bar color="primary" [value]="count" mode="determinate">
-            </md-progress-bar>
+            <div style="width:100%;">
+                <md-progress-bar color="primary" [value]="count" mode="determinate">
+                </md-progress-bar>
+            </div>
         </div>
-    </div>
-    <div class="center-content my-2">
-        <p-dataTable [value]="jobCardMasters" sortField="GroupMachine" rowGroupMode="rowspan"
-                     [scrollHeight]="scrollHeight" [scrollWidth]="'98.5vw'" [scrollable]="true">
-            <p-column *ngFor="let column of columns" [field]="column.field" [styleClass]="column.styleclass"
-                      [header]="column.header" [style]="column.style" [sortable]="true">
-                <ng-template *ngIf="column.isButton" let-col let-data1="rowData" pTemplate="body">
-                    <div *ngIf="data1[col.field]">
-                        <i>{{data1[col.field] | slice:0:28}}</i>
-                        <button type="button" md-icon-button color="primary" mdTooltip="More detail"
-                                (click)="onSelectData(data1[col.field])">
-                            <i class="fa fa-2x fa-search" aria-hidden="true"></i>
-                        </button>
-                        <!--<button type="button" md-icon-button color="warn" mdTooltip="Cancel required"
+        <div class="center-content my-2">
+            <p-dataTable [value]="jobCardMasters" sortField="GroupMachine" rowGroupMode="rowspan"
+                         [scrollHeight]="scrollHeight" [scrollWidth]="'98.5vw'" [scrollable]="true">
+                <p-column *ngFor="let column of columns" [field]="column.field" [styleClass]="column.styleclass"
+                          [header]="column.header" [style]="column.style" [sortable]="true">
+                    <ng-template *ngIf="column.isButton" let-col let-data1="rowData" pTemplate="body">
+                        <div *ngIf="data1[col.field]">
+                            <i>{{data1[col.field] | slice:0:28}}</i>
+                            <button type="button" md-icon-button color="primary" mdTooltip="More detail"
+                                    (click)="onSelectData(data1[col.field])">
+                                <i class="fa fa-2x fa-search" aria-hidden="true"></i>
+                            </button>
+                            <!--<button type="button" md-icon-button color="warn" mdTooltip="Cancel required"
                                 (click)="onCancelData(data1[col.field])">
                             <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
                         </button>-->
-                    </div>
-                    <div *ngIf="!data1[col.field]">
-                        -
-                    </div>
-                </ng-template>
-            </p-column>
-        </p-dataTable>
+                        </div>
+                        <div *ngIf="!data1[col.field]">
+                            -
+                        </div>
+                    </ng-template>
+                </p-column>
+            </p-dataTable>
+        </div>
     </div>
+    <ng-template #newJobDetailBlock>
+        <div class="mx-3" [@flyInOut]="'in'">
+            <jobcard-detail-edit (ComplateOrCancel)="onComplateOrCancel($event)" [EditValueDetail]="newJobDetail"
+                                 [MachineTypeId]="jobCardMaster.TypeMachineId"
+                                 [ProjectDetailId]="jobCardMaster.ProjectCodeDetailId"></jobcard-detail-edit>
+        </div>
+    </ng-template>
 </div>

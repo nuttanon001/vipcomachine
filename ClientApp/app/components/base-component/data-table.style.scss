@@ -7,3 +7,10 @@
     position: fixed !important;
     bottom: 0px;
 }
+
+.upper-tool {
+    flex-grow: 0;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

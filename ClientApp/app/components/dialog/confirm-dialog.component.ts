@@ -11,8 +11,8 @@ import { Component } from '@angular/core';
         </h4>
     </div>
     <p>{{ message }}</p>
-    <button type="submit" md-raised-button (click)="dialogRef.close(true)" color="accent">ตกลง</button>
-    <button type="button" md-button (click)="dialogRef.close()" color="warn">ยกเลิก</button>
+    <button type="submit" md-raised-button (click)="dialogRef.close(true)" color="accent">Yes</button>
+    <button type="button" md-button (click)="dialogRef.close()" color="warn">No</button>
     `,
 })
 export class ConfirmDialog {
