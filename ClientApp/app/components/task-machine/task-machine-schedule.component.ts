@@ -116,7 +116,6 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
             Skip: [this.schedule.Skip],
             Take: [this.schedule.Take],
             TypeMachineId: [this.schedule.TypeMachineId],
-
         });
 
         this.reportForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
@@ -134,8 +133,6 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
             this.getProjectDetailArray(this.schedule.JobNo);
         }
 
-
-        // console.log("onValueChanged:");
         this.onGetTaskMachineWaitAndProcessData(this.schedule);
     }
 
@@ -319,6 +316,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
     resetFilter(): void {
         this.taskMachines = new Array;
         this.buildForm();
+        this.onGetTaskMachineWaitAndProcessData(this.schedule);
     }
 
     // load Data Lazy
@@ -336,7 +334,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
 
         this.reportForm.patchValue({
             Skip: event.first,
-            Take: ((event.first || 0) + (event.rows || 10)),
+            Take: ((event.first || 0) + (event.rows || 4)),
         });
     }
 }

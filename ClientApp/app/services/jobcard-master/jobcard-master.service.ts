@@ -27,9 +27,23 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
             .map(this.extractData).catch(this.handleError);
     }
 
+    // get set Cutting Plan to JobCardDetail
+    getCuttingPlanToJobCardDetail(jobCardMasterId: number): Observable<any> {
+        let url: string = `${this.actionUrl}GetCuttingPlanToJobCardDetail/${jobCardMasterId}`;
+        return this.http.get(url)
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    // get check jobcard can complate
+    getCheckJobCardCanComplate(JobCardMasterId: number): Observable<any> {
+        let url: string = `${this.actionUrl}JobCardCanComplate/${JobCardMasterId}`;
+        return this.http.get(url)
+            .map(this.extractData).catch(this.handleError);
+    }
+
     // get cancel jobcard
-    getCancelJobCardMaster(JobCardMasterId: number): Observable<JobCardMaster> {
-        let url: string = `${this.actionUrl}JobCardCancel/${JobCardMasterId}`;
+    getChangeStatusJobCardMaster(JobCardMasterId: number,status:number): Observable<JobCardMaster> {
+        let url: string = `${this.actionUrl}JobCardChangeStatus/${JobCardMasterId}/${status}`;
         return this.http.get(url)
             .map(this.extractData).catch(this.handleError);
     }

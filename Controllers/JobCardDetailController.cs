@@ -94,6 +94,7 @@ namespace VipcoMachine.Controllers
             var QueryData = await this.repository.GetAllAsQueryable()
                                                    .Where(x => x.JobCardMasterId == MasterId)
                                                    .Include(x => x.JobCardMaster.ProjectCodeDetail.ProjectCodeMaster)
+                                                   .Include(x => x.JobCardMaster.TypeMachine)
                                                    .Include(x => x.CuttingPlan)
                                                    .Include(x => x.UnitsMeasure)
                                                    .Include(x => x.StandardTime.TypeStandardTime)
@@ -111,15 +112,33 @@ namespace VipcoMachine.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]JobCardDetail nJobCardDetail)
         {
-            if (nJobCardDetail != null)
+            var Message = "";
+            try
             {
-                nJobCardDetail.CreateDate = DateTime.Now;
-                nJobCardDetail.Creator = nJobCardDetail.Creator ?? "Someone";
+                if (nJobCardDetail != null)
+                {
+                    if (nJobCardDetail.CuttingPlan != null)
+                        nJobCardDetail.CuttingPlan = null;
 
-                return new JsonResult(await this.repository.AddAsync(nJobCardDetail), this.DefaultJsonSettings);
+                    if (nJobCardDetail.StandardTime != null)
+                        nJobCardDetail.StandardTime = null;
+
+                    if (nJobCardDetail.UnitsMeasure != null)
+                        nJobCardDetail.UnitsMeasure = null;
+
+                    nJobCardDetail.CreateDate = DateTime.Now;
+                    nJobCardDetail.Creator = nJobCardDetail.Creator ?? "Someone";
+
+                    return new JsonResult(await this.repository.AddAsync(nJobCardDetail), this.DefaultJsonSettings);
+                }
+            }
+            catch (Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
             }
 
-            return NotFound(new { Error = "Not found JobCard Detail." });
+
+            return NotFound(new { Error = Message });
 
         }
         #endregion

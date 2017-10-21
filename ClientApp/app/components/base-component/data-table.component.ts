@@ -57,6 +57,16 @@ export class DataTableComponent implements OnInit,OnDestroy {
         this._columns = setColumns;
         if (setColumns) {
             setTimeout(() => {
+                if (this.checkBox) {
+                    if (this.isDisabled === false) {
+                        this.checkBox.checked = !this.isDisabled;
+
+                        console.log("onCondition");
+                        this.onCondition(this.checkBox);
+                        return;
+                    }
+                }
+                console.log("columns");
                 this.onScroll(0);
             }, 150);
         }
@@ -114,12 +124,6 @@ export class DataTableComponent implements OnInit,OnDestroy {
                 }
                 this.isLoading = false;
             });
-        if (this.checkBox) {
-            if (this.isDisabled === false) {
-                this.checkBox.checked = !this.isDisabled;
-                this.onCondition(this.checkBox);
-            }
-        }
     }
     // angular hook destroy
     ngOnDestroy(): void {

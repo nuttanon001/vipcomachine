@@ -137,10 +137,10 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
                 this.serviceDialogs.dialogSelectedJobCardDetailForWait(this.viewContainerRef, data)
                     .subscribe(jobCardDetail => {
                         if (jobCardDetail) {
-                            // Calcel JobCardMaster
+                            // calcel JobCardMaster
                             if (jobCardDetail.JobCardDetailId === -99) {
                                 this.onGetJobCardWaitData();
-                            } else if (jobCardDetail.JobCardDetailId === -88) { // Edit JobCardMaster
+                            } else if (jobCardDetail.JobCardDetailId === -88) { // edit JobCardMaster
                                 this.router.navigate(["jobcard/jobcard-waiting-edit/", jobCardDetail.JobCardMasterId]);
                             } else if (jobCardDetail.JobCardDetailId === -77) {
                                 this.onNewJobCardDetail(jobCardDetail.JobCardMasterId || 0);
@@ -226,9 +226,9 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
                             this.viewContainerRef).subscribe(result => {
                                 if (result) {
                                     // this.router.navigate(['/heroes', { id: heroId, foo: 'foo' }]);
-                                    this.router.navigate(["task-machine/jobcard-detail/", { condition: dbJobDetail.JobCardDetailId }]);
+                                    this.router.navigate(["task-machine/jobcard-detail/", dbJobDetail.JobCardDetailId]);
                                 }
-                            })
+                            });
                     }, Error => {
                         this.serviceDialogs.error("Error Message", Error, this.viewContainerRef);
                         return;

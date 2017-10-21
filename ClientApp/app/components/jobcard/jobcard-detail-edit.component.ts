@@ -95,6 +95,12 @@ export class JobcardDetailEditComponent implements OnInit {
                 newOrUpdate.StatusString = "Wait";
             }
 
+            if (!newOrUpdate.Quality) {
+                newOrUpdate.Quality = 1;
+            } else if (newOrUpdate.Quality < 1) {
+                newOrUpdate.Quality = 1;
+            }
+
             if (newOrUpdate.UnitsMeasureString || newOrUpdate.CuttingPlanString ||
                 newOrUpdate.Material || newOrUpdate.Quality || newOrUpdate.StandardTimeString) {
                 this.ComplateOrCancel.emit(this.editValueForm.value);
@@ -117,8 +123,8 @@ export class JobcardDetailEditComponent implements OnInit {
                     this.editValueForm.patchValue({
                         CuttingPlanId: resultCutting.CuttingPlanId,
                         CuttingPlanString: resultCutting.CuttingPlanNo,
-                        CuttingPlan: Object.assign({}, resultCutting),
-                        Material: (resultCutting.MaterialSize || "") + (resultCutting.MaterialGrade || ""),
+                        // don't use CuttingPlan: Object.assign({}, resultCutting),
+                        Material: (resultCutting.MaterialSize || "") + " " + (resultCutting.MaterialGrade || ""),
                         Quality: resultCutting.Quantity || 0
                     });
                 }
@@ -147,7 +153,7 @@ export class JobcardDetailEditComponent implements OnInit {
                     this.editValueForm.patchValue({
                         UnitMeasureId: resultUom.UnitMeasureId,
                         UnitsMeasureString: resultUom.UnitMeasureName,
-                        UnitsMeasure: Object.assign({}, resultUom),
+                        // don't use UnitsMeasure: Object.assign({}, resultUom),
                     });
                 }
             });

@@ -20,6 +20,13 @@ export class TaskMachineService extends BaseRestService<TaskMachine> {
         return this.http.post(url, JSON.stringify(option), this.getRequestOption())
             .map(this.extractData).catch(this.handleError);
     }
+
+    // post Check Task Machine Time
+    postTaskMachineTime(taskMachine: TaskMachine): Observable<any> {
+        let url: string = `${this.actionUrl}CheckMachineTime/`;
+        return this.http.post(url, JSON.stringify(taskMachine), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
+    }
 }
 
 @Injectable()

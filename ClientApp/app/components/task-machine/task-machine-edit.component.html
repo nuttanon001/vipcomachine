@@ -5,7 +5,6 @@
                 <b>Require Machine Master</b>
             </ng-template>
             <div class="edit-container mx-3">
-
                 <div *ngIf="jobCardDetail">
                     <div class="my-form">
                         <label for="JobMasterNoString" class="my-label">Require/McNo :</label>
@@ -132,7 +131,6 @@
                                         [minDate]="editValueForm.controls.PlannedStartDate.value"
                                         [maxDate]="editValueForm.controls.ActualEndDate.value">
                             </p-calendar>
-                            <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.ActualStartDate"></validation-messages>
                         </div>
 
@@ -142,7 +140,6 @@
                                         id="ActualEndDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
                                         [minDate]="editValueForm.controls.ActualStartDate.value">
                             </p-calendar>
-                            <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.ActualEndDate"></validation-messages>
                         </div>
                     </div>

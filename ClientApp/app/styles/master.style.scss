@@ -10,7 +10,8 @@
 .master-dialog {
     display: flex;
     flex-direction: column;
-    width: 1165px;
+    width: 885px;
+    height: 460px;
 }
 
 .child-left-container {
@@ -33,8 +34,21 @@
 
 .center-content {
     display: flex;
+    flex-direction: column;
     flex-grow: 1;
     order: 2;
+}
+
+.master-form-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-top: solid 1px lightsteelblue;
+    border-bottom: solid 1px lightsteelblue;
+
+    i {
+        margin-left: 15px;
+    }
 }
 
 .right-content {

@@ -152,6 +152,25 @@ namespace VipcoMachine.Controllers
             return new JsonResult(new { Result = CanCancel } , this.DefaultJsonSettings);
         }
 
+        [HttpGet("JobCardCanComplate/{key}")]
+        public async Task<IActionResult> GetJobCardCanComplate(int key)
+        {
+            var Includes = new List<string> { "JobCardDetails" };
+            var HasData = await this.repository.GetAsynvWithIncludes(key, "JobCardMasterId", Includes);
+            var CanComplate = false;
+            if (HasData != null)
+            {
+                if (HasData.JobCardDetails.Any())
+                {
+                    CanComplate = !HasData.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Wait);
+                }
+                else
+                    CanComplate = true;
+            }
+
+            return new JsonResult(new { Result = CanComplate }, this.DefaultJsonSettings);
+        }
+
         [HttpGet("JobCardHasWait")]
         public async Task<IActionResult> GetJobCardHasWait()
         {
@@ -162,6 +181,7 @@ namespace VipcoMachine.Controllers
                 var QueryData = this.repository.GetAllAsQueryable()
                                                .Include(x => x.JobCardDetails)
                                                .Include(x => x.EmployeeRequire)
+                                               .Include(x => x.EmployeeWrite)
                                                .Include(x => x.TypeMachine)
                                                .Include(x => x.ProjectCodeDetail.ProjectCodeMaster)
                                                .AsQueryable();
@@ -180,33 +200,38 @@ namespace VipcoMachine.Controllers
                         columns.Add(item.ToString("dd/MM/yy"));
                     }
 
-                    foreach (var dataByEmp in GetData.GroupBy(x => x.EmployeeRequire))
+                    foreach(var groupMachine in GetData.GroupBy(x => x.TypeMachine))
                     {
-                        if (dataByEmp == null)
-                            continue;
-                        else
+                        foreach (var dataByEmp in groupMachine.GroupBy(x => x.EmployeeWrite))
                         {
-                            IDictionary<String, Object> rowData = new ExpandoObject();
-                            var EmployeeReq = dataByEmp.Key != null ? $"{(dataByEmp?.Key.NameThai ?? "")}" : "No-Data";
-                            // add column time
-                            rowData.Add(columns[1], EmployeeReq);
-                            foreach (var item in dataByEmp)
+                            if (dataByEmp == null)
+                                continue;
+                            else
                             {
-                                string TypeCode = item.TypeMachine == null ? "No-Data" : item.TypeMachine.TypeMachineCode;
-                                // if don't have type add item to rowdata
-                                if (!rowData.Keys.Any(x => x == "GroupMachine"))
-                                    rowData.Add(columns[0], TypeCode);
+                                IDictionary<String, Object> rowData = new ExpandoObject();
+                                var EmployeeReq = dataByEmp.Key != null ? $"{(dataByEmp?.Key.NameThai ?? "")}" : "No-Data";
+                                // add column time
+                                rowData.Add(columns[1], EmployeeReq);
+                                foreach (var item in dataByEmp)
+                                {
+                                    string TypeCode = item.TypeMachine == null ? "No-Data" : item.TypeMachine.TypeMachineCode;
+                                    // if don't have type add item to rowdata
+                                    if (!rowData.Keys.Any(x => x == "GroupMachine"))
+                                        rowData.Add(columns[0], TypeCode);
 
-                                var key = columns.Where(y => y.Contains(item.JobCardDate.Value.ToString("dd/MM/yy"))).FirstOrDefault();
-                                // if don't have data add it to rowData
-                                if (!rowData.Keys.Any(x => x == key))
-                                    rowData.Add(key, $"คลิกที่ไอคอน เพื่อแสดงข้อมูล#{item.JobCardMasterId}");
-                                else
-                                    rowData[key] += $"#{item.JobCardMasterId}";
+                                    var key = columns.Where(y => y.Contains(item.JobCardDate.Value.ToString("dd/MM/yy"))).FirstOrDefault();
+                                    // if don't have data add it to rowData
+                                    if (!rowData.Keys.Any(x => x == key))
+                                        rowData.Add(key, $"คลิกที่ไอคอน เพื่อแสดงข้อมูล#{item.JobCardMasterId}");
+                                    else
+                                        rowData[key] += $"#{item.JobCardMasterId}";
+                                }
+                                dataTable.Add(rowData);
                             }
-                            dataTable.Add(rowData);
                         }
+
                     }
+
 
                     if (dataTable.Any())
                         return new JsonResult(new
@@ -225,26 +250,95 @@ namespace VipcoMachine.Controllers
             return NotFound(new { Error = Message });
         }
 
-        [HttpGet("JobCardCancel/{key}")]
-        public async Task<IActionResult> GetCancelJobCard(int key)
+        [HttpGet("JobCardChangeStatus/{key}/{status}")]
+        public async Task<IActionResult> GetCancelJobCard(int key,int status)
         {
-            if (key > 0)
+            if (key > 0 && status > 0)
             {
                 var Includes = new List<string> { "JobCardDetails" };
                 var dbJobCard = await this.repository.GetAsynvWithIncludes(key, "JobCardMasterId", Includes);
                 if (dbJobCard != null)
                 {
-                    dbJobCard.JobCardMasterStatus = JobCardMasterStatus.Cancel;
-                    foreach(var dbJobDetail in dbJobCard.JobCardDetails)
+                    if (status == 2)
                     {
-                        dbJobDetail.JobCardDetailStatus = JobCardDetailStatus.Cancel;
-                        await this.repositoryDetail.UpdateAsync(dbJobDetail, dbJobDetail.JobCardDetailId);
+                        dbJobCard.JobCardMasterStatus = JobCardMasterStatus.Complete;
                     }
+                    else if (status == 3)
+                    {
+                        dbJobCard.JobCardMasterStatus = JobCardMasterStatus.Cancel;
+                        foreach (var dbJobDetail in dbJobCard.JobCardDetails)
+                        {
+                            dbJobDetail.JobCardDetailStatus = JobCardDetailStatus.Cancel;
+                            await this.repositoryDetail.UpdateAsync(dbJobDetail, dbJobDetail.JobCardDetailId);
+                        }
+                    }
+
                     return new JsonResult(await this.repository.UpdateAsync(dbJobCard, key), this.DefaultJsonSettings);
                 }
             }
 
             return NotFound(new { Error = "Not found key." });
+        }
+
+        [HttpGet("GetCuttingPlanToJobCardDetail/{key}")]
+        public async Task<IActionResult> GetCuttingPlanToJobCardDetail(int key)
+        {
+            var Message = "Not found JobCardMasterId";
+
+            try
+            {
+                if (key > 0)
+                {
+                    List<string> TypeCode = new List<string>() { "gm", "cm" };
+                    var JobMaster = await this.repository.GetAllAsQueryable()
+                                                         .Include(x => x.TypeMachine)
+                                                         .FirstOrDefaultAsync(x => x.JobCardMasterId == key &&
+                                                                                    x.JobCardMasterStatus == JobCardMasterStatus.Wait &&
+                                                                                    TypeCode.Contains(x.TypeMachine.TypeMachineCode.ToLower()));
+
+                    if (JobMaster != null)
+                    {
+                        var CuttingPlans = this.repositoryCut.GetAllAsQueryable()
+                                                    .Where(x => x.ProjectCodeDetailId == JobMaster.ProjectCodeDetailId &&
+                                                                !x.JobCardDetails.Any() && x.TypeCuttingPlan == 1)
+                                                    .AsQueryable();
+
+                        if (JobMaster.TypeMachine.TypeMachineCode.Contains("GM"))
+                        {
+                            CuttingPlans = CuttingPlans.Where(x => x.CuttingPlanNo.ToLower().Contains("pl"));
+                        }
+                        else
+                        {
+                            CuttingPlans = CuttingPlans.Where(x => !x.CuttingPlanNo.ToLower().Contains("pl"));
+
+                        }
+
+                        var ListCutting = await CuttingPlans.ToListAsync();
+                        foreach (var Cutting in ListCutting)
+                        {
+                            await this.repositoryDetail.AddAsync(
+                                new JobCardDetail()
+                                {
+                                    JobCardMasterId = JobMaster.JobCardMasterId,
+                                    CuttingPlanId = Cutting.CuttingPlanId,
+                                    JobCardDetailStatus = JobCardDetailStatus.Wait,
+                                    Material = $"{Cutting.MaterialSize ?? ""} {Cutting.MaterialGrade ?? ""}",
+                                    Quality = Cutting.Quantity,
+                                    Remark = "Add by system",
+                                    CreateDate = DateTime.Now,
+                                    Creator = "System"
+                                });
+                        }
+
+                        return new JsonResult(new { Result = ListCutting.Any() }, this.DefaultJsonSettings);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+            return NotFound(new { Error = Message });
         }
 
         #endregion GET

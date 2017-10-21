@@ -50,12 +50,12 @@ export class TaskMachineDialogComponent implements OnInit {
             this.service.getOneKeyNumber(this.TaskMachineId)
                 .subscribe(dbTaskMachine => {
                     this.taskMachine = dbTaskMachine;
-                    //PlanStartDate
+                    // planStartDate
                     if (this.taskMachine.PlannedStartDate) {
                         this.taskMachine.PlannedStartDate = this.taskMachine.PlannedStartDate != null ?
                             new Date(this.taskMachine.PlannedStartDate) : new Date();
                     }
-                    //PlanEndDate
+                    // planEndDate
                     if (this.taskMachine.PlannedEndDate) {
                         this.taskMachine.PlannedEndDate = this.taskMachine.PlannedEndDate != null ?
                             new Date(this.taskMachine.PlannedEndDate) : new Date();
@@ -88,7 +88,7 @@ export class TaskMachineDialogComponent implements OnInit {
 
     // build form
     buildForm(): void {
-        console.log("Befor :", this.taskMachine);
+        // console.log("Befor :", this.taskMachine);
 
         this.taskMachineForm = this.fb.group({
             TaskMachineId: [this.taskMachine.TaskMachineId],
@@ -118,7 +118,7 @@ export class TaskMachineDialogComponent implements OnInit {
             AssignedByString: [this.taskMachine.AssignedByString]
         });
 
-        console.log("Form :", this.taskMachineForm.value);
+        // console.log("Form :", this.taskMachineForm.value);
 
         this.taskMachineForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
     }
@@ -126,7 +126,7 @@ export class TaskMachineDialogComponent implements OnInit {
     // on Form Value Change
     onValueChanged(data?: any): void {
         if (!this.taskMachineForm) { return; }
-        const form = this.taskMachineForm;
+        const form:FormGroup = this.taskMachineForm;
         const controlT: AbstractControl | null = form.get("TotalQuantity");
         const controlC: AbstractControl | null = form.get("CurrentQuantity");
 
@@ -166,7 +166,7 @@ export class TaskMachineDialogComponent implements OnInit {
 
         if (this.taskMachineForm.valid) {
             this.taskMachine = this.taskMachineForm.value;
-            console.log("TaskMachine :", this.taskMachine);
+            // console.log("TaskMachine :", this.taskMachine);
 
             if (this.taskMachine.CurrentQuantity) {
                 if (!this.taskMachine.ActualStartDate) {
@@ -194,7 +194,7 @@ export class TaskMachineDialogComponent implements OnInit {
 
             this.taskMachine = this.changeTimezone(this.taskMachine);
 
-            console.log("TaskMachine After :", this.taskMachine);
+            // console.log("TaskMachine After :", this.taskMachine);
 
 
             this.service.putKeyNumber(this.taskMachine, this.taskMachine.TaskMachineId)

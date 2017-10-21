@@ -30,6 +30,10 @@ import {
 @Injectable()
 export class DialogsService {
 
+    // width and height > width and height in scss master-dialog
+    width: string = "950px";
+    height: string = "500px";
+
     constructor(private dialog: MdDialog) { }
 
     public confirm(title: string, message: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
@@ -80,8 +84,8 @@ export class DialogsService {
 
         // config
         config.viewContainerRef = viewContainerRef;
-        config.height = "650px";
-        config.width = "1000px";
+        config.height = this.height;
+        config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -95,8 +99,8 @@ export class DialogsService {
 
         // config
         config.viewContainerRef = viewContainerRef;
-        config.height = "650px";
-        config.width = "1000px";
+        config.height = this.height;
+        config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -112,8 +116,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        config.height = "650px";
-        config.width = "1000px";
+        config.height = this.height;
+        config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -128,8 +132,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        config.height = "650px";
-        config.width = "1100px";
+        config.height = this.height;
+        config.width = this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -144,8 +148,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = standard;
-        config.height = "450px";
-        config.width = "1000px";
+        config.height = this.height;
+        config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -162,8 +166,8 @@ export class DialogsService {
         if (mode) {
             config.data = mode;
         }
-        config.height = "650px";
-        config.width = "1000px";
+        config.height = this.height;
+        config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -178,8 +182,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        config.height = "650px";
-        config.width = "1000px";
+        config.height = this.height;
+        config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -193,8 +197,8 @@ export class DialogsService {
 
         // config
         config.viewContainerRef = viewContainerRef;
-        config.height = "650px";
-        config.width = "1000px";
+        config.height = this.height;
+        config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -209,8 +213,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        config.height = "650px";
-        config.width = "1100px";
+        config.height = this.height;
+        config.width = this.width;
         config.hasBackdrop = true;
 
         //open dialog
@@ -225,8 +229,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = jobCardMasters;
-        config.height = "650px";
-        config.width = "1200px";
+        config.height = this.height;
+        config.width = this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -241,8 +245,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = TaskMachineId;
-        config.height = "650px";
-        config.width = "1200px";
+        config.height = this.height;
+        config.width = this.width;
         config.hasBackdrop = true;
 
         // open dialog

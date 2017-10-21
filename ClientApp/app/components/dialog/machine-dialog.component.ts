@@ -14,12 +14,12 @@ import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 // 3rd party
 import { DatatableComponent, TableColumn } from "@swimlane/ngx-datatable";
-
+import { SelectItem } from "primeng/primeng";
 
 @Component({
     selector: 'machine-dialog',
     templateUrl: './machine-dialog.component.html',
-    styleUrls: ["../../styles/master.style.scss"],
+    styleUrls: ["../../styles/master.style.scss", "../../styles/edit.style.scss"],
     providers: [
         MachineService,
         TypeMachineService,
@@ -31,18 +31,14 @@ export class MachineDialogComponent
 {
     machines: Array<Machine>;
     templates: Array<Machine>;
-    typeMachines: Array<TypeMachine>;
+    typeMachines: Array<SelectItem>;
     typeMachine: TypeMachine;
     // Machine
     selectedMachine: Machine | undefined;
     // Column
     columns: Array<TableColumn> = [
         { prop: "MachineCode", name: "Code", flexGrow: 1 },
-        { prop: "MachineName", name: "Name", flexGrow: 3 }
-    ];
-    columnsType: Array<TableColumn> = [
-        { prop: "TypeMachineCode", name: "Code", flexGrow: 1 },
-        { prop: "Name", name: "Name", flexGrow: 3}
+        { prop: "MachineName", name: "Name", flexGrow: 1 }
     ];
     // table
     @ViewChild(DatatableComponent) table: DatatableComponent;
@@ -70,21 +66,22 @@ export class MachineDialogComponent
         }
 
         this.serviceTypeMachine.getAll()
-            .subscribe(dbTypeMachine => {
+            .subscribe(dbTypeMachines => {
                 if (this.mode) {
-                    this.typeMachines = dbTypeMachine.filter(item => item.TypeMachineId == this.mode).slice();
-                } else {
-                    this.typeMachines = dbTypeMachine.slice();
-                }
-
-                if (this.typeMachines) {
-                    this.typeMachine = this.typeMachines[0];
-                    this.serviceMachine.getByMasterId(this.typeMachine.TypeMachineId)
+                    dbTypeMachines = dbTypeMachines.filter(item => item.TypeMachineId == this.mode).slice();
+                    this.serviceMachine.getByMasterId(this.mode)
                         .subscribe(dbMachine => {
                             this.machines = dbMachine.slice();
                         });
+                } else {
+                    dbTypeMachines = dbTypeMachines.slice();
                 }
-            });
+
+                this.typeMachines = new Array;
+                for (let item of dbTypeMachines) {
+                    this.typeMachines.push({ label: `${(item.TypeMachineCode || "")} ${(item.Name || "")}`, value: item.TypeMachineId });
+                }
+            }, error => console.error(error));
     }
 
     // Selected Machine
@@ -98,11 +95,13 @@ export class MachineDialogComponent
     // Selected Type Machine
     onSelectedTypeMachine(selected?: any): void {
         if (selected) {
-            this.typeMachine = selected.selected[0];
-            this.serviceMachine.getByMasterId(this.typeMachine.TypeMachineId)
-                .subscribe(dbMachine => {
-                    this.machines = dbMachine.slice();
-                });
+            // debug here
+            console.log("selected :", selected);
+            //this.typeMachine = selected.selected[0];
+            //this.serviceMachine.getByMasterId(this.typeMachine.TypeMachineId)
+            //    .subscribe(dbMachine => {
+            //        this.machines = dbMachine.slice();
+            //    });
         }
     }
 

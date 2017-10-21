@@ -19,7 +19,6 @@ import "rxjs/add/operator/switch";
 @Component({
   selector: "search-box",
   template: `
-    <i class="fa fa-search" aria-hidden="true"></i>
     <md-input-container floatPlaceholder="never">
         <input type="text" mdInput placeholder="Search here..." autofocus>
     </md-input-container>

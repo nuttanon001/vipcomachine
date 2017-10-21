@@ -60,25 +60,27 @@ namespace VipcoMachine.Controllers
 
                 if (await this.repositoryJobDetail.UpdateAsync(jobCardDetail,jobCardDetail.JobCardDetailId) != null)
                 {
-                    if (jobCardDetail.JobCardMasterId != null)
-                    {
-                        var jobCardMaster = await this.repositoryJobMaster.GetAsynvWithIncludes(jobCardDetail.JobCardMasterId.Value, "JobCardMasterId", Includes);
 
-                        if (jobCardMaster != null)
-                        {
-                            if (!jobCardMaster.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Wait))
-                                jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Complete;
-                            else
-                            {
-                                if (jobCardMaster.JobCardMasterStatus == JobCardMasterStatus.Complete)
-                                    jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Wait;
-                            }
+                    // JobCardMaster status will change manual
+                    //if (jobCardDetail.JobCardMasterId != null)
+                    //{
+                    //    var jobCardMaster = await this.repositoryJobMaster.GetAsynvWithIncludes(jobCardDetail.JobCardMasterId.Value, "JobCardMasterId", Includes);
 
-                            jobCardMaster.ModifyDate = DateTime.Now;
-                            jobCardMaster.Modifyer = Create;
-                            await this.repositoryJobMaster.UpdateAsync(jobCardMaster, jobCardMaster.JobCardMasterId);
-                        }
-                    }
+                    //    if (jobCardMaster != null)
+                    //    {
+                    //        if (!jobCardMaster.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Wait))
+                    //            jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Complete;
+                    //        else
+                    //        {
+                    //            if (jobCardMaster.JobCardMasterStatus == JobCardMasterStatus.Complete)
+                    //                jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Wait;
+                    //        }
+
+                    //        jobCardMaster.ModifyDate = DateTime.Now;
+                    //        jobCardMaster.Modifyer = Create;
+                    //        await this.repositoryJobMaster.UpdateAsync(jobCardMaster, jobCardMaster.JobCardMasterId);
+                    //    }
+                    //}
 
                     return true;
                 }
@@ -208,7 +210,44 @@ namespace VipcoMachine.Controllers
         #endregion
 
         #region POST
-        // GET: api/TaskMachine/TaskMachineWaitAndProcess
+        // POST: api/TaskMachine/CheckMachineTime
+        [HttpPost("CheckMachineTime")]
+        public async Task<IActionResult> CheclMachineTime([FromBody] TaskMachine taskMachine)
+        {
+            var Message = "Not found data";
+
+            try
+            {
+                if (taskMachine != null)
+                {
+                    if (taskMachine.PlannedStartDate != null &&
+                        taskMachine.PlannedEndDate != null &&
+                        taskMachine.MachineId != null)
+                    {
+
+                        taskMachine.PlannedStartDate = taskMachine.PlannedStartDate.AddHours(7);
+                        taskMachine.PlannedEndDate = taskMachine.PlannedEndDate.AddHours(7);
+
+                        var AnyData = await this.repository.GetAllAsQueryable()
+                                                    .AnyAsync(x => (x.TaskMachineStatus == TaskMachineStatus.Wait ||
+                                                                x.TaskMachineStatus == TaskMachineStatus.Process) &&
+                                                                x.MachineId == taskMachine.MachineId &&
+                                                                taskMachine.PlannedStartDate.Date <= x.PlannedEndDate.Date &&
+                                                                taskMachine.PlannedEndDate.Date >= x.PlannedStartDate.Date);
+
+                        return new JsonResult(new { AnyData = AnyData }, this.DefaultJsonSettings);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+
+            return NotFound(new { Error = Message });
+        }
+
+        // POST: api/TaskMachine/TaskMachineWaitAndProcess
         [HttpPost("TaskMachineWaitAndProcess")]
         public async Task<IActionResult> TaskMachineWaitAndProcess([FromBody] OptionScheduleViewModel Scehdule)
         {
@@ -261,7 +300,7 @@ namespace VipcoMachine.Controllers
 
                     // Option Skip and Task
                     if (Scehdule.Skip.HasValue && Scehdule.Take.HasValue)
-                        QueryData = QueryData.Skip(Scehdule.Skip ?? 0).Take(Scehdule.Take ?? 10);
+                        QueryData = QueryData.Skip(Scehdule.Skip ?? 0).Take(Scehdule.Take ?? 4);
                 }
                 else
                 {

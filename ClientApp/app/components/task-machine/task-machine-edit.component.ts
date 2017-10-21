@@ -1,6 +1,6 @@
 ﻿// angular
 import { Component, ViewContainerRef, ViewChild } from "@angular/core";
-import { FormBuilder, FormControl, Validators, AbstractControl } from "@angular/forms";
+import { FormBuilder, FormControl, Validators, AbstractControl, FormGroup } from "@angular/forms";
 // models
 import {
     TaskMachine, TaskMachineHasOverTime,
@@ -16,10 +16,11 @@ import { TaskMachineHasOverTimeService } from "../../services/over-time/over-tim
 import { JobCardMasterService } from "../../services/jobcard-master/jobcard-master.service";
 import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-detail.service";
 import { TaskMachineService, TaskMachineServiceCommunicate } from "../../services/task-machine/task-machine.service";
+import { AuthService } from "../../services/auth/auth.service";
 // primeng
 import { SelectItem } from "primeng/primeng";
 // 3rd party
-import { TableColumn } from "@swimlane/ngx-datatable"
+import { TableColumn } from "@swimlane/ngx-datatable";
 // pipes
 import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 
@@ -28,10 +29,9 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
     templateUrl: "./task-machine-edit.component.html",
     styleUrls: ["../../styles/edit.style.scss"],
 })
-/** task-machine-edit component*/
+// task-machine-edit component*/
 export class TaskMachineEditComponent
-    extends BaseEditComponent<TaskMachine, TaskMachineService>
-{
+    extends BaseEditComponent<TaskMachine, TaskMachineService> {
     // paramater
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
     jobCardDetail: JobCardDetail = {
@@ -57,6 +57,7 @@ export class TaskMachineEditComponent
         private serviceStandard: StandardTimeService,
         private viewContainerRef: ViewContainerRef,
         private serviceDialogs: DialogsService,
+        private serviceAuth: AuthService,
         private fb: FormBuilder
     ) {
         super(
@@ -72,28 +73,28 @@ export class TaskMachineEditComponent
                 this.service.getOneKeyNumber(value.TaskMachineId)
                     .subscribe(dbData => {
                         this.editValue = dbData;
-                        // Set Date
-                        //PlanStartDate
+                        // set Date
+                        // planStartDate
                         if (this.editValue.PlannedStartDate) {
                             this.editValue.PlannedStartDate = this.editValue.PlannedStartDate != null ?
                                 new Date(this.editValue.PlannedStartDate) : new Date();
                         }
-                        //PlanEndDate
+                        // planEndDate
                         if (this.editValue.PlannedEndDate) {
                             this.editValue.PlannedEndDate = this.editValue.PlannedEndDate != null ?
                                 new Date(this.editValue.PlannedEndDate) : new Date();
                         }
-                        //ActualStartDate
+                        // actualStartDate
                         if (this.editValue.ActualStartDate) {
                             this.editValue.ActualStartDate = this.editValue.ActualStartDate != null ?
                                 new Date(this.editValue.ActualStartDate) : new Date();
                         }
-                        //ActualEndDate
+                        // actualEndDate
                         if (this.editValue.ActualEndDate) {
                             this.editValue.ActualEndDate = this.editValue.ActualEndDate != null ?
                                 new Date(this.editValue.ActualEndDate) : new Date();
                         }
-                        // OverTime
+                        // overTime
                         if (this.editValue.TaskMachineId) {
                             this.serviceOverTime.getByMasterId(this.editValue.TaskMachineId)
                                 .subscribe(dbOperator => {
@@ -108,7 +109,7 @@ export class TaskMachineEditComponent
                                 });
                         }
 
-                        //JobCardDetail
+                        // jobCardDetail
                         if (this.editValue.JobCardDetailId) {
                             this.serviceJobCardDetail.getOneKeyNumber(this.editValue.JobCardDetailId)
                                 .subscribe(dbJobCardDetail => {
@@ -128,7 +129,7 @@ export class TaskMachineEditComponent
                         TaskMachineId: 0,
                         TaskMachineStatus: 1,
                         JobCardDetailId: value.JobCardDetailId,
-                        PlannedStartDate: new Date()
+                        PlannedStartDate: new Date(),
                     };
                     this.defineData();
                     // get jobcard-detail
@@ -148,6 +149,11 @@ export class TaskMachineEditComponent
                             });
                     }
                 }
+
+                if (this.serviceAuth.getAuth) {
+                    this.editValue.AssignedByString = this.serviceAuth.getAuth.NameThai || "";
+                    this.editValue.AssignedBy = this.serviceAuth.getAuth.EmpCode || "";
+                }
             }
         } else {
             this.editValue = {
@@ -155,6 +161,12 @@ export class TaskMachineEditComponent
                 TaskMachineStatus: 1,
                 PlannedStartDate: new Date()
             };
+
+            if (this.serviceAuth.getAuth) {
+                this.editValue.AssignedByString = this.serviceAuth.getAuth.NameThai || "";
+                this.editValue.AssignedBy = this.serviceAuth.getAuth.EmpCode || "";
+            }
+
             this.defineData();
         }
     }
@@ -200,7 +212,7 @@ export class TaskMachineEditComponent
             CreateDate: [this.editValue.CreateDate],
             Modifyer: [this.editValue.Modifyer],
             ModifyDate: [this.editValue.ModifyDate],
-            //Fk
+            // fk
             MachineId: [this.editValue.MachineId,
                 [
                     Validators.required
@@ -210,19 +222,6 @@ export class TaskMachineEditComponent
             AssignedBy: [this.editValue.AssignedBy],
             PrecedingTaskMachineId: [this.editValue.PrecedingTaskMachineId],
             TaskMachineHasOverTimes: [this.editValue.TaskMachineHasOverTimes],
-            //ViewModel
-            //PlannedStartTime: [this.editValue.PlannedStartTime,
-            //    [
-            //        Validators.required
-            //    ]
-            //],
-            //PlannedEndTime: [this.editValue.PlannedEndTime,
-            //    [
-            //        Validators.required
-            //    ]
-            //],
-            //ActualStartTime: [this.editValue.ActualStartTime],
-            //ActualEndTime: [this.editValue.ActualEndTime],
             MachineString: [this.editValue.MachineString],
             CuttingPlanNo: [this.editValue.CuttingPlanNo],
             AssignedByString: [this.editValue.AssignedByString]
@@ -233,6 +232,61 @@ export class TaskMachineEditComponent
         if (control) {
             control.valueChanges.subscribe((data: any) => this.onUpdatePlanStartAndEndDate());
         }
+    }
+
+    // on Value Change Override
+    onValueChanged(data?: any): void {
+        const form: FormGroup = this.editValueForm;
+        const controlT: AbstractControl | null = form.get("TotalQuantity");
+        const controlC: AbstractControl | null = form.get("CurrentQuantity");
+
+        const controlAS: AbstractControl | null = form.get("ActualStartDate");
+        const controlAE: AbstractControl | null = form.get("ActualEndDate");
+
+        const controlPS: AbstractControl | null = form.get("PlannedStartDate");
+        const controlPE: AbstractControl | null = form.get("PlannedEndDate");
+        const controlMC: AbstractControl | null = form.get("MachineId");
+
+
+        if (controlC && controlT) {
+            if (controlC.value && controlT.value) {
+                if (controlC.value > controlT.value) {
+                    this.editValueForm.patchValue({
+                        CurrentQuantity: controlT.value
+                    });
+                }
+            }
+        }
+
+        if (controlAS && controlAE) {
+            if (controlAS.value && controlAE.value) {
+                if (controlAS.value > controlAE.value) {
+                    this.editValueForm.patchValue({
+                        ActualStartDate: controlAE.value
+                    });
+                } else if (controlAE.value < controlAS.value) {
+                    this.editValueForm.patchValue({
+                        ActualEndDate: controlAS.value
+                    });
+                }
+            }
+        }
+
+        if (controlPS && controlPE && controlMC) {
+            if (controlPS.value && controlPE.value && controlPE.value) {
+                // console.log("Check Task Machine");
+                this.service.postTaskMachineTime(form.value)
+                    .subscribe(checkData => {
+                        // console.log("checkData", checkData);
+
+                        if (checkData.AnyData) {
+                            this.serviceDialogs.context("Same Date", "This machine already has planed in same date. but it 's up to you.", this.viewContainerRef);
+                        }
+                    })
+            }
+        }
+
+        super.onValueChanged();
     }
 
     // new OverTime
@@ -306,7 +360,7 @@ export class TaskMachineEditComponent
     onRemoveOverTime(overTime: TaskMachineHasOverTime): void {
         if (overTime && this.editValue.TaskMachineHasOverTimes) {
             // find id
-            let index: number = this.editValue.TaskMachineHasOverTimes.indexOf(overTime)
+            let index: number = this.editValue.TaskMachineHasOverTimes.indexOf(overTime);
 
             if (index > -1) {
                 this.editValue.TaskMachineHasOverTimes.splice(index, 1);
@@ -320,12 +374,13 @@ export class TaskMachineEditComponent
         }
     }
 
-    // JobCardDetail
+    // jobCardDetail
     onSelectJobCardDetail(): void {
         this.serviceDialogs.dialogSelectedJobCardDetail(this.viewContainerRef,1)
             .subscribe(jobCardDetail => {
                 if (jobCardDetail) {
-                    this.jobCardDetail = Object.assign({}, jobCardDetail);;
+                    // console.log(jobCardDetail);
+                    this.jobCardDetail = Object.assign({}, jobCardDetail);
                     // cloning an object
                     this.editValueForm.patchValue({
                         JobCardDetailId: jobCardDetail.JobCardDetailId,
@@ -338,7 +393,7 @@ export class TaskMachineEditComponent
             });
     }
 
-    // AssignedBy
+    // assignedBy
     onSelectedAssignedBy(): void {
         this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef,"Once")
             .subscribe(employees => {
@@ -353,13 +408,21 @@ export class TaskMachineEditComponent
             });
     }
 
-    // Machine
+    // machine
     onSelectedMachine(): void {
         let mode: number = 0;
         if (this.jobCardDetail) {
             if (this.jobCardDetail.JobCardMaster) {
                 mode = this.jobCardDetail.JobCardMaster.TypeMachineId || 0;
             }
+        }
+
+        // debug here
+        // console.log("Mode", mode);
+
+        if (mode < 1) {
+            this.serviceDialogs.error("Warning Message", "Select \"Machine Required Detail\" befor select MachineNo.", this.viewContainerRef);
+            return;
         }
 
         this.serviceDialogs.dialogSelectMachine(this.viewContainerRef, mode)
@@ -373,11 +436,11 @@ export class TaskMachineEditComponent
             });
     }
 
-    // Update PlanDate
+    // update PlanDate
     onUpdatePlanStartAndEndDate(): void {
         if (!this.editValueForm || !this.jobCardDetail) { return; }
 
-        const form = this.editValueForm;
+        const form:FormGroup = this.editValueForm;
         const control: AbstractControl|null = form.get("PlannedStartDate");
         let planViewModel: PlanViewModel = {};
         // if have planned start date
@@ -386,13 +449,20 @@ export class TaskMachineEditComponent
                 planViewModel.PlannedStartDate = control.value;
             }
 
-            // Beark loop
+            if (!this.jobCardDetail.StandardTimeId) {
+                return;
+            } else if (this.jobCardDetail.StandardTimeId < 1) {
+                return;
+            }
+
+            // beark loop
             if (this.oldDate) {
                 if (planViewModel.PlannedStartDate) {
-                    let compare = planViewModel.PlannedStartDate.toLocaleDateString();
+                    let compare :string= planViewModel.PlannedStartDate.toLocaleDateString();
                     // console.log("Compare: " + compare + " : " + this.oldDate);
-                    if (this.oldDate === compare)
+                    if (this.oldDate === compare) {
                         return;
+                    }
                 }
             }
 
@@ -414,7 +484,7 @@ export class TaskMachineEditComponent
         }
     }
 
-    //get Attach
+    // get Attach
     getAttach(): void {
         if (this.jobCardDetail) {
             if (this.jobCardDetail.JobCardMasterId) {

@@ -52,9 +52,9 @@
     </div>
     <div class="bottom-container my-2">
         <p-dataTable [value]="taskMachines" sortField="MachineNo" rowGroupMode="rowspan"
-                     [lazy]="true" [rows]="10" [paginator]="true" [rowsPerPageOptions]="[5,10,20]"
+                     [lazy]="true" [rows]="5" [paginator]="true" [rowsPerPageOptions]="[5,10,20]"
                      [totalRecords]="totalRecords" (onLazyLoad)="loadDataLazy($event)"
-                     scrollable="true" scrollWidth="96vw">
+                     scrollable="true" scrollWidth="94vw">
             <p-headerColumnGroup>
                 <p-row>
                     <p-column *ngFor="let colup of columnsUpper" [header]="colup.header"

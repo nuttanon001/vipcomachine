@@ -25,7 +25,10 @@ import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-deta
 // jobCard-wating-dialog component*/
 export class JobCardWatingDialogComponent implements OnInit {
     onCancel: boolean = false;
-    showContextCancel: boolean;
+    onComplate: boolean = false;
+    showContext: boolean;
+    status: number;
+    message: string;
 
     selected: JobCardMaster;
     columns: Array<TableColumn> = [
@@ -42,16 +45,29 @@ export class JobCardWatingDialogComponent implements OnInit {
     // called by Angular after jobCard-wating-dialog component initialized */
     ngOnInit(): void {
         if (this.jobCardMasters) {
-            this.selected = this.jobCardMasters[0];
-            this.onCheckCancel();
+            this.onSelectedJobCardMasterSet(this.jobCardMasters[0]);
         }
+    }
+
+    onSelectedJobCardMasterSet(value: JobCardMaster) {
+        if (value) {
+            this.service.getCuttingPlanToJobCardDetail(value.JobCardMasterId)
+                .subscribe(undefined, undefined, () => {
+                    this.service.getOneKeyNumber(value.JobCardMasterId)
+                        .subscribe(dbData => {
+                            this.selected = dbData;
+                            this.onCheckCancel();
+                            this.onCheckComplate();
+                        });
+                });
+        }
+
     }
 
     // selected JobCardMaster
     onSelectedJobCardMaster(selected: any): void {
         if (selected) {
-            this.selected = selected.selected[0];
-            this.onCheckCancel();
+            this.onSelectedJobCardMasterSet(selected.selected[0]);
         }
     }
 
@@ -60,6 +76,18 @@ export class JobCardWatingDialogComponent implements OnInit {
         // debug here
         // console.log("JobCardDetail: ", jobCardDetail);
         this.dialogRef.close(jobCardDetail);
+    }
+
+    // show comfirm box
+    onShowComfirmBox(mode: number): void {
+        if (mode) {
+            this.status = mode;
+            if (mode === 3) {
+                this.message = "Are you want to cancel this Machine-Required ?";
+            } else {
+                this.message = "Are you want to complate this Machine-Required ?";
+            }
+        }
     }
 
     // check Can Cancel
@@ -75,15 +103,28 @@ export class JobCardWatingDialogComponent implements OnInit {
         }
     }
 
-    // on Cancel JobCardDetail
-    onCancelJobCard(): void {
+    // check Can Cancel
+    onCheckComplate(): void {
         if (this.selected) {
-            this.service.getCancelJobCardMaster(this.selected.JobCardMasterId)
+            this.service.getCheckJobCardCanComplate(this.selected.JobCardMasterId)
+                .subscribe(result => {
+                    // console.log(result);
+                    this.onComplate = result.Result;
+                }, Error => this.onCancel = false);
+        } else {
+            this.onCancel = false;
+        }
+    }
+
+    // on Cancel JobCardDetail
+    onChangeStatusJobCard(): void {
+        if (this.selected && this.status) {
+            this.service.getChangeStatusJobCardMaster(this.selected.JobCardMasterId,this.status)
                 .subscribe(dbUpdate => {
                     // send -99 for reload data
                     let result1: JobCardDetail = {
-                        JobCardDetailId : -99
-                    }
+                        JobCardDetailId: -99
+                    };
                     this.dialogRef.close(result1);
                 }, Error => console.error(Error));
         }
@@ -94,8 +135,8 @@ export class JobCardWatingDialogComponent implements OnInit {
         if (this.selected) {
             let result1: JobCardDetail = {
                 JobCardDetailId: mode,
-                JobCardMasterId:this.selected.JobCardMasterId
-            }
+                JobCardMasterId: this.selected.JobCardMasterId
+            };
             this.dialogRef.close(result1);
         }
     }

@@ -1,9 +1,8 @@
-﻿<H5 md-dialog-title style="color:cadetblue">New or Update Standard Time Here</H5>
-<hr />
-<div md-dialog-content class="h-75 w-100 master-container">
+﻿<div class="master-dialog">
+    <H5 style="color:cadetblue">New or Update Standard Time Here</H5>
     <div class="child-container">
         <div class="center-content">
-            <form [formGroup]="standardForm" class="w-100 h-75">
+            <form [formGroup]="standardForm">
                 <div class="my-form">
                     <label for="StandardTimeCode" class="my-label">Code:</label>
                     <div class="col-sm-4">
@@ -63,16 +62,7 @@
                 </div>
             </form>
         </div>
-        <div md-dialog-actions class="right-content ml-1">
-            <!--<button type="button" md-icon-button color="accent" (click)="onNewModel()"
-                [disabled]="!showNewModel" mdTooltip="Create new" mdTooltipPosition="left">
-            <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
-            </button>
-            <button type="button" md-icon-button color="warn" (click)="onCancelNewModel()"
-                    [disabled]="showNewModel" mdTooltip="Cancel" mdTooltipPosition="left">
-                <i class="fa fa-2x fa-times" aria-hidden="true"></i>
-            </button>
-            <hr />-->
+        <div class="right-content">
             <button type="button" md-icon-button color="primary" (click)="onUpdateClick()"
                     [disabled]="!standardForm.valid" mdTooltip="Selected" mdTooltipPosition="left">
                 <i class="fa fa-2x fa-hand-pointer-o" aria-hidden="true"></i>
@@ -84,7 +74,3 @@
         </div>
     </div>
 </div>
-<!--<div md-dialog-actions>
-    <button md-button (click)="onUpdateClick()" color="primary" [disabled]="!standardForm.valid">New/Update</button>
-    <button md-button (click)="onCancelClick()" color="warn">Cancel</button>
-</div>-->

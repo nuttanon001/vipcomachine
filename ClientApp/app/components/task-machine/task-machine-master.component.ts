@@ -77,23 +77,8 @@ export class TaskMachineMasterComponent
                 setTimeout(() => {
                     this.onDetailEdit(newTaskMachine);
                 }, 500);
-
             }
         }, error => console.error(error));
-
-        //this.route.params.subscribe((params: any) => {
-        //    let key: number = params["condition"];
-
-        //    if (key) {
-        //        let newTaskMachine: TaskMachine = {
-        //            TaskMachineId: 0,
-        //            JobCardDetailId: key
-        //        };
-        //        setTimeout(() => {
-        //            this.onDetailEdit(newTaskMachine);
-        //        }, 500);
-        //    }
-        //}, error => console.error(error));
     }
 
     // on get data with lazy load
@@ -152,6 +137,9 @@ export class TaskMachineMasterComponent
 
     // on insert data
     onInsertToDataBase(value: TaskMachine): void {
+        // Check value task machine
+        value = this.onCheckValueTaskMachine(value);
+
         if (this.serverAuth.getAuth) {
             value.Creator = this.serverAuth.getAuth.UserName || "";
         }
@@ -175,6 +163,9 @@ export class TaskMachineMasterComponent
 
     // on update data
     onUpdateToDataBase(value: TaskMachine): void {
+        // Check value task machine
+        value = this.onCheckValueTaskMachine(value);
+
         if (this.serverAuth.getAuth) {
             value.Modifyer = this.serverAuth.getAuth.UserName || "";
         }
@@ -185,8 +176,7 @@ export class TaskMachineMasterComponent
             (complete: any) => {
                 this.displayValue = complete;
                 this.onSaveComplete();
-            },
-            (error: any) => {
+            },(error: any) => {
                 console.error(error);
                 this.canSave = true;
                 this.dialogsService.error("Failed !",
@@ -209,5 +199,30 @@ export class TaskMachineMasterComponent
         } else {
             this.displayValue = undefined;
         }
+    }
+
+    // on check TaskMachine
+    onCheckValueTaskMachine(value: TaskMachine): TaskMachine {
+        if (value.CurrentQuantity) {
+            if (!value.ActualStartDate) {
+                value.ActualStartDate = new Date;
+            }
+
+            if (value.TotalQuantity === value.CurrentQuantity) {
+                if (!value.ActualEndDate) {
+                    value.ActualEndDate = new Date;
+                }
+            }
+        }
+        // if actual end set production full qty
+        if (value.ActualEndDate) {
+            value.CurrentQuantity = value.TotalQuantity;
+
+            if (!value.ActualStartDate) {
+                value.ActualStartDate = value.ActualEndDate;
+            }
+        }
+
+        return value;
     }
 }

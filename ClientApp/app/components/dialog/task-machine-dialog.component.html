@@ -1,18 +1,13 @@
-﻿<H5 md-dialog-title style="color:cadetblue">Update Progess Task Machine</H5>
-<hr />
-<div md-dialog-content class="h-100 w-100 master-container">
-    <!---->
-    <div *ngIf="taskMachine">
-        <div *ngIf="!waiting;else WaitingBlock" class="child-container">
-            <div class="center-content w-100">
-                <form [formGroup]="taskMachineForm" class="w-100 border border-info">
+﻿<div class="master-dialog">
+    <H5 style="color:cadetblue">Update Progess Task Machine</H5>
+    <div class="child-container" *ngIf="taskMachine">
+        <div class="center-content" >
+            <div *ngIf="!waiting;else WaitingBlock">
+                <form [formGroup]="taskMachineForm" class="border border-info">
                     <div class="my-form">
                         <label for="TaskMachineName" class="my-label">Task Code:</label>
                         <div class="col-sm-10">
                             {{taskMachine.TaskMachineName || "-"}}
-                            <!--<input type="text" class="my-input" placeholder="Code will automatically generated."
-                                   id="TaskMachineName" formControlName="TaskMachineName"
-                                   readonly>-->
                         </div>
                     </div>
 
@@ -20,17 +15,11 @@
                         <label for="PlannedStartDate" class="my-label">PlannedStart:</label>
                         <div class="col-sm-4">
                             {{(taskMachine.PlannedStartDate | date:'dd/MM/yyyy') || "-"}}
-                            <!--<p-calendar formControlName="PlannedStartDate" [showIcon]="true"
-                                        id="PlannedStartDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
-                            </p-calendar>-->
                         </div>
 
                         <label for="PlannedEndDate" class="my-label">PlannedEnd:</label>
                         <div class="col-sm-4">
                             {{(taskMachine.PlannedEndDate | date:'dd/MM/yyyy') || "-"}}
-                            <!--<p-calendar formControlName="PlannedEndDate" [showIcon]="true"
-                                        id="PlannedEndDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
-                            </p-calendar>-->
                         </div>
                     </div>
 
@@ -38,16 +27,13 @@
                         <label for="TotalQuantity" class="my-label">Quantity:</label>
                         <div class="col-sm-4">
                             {{taskMachine.TotalQuantity || "-"}}
-                            <!--<input type="number" class="my-input" min="0"
-                                   id="TotalQuantity" formControlName="TotalQuantity" readonly>
-                            <validation-messages [control]="taskMachineForm.controls.TotalQuantity"></validation-messages>-->
                         </div>
 
                         <label for="CurrentQuantity" class="my-label">Production:</label>
                         <div class="col-sm-4">
                             <input type="number" class="my-input" min="0" [max]="taskMachineForm.controls.TotalQuantity.value"
-                                   placeholder="Insert production number here"
-                                   id="CurrentQuantity" formControlName="CurrentQuantity">
+                                    placeholder="Insert production number here"
+                                    id="CurrentQuantity" formControlName="CurrentQuantity">
                             <validation-messages [control]="taskMachineForm.controls.CurrentQuantity"></validation-messages>
                         </div>
                     </div>
@@ -72,21 +58,21 @@
                     </div>
                 </form>
             </div>
-            <div md-dialog-actions class="right-content mx-2">
-                <button type="button" md-icon-button color="primary" (click)="onUpdateTaskMachine()"
-                        [disabled]="!taskMachineForm.valid" mdTooltip="Save" mdTooltipPosition="left">
-                    <i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i>
-                </button>
-
-                <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
-                        mdTooltip="Cancel" mdTooltipPosition="left">
-                    <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
-                </button>
-            </div>
+            <ng-template #WaitingBlock>
+                <md-progress-bar mode="indeterminate" class="w-100 my-5"></md-progress-bar>
+                Waiting... for loading
+            </ng-template>
         </div>
-        <ng-template #WaitingBlock>
-            <md-progress-bar mode="indeterminate" class="w-100 my-5"></md-progress-bar>
-            Waiting... for loading
-        </ng-template>
+        <div class="right-content">
+            <button type="button" md-icon-button color="primary" (click)="onUpdateTaskMachine()"
+                    [disabled]="!taskMachineForm.valid" mdTooltip="Save" mdTooltipPosition="left">
+                <i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i>
+            </button>
+
+            <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
+                    mdTooltip="Cancel" mdTooltipPosition="left">
+                <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
+            </button>
+        </div>
     </div>
 </div>

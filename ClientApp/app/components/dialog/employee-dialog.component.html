@@ -1,57 +1,49 @@
-﻿<H5 md-dialog-title style="color:cadetblue">Selected Employee</H5>
-<hr />
-<div md-dialog-content class="h-100 w-100 master-container">
+﻿<div class="master-dialog">
+    <H5 style="color:cadetblue">Selected Employee</H5>
     <div class="child-container">
         <div class="center-content w-100">
-            <split direction="horizontal" [gutterSize]="7" [visibleTransition]="true">
+            <split direction="horizontal" [gutterSize]="4" [visibleTransition]="true">
                 <split-area [size]="50" [order]="1">
-                    <data-table (selected)="onSelectedEmp($event)" [columns]="columns" [height]="'calc(100vh - 400px)'">
-                    </data-table>
+                    <div class="child-left-container">
+                        <data-table (selected)="onSelectedEmp($event)"
+                                    [columns]="columns"
+                                    [height]="'calc(100vh - 270px)'">
+                        </data-table>
+                    </div>
                 </split-area>
-                <split-area [size]="50" [order]="2" *ngIf="Show2ndTable">
-                    <div style="margin-top:65px;">
-                        <ngx-datatable class="material"
-                                       [rows]="selectEmployee"
-                                       [columnMode]="'flex'"
-                                       [headerHeight]="50"
-                                       [footerHeight]="0"
-                                       [rowHeight]="50"
-                                       [selectionType]="'single'">
-                            <ngx-datatable-column name="Code" prop="EmpCode" [flexGrow]="1"></ngx-datatable-column>
-                            <ngx-datatable-column name="Name" prop="NameThai" [flexGrow]="1"></ngx-datatable-column>
-                            <ngx-datatable-column [flexGrow]="1" [sortable]="false">
-                                <ng-template let-row="row" ngx-datatable-cell-template>
-                                    <button md-button (click)="onRemoveEmp(row)" color="warn">Remove</button>
-                                </ng-template>
-                            </ngx-datatable-column>
-                        </ngx-datatable>
+                <split-area [size]="50" [order]="2" >
+                    <div class="child-container">
+                        <div class="center-content" *ngIf="Show2ndTable">
+                            <div style="margin-top:65px;"></div>
+                            <ngx-datatable class="material"
+                                           [rows]="selectEmployee"
+                                           [columnMode]="'flex'"
+                                           [headerHeight]="50"
+                                           [footerHeight]="0"
+                                           [rowHeight]="50"
+                                           [selectionType]="'single'">
+                                <ngx-datatable-column name="Code" prop="EmpCode" [flexGrow]="1"></ngx-datatable-column>
+                                <ngx-datatable-column name="Name" prop="NameThai" [flexGrow]="1"></ngx-datatable-column>
+                                <ngx-datatable-column [flexGrow]="1" [sortable]="false">
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <button md-button (click)="onRemoveEmp(row)" color="warn">Remove</button>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                        <div class="right-content">
+                            <button type="button" md-icon-button color="primary" (click)="onSelectedClick()"
+                                    [disabled]="!CanSelected" mdTooltip="Selected" mdTooltipPosition="left">
+                                <i class="fa fa-2x fa-hand-pointer-o" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
+                                    mdTooltip="Cancel" mdTooltipPosition="left">
+                                <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
                 </split-area>
             </split>
         </div>
-        <div md-dialog-actions class="right-content mx-2">
-            <!--<button type="button" md-icon-button color="accent" (click)="onNewModel()"
-                    [disabled]="!showNewModel" mdTooltip="Create new" mdTooltipPosition="left">
-                <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
-            </button>
-            <button type="button" md-icon-button color="warn" (click)="onCancelNewModel()"
-                    [disabled]="showNewModel" mdTooltip="Cancel" mdTooltipPosition="left">
-                <i class="fa fa-2x fa-times" aria-hidden="true"></i>
-            </button>
-            <hr />-->
-            <button type="button" md-icon-button color="primary" (click)="onSelectedClick()"
-                    [disabled]="!CanSelected" mdTooltip="Selected" mdTooltipPosition="left">
-                <i class="fa fa-2x fa-hand-pointer-o" aria-hidden="true"></i>
-            </button>
-            <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
-                    mdTooltip="Cancel" mdTooltipPosition="left">
-                <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
-            </button>
-        </div>
     </div>
 </div>
-<!--<hr />
-<div md-dialog-actions>
-    <button md-button (click)="onSelectedClick()" [disabled]="!CanSelected" color="primary">Selected</button>
-    <button md-button (click)="onCancelClick()" color="warn">Cancel</button>
-</div>-->
