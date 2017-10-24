@@ -16,6 +16,7 @@ namespace VipcoMachine.Models
         /// Material Quality
         /// </summary>
         public double? Quality { get; set; }
+        public int? UnitNo { get; set; }
         public JobCardDetailStatus? JobCardDetailStatus { get; set; }
         [StringLength(200)]
         public string Remark { get; set; }

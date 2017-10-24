@@ -61,12 +61,12 @@ export class DataTableComponent implements OnInit,OnDestroy {
                     if (this.isDisabled === false) {
                         this.checkBox.checked = !this.isDisabled;
 
-                        console.log("onCondition");
+                        // console.log("onCondition");
                         this.onCondition(this.checkBox);
                         return;
                     }
                 }
-                console.log("columns");
+                // console.log("columns");
                 this.onScroll(0);
             }, 150);
         }

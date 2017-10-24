@@ -9,6 +9,8 @@ import { DialogsService } from "../../services/dialog/dialogs.service";
 import { MaterialService } from "../../services/material/material.service";
 // rxjs
 import { Subscription } from "rxjs/Subscription";
+// 3rd party
+import { SelectItem } from "primeng/primeng";
 
 @Component({
     selector: "jobcard-detail-edit",
@@ -26,6 +28,7 @@ export class JobcardDetailEditComponent implements OnInit {
 
     tempMaterials: Array<string>;
     materials: Array<string>;
+    unitNos: Array<SelectItem>;
     /** jobcard-detail-edit ctor */
     constructor(
         private serviceMaterial: MaterialService,
@@ -48,6 +51,14 @@ export class JobcardDetailEditComponent implements OnInit {
         if (!this.materials) {
             this.materials = new Array;
         }
+
+        if (!this.unitNos) {
+            this.unitNos = new Array;
+            this.unitNos.push({ label: "Selected Unit No.", value: undefined });
+            for (let i: number = 1; i < 20; i++) {
+                this.unitNos.push({ label: `UnitNo.${i.toString()}`, value: i });
+            }
+        }
     }
 
     // build form
@@ -55,16 +66,17 @@ export class JobcardDetailEditComponent implements OnInit {
         this.editValueForm = this.fb.group({
             JobCardDetailId: [this.EditValueDetail.JobCardDetailId],
             Material: [this.EditValueDetail.Material,
-            [
-                Validators.maxLength(200),
-            ]
+                [
+                    Validators.maxLength(200),
+                ]
             ],
             Quality: [this.EditValueDetail.Quality],
+            UnitNo: [this.EditValueDetail.UnitNo],
             JobCardDetailStatus: [this.EditValueDetail.JobCardDetailStatus],
             Remark: [this.EditValueDetail.Remark,
-            [
-                Validators.maxLength(200)
-            ]
+                [
+                    Validators.maxLength(200)
+                ]
             ],
             Creator: [this.EditValueDetail.Creator],
             CreateDate: [this.EditValueDetail.CreateDate],
@@ -99,6 +111,10 @@ export class JobcardDetailEditComponent implements OnInit {
                 newOrUpdate.Quality = 1;
             } else if (newOrUpdate.Quality < 1) {
                 newOrUpdate.Quality = 1;
+            }
+
+            if (newOrUpdate.UnitNo) {
+                newOrUpdate.CuttingPlanString += " | Unit." + newOrUpdate.UnitNo;
             }
 
             if (newOrUpdate.UnitsMeasureString || newOrUpdate.CuttingPlanString ||

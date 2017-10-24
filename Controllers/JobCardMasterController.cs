@@ -303,7 +303,7 @@ namespace VipcoMachine.Controllers
                                                                 !x.JobCardDetails.Any() && x.TypeCuttingPlan == 1)
                                                     .AsQueryable();
 
-                        if (JobMaster.TypeMachine.TypeMachineCode.Contains("GM"))
+                        if (JobMaster.TypeMachine.TypeMachineCode.ToLower().Contains("gm"))
                         {
                             CuttingPlans = CuttingPlans.Where(x => x.CuttingPlanNo.ToLower().Contains("pl"));
                         }
@@ -323,7 +323,7 @@ namespace VipcoMachine.Controllers
                                     CuttingPlanId = Cutting.CuttingPlanId,
                                     JobCardDetailStatus = JobCardDetailStatus.Wait,
                                     Material = $"{Cutting.MaterialSize ?? ""} {Cutting.MaterialGrade ?? ""}",
-                                    Quality = Cutting.Quantity,
+                                    Quality = Cutting.Quantity == null ? 1 : (Cutting.Quantity < 1 ? 1 : Cutting.Quantity),
                                     Remark = "Add by system",
                                     CreateDate = DateTime.Now,
                                     Creator = "System"
@@ -350,7 +350,7 @@ namespace VipcoMachine.Controllers
         {
             if (ListKey != null)
             {
-                var Includes = new List<string> { "EmployeeRequire", "EmployeeWrite", "TypeMachine", "ProjectCodeDetail.ProjectCodeMaster" };
+                var Includes = new List<string> { "ProjectCodeDetail.ProjectCodeMaster" };
                 var JobCardMasters = new List<JobCardMasterViewModel>();
 
                 foreach(var key in ListKey)

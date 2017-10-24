@@ -7,14 +7,14 @@
             <div class="view-container">
                 <div class="row my-1">
                     <div class="my-label">
-                        Require/McNo :
+                        Require/McNo
                     </div>
                     <div class="my-value">
                         {{displayValue.JobCardMasterNo || "-"}}
                     </div>
 
                     <div class="my-label">
-                        Description :
+                        Description
                     </div>
                     <div class="my-value">
                         {{displayValue.Description || "-"}}
@@ -23,13 +23,13 @@
 
                 <div class="row my-1">
                     <div class="my-label">
-                        DueDate :
+                        DueDate
                     </div>
                     <div class="my-value">
                         {{(displayValue.DueDate | date:'dd/MM/yyyy') || "-"}}
                     </div>
                     <div class="my-label">
-                        Date :
+                        Date
                     </div>
                     <div class="my-value">
                         {{(displayValue.JobCardDate | date:'dd/MM/yyyy') || "-"}}
@@ -38,14 +38,14 @@
 
                 <div class="row my-1">
                     <div class="my-label">
-                        Group Machine :
+                        Group Machine
                     </div>
                     <div class="my-value">
                         {{displayValue?.TypeMachineString || "-"}}
                     </div>
 
                     <div class="my-label">
-                        Job Lv2/3 :
+                        Job Lv2/3
                     </div>
                     <div class="my-value">
                         {{displayValue?.ProjectDetailString || "-"}}
@@ -54,14 +54,14 @@
 
                 <div class="row my-1">
                     <div class="my-label">
-                        Creator :
+                        Creator
                     </div>
                     <div class="my-value">
                         {{displayValue?.EmployeeWriteString || "-"}}
                     </div>
 
                     <div class="my-label">
-                        Require :
+                        Require
                     </div>
                     <div class="my-value">
                         {{displayValue?.EmployeeRequireString || "-"}}
@@ -69,10 +69,8 @@
                 </div>
 
                 <div class="row my-1">
-
-
                     <div class="my-label">
-                        Remark :
+                        Remark
                     </div>
                     <div class="my-value">
                         {{displayValue.Remark || "-"}}
@@ -81,7 +79,7 @@
 
                 <div class="row my-1">
                     <div class="my-label">
-                        Status :
+                        Status
                     </div>
                     <div class="my-value">
                         {{(displayValue.StatusString) || "-"}}
@@ -166,8 +164,8 @@
                                    [rowHeight]="50"
                                    [selectionType]="'single'"
                                    (select)="onSelect($event)">
-                        <ngx-datatable-column name="CuttingPlan" prop="CuttingPlanString" [flexGrow]="1"></ngx-datatable-column>
-                        <ngx-datatable-column name="StandardTime" prop="StandardTimeString" [flexGrow]="2"></ngx-datatable-column>
+                        <ngx-datatable-column name="CuttingPlan" prop="CuttingPlanString" [flexGrow]="3"></ngx-datatable-column>
+                        <ngx-datatable-column name="StandardTime" prop="StandardTimeString" [flexGrow]="1"></ngx-datatable-column>
                         <ngx-datatable-column name="Material" prop="Material" [flexGrow]="2"></ngx-datatable-column>
                         <ngx-datatable-column name="Quality" prop="Quality" [flexGrow]="1"></ngx-datatable-column>
                         <ngx-datatable-column name="Uom" prop="UnitsMeasureString" [flexGrow]="1"></ngx-datatable-column>

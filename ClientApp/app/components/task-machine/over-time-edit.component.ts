@@ -18,8 +18,7 @@ import { SelectItem } from "primeng/primeng";
     styleUrls: ["../../styles/edit.style.scss"],
 })
 /** over-time-edit component*/
-export class OverTimeEditComponent implements OnInit
-{
+export class OverTimeEditComponent implements OnInit {
     editValueForm: FormGroup;
     operators: Array<SelectItem>;
     operatorsEmp: Array<MachineHasOperator>;

@@ -60,6 +60,16 @@
                 <validation-messages [control]="editValueForm.controls.Remark"></validation-messages>
             </div>
         </div>
+
+        <div class="my-form">
+            <label for="UnitNo" class="my-label">UnitNo:</label>
+            <div class="col-sm-4">
+                <p-dropdown class="my-input-combobox" [options]="unitNos" filter="filter" [style]="{'width':'100%'}"
+                            id="UnitNo" formControlName="UnitNo">
+                </p-dropdown>
+                <validation-messages [control]="editValueForm.controls.UnitNo"></validation-messages>
+            </div>
+        </div>
     </form>
     <div md-dialog-actions style="border-top:1px solid #32a8cc;">
         <button md-raised-button (click)="onNewOrUpdateClick()" [disabled]="!editValueForm.valid" color="primary" class="my-1">New/Update</button>

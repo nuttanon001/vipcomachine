@@ -105,6 +105,39 @@ namespace VipcoMachine.Controllers
             return new JsonResult(this.ConverterTableToViewModel<JobCardDetailViewModel, JobCardDetail>(QueryData)
                                 , this.DefaultJsonSettings);
         }
+        // GET: api/JobCardDetail/ChangeStandardTime/5/7
+        [HttpGet("ChangeStandardTime/{JobCardDetailId}/{StandardTimeId}/{Create}")]
+        public async Task<IActionResult> ChangeStandardTime(int JobCardDetailId,int StandardTimeId,string Create)
+        {
+            var Message = "Not found JobCardDetailId";
+            try
+            {
+                if (JobCardDetailId > 0 && StandardTimeId > 0)
+                {
+                    var JobDetail = await this.repository.GetAsync(JobCardDetailId);
+                    if (JobDetail != null)
+                    {
+                        if (JobDetail.StandardTimeId != StandardTimeId)
+                        {
+                            JobDetail.StandardTimeId = StandardTimeId;
+                            JobDetail.ModifyDate = DateTime.Now;
+                            JobDetail.Modifyer = Create ?? "Someone";
+
+                            return new JsonResult(
+                                await this.repository.UpdateAsync(JobDetail, JobDetail.JobCardDetailId),
+                                this.DefaultJsonSettings);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+
+            return NotFound(new { Error = Message });
+        }
+
         #endregion
 
         #region POST

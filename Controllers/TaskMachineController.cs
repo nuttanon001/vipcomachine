@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 
 using System;
@@ -17,6 +18,7 @@ using VipcoMachine.Helpers;
 using VipcoMachine.ViewModels;
 using VipcoMachine.Services.Interfaces;
 using System.Dynamic;
+using ReportClasses;
 
 namespace VipcoMachine.Controllers
 {
@@ -32,6 +34,7 @@ namespace VipcoMachine.Controllers
         private IRepository<JobCardDetail> repositoryJobDetail;
         private IRepository<JobCardMaster> repositoryJobMaster;
         private IMapper mapper;
+        private IHostingEnvironment hostingEnvironment;
         private HelpersClass<TaskMachine> helpers;
 
         private JsonSerializerSettings DefaultJsonSettings =>
@@ -169,6 +172,7 @@ namespace VipcoMachine.Controllers
                 IRepository<MachineHasOperator> repoOperator,
                 IRepository<JobCardMaster> repoMaster,
                 IRepository<JobCardDetail> repoDetail,
+                IHostingEnvironment hosting,
                 IMapper map)
         {
             this.repository = repo;
@@ -177,6 +181,7 @@ namespace VipcoMachine.Controllers
             this.repositoryJobDetail = repoDetail;
             this.repositoryMachine = repoMachine;
             this.repositoryOperator = repoOperator;
+            this.hostingEnvironment = hosting;
             this.mapper = map;
             this.helpers = new HelpersClass<TaskMachine>();
         }
@@ -232,6 +237,7 @@ namespace VipcoMachine.Controllers
                                                     .AnyAsync(x => (x.TaskMachineStatus == TaskMachineStatus.Wait ||
                                                                 x.TaskMachineStatus == TaskMachineStatus.Process) &&
                                                                 x.MachineId == taskMachine.MachineId &&
+                                                                x.TaskMachineId != taskMachine.TaskMachineId &&
                                                                 taskMachine.PlannedStartDate.Date <= x.PlannedEndDate.Date &&
                                                                 taskMachine.PlannedEndDate.Date >= x.PlannedStartDate.Date);
 
@@ -349,7 +355,8 @@ namespace VipcoMachine.Controllers
                         rowData.Add("MachineNo", Data?.Machine?.MachineCode ?? "-");
                         rowData.Add("JobNo", JobNo);
                         rowData.Add("CT/SD", Data?.JobCardDetail?.CuttingPlan?.CuttingPlanNo +
-                            (Data?.JobCardDetail == null ? "" : " | " + Data?.JobCardDetail?.Material ?? ""));
+                            (string.IsNullOrEmpty(Data?.JobCardDetail?.Material) ? "" : $" | {Data?.JobCardDetail?.Material}" ) +
+                            (Data?.JobCardDetail?.UnitNo == null ? "" : $" | UnitNo.{Data?.JobCardDetail?.UnitNo}"));
                         rowData.Add("Qty", Qty);
                         rowData.Add("Pro", Pro);
                         rowData.Add("Progess", Math.Round(((double)(Pro * 100) / Qty), 1) + "%");
@@ -492,6 +499,9 @@ namespace VipcoMachine.Controllers
 
                 nTaskMachine.CreateDate = DateTime.Now;
                 nTaskMachine.Creator = nTaskMachine.Creator ?? "Someone";
+
+                if (nTaskMachine.JobCardDetail != null)
+                    nTaskMachine.JobCardDetail = null;
 
                 // Check TaskMachineStatus
                 if (nTaskMachine.ActualStartDate.HasValue && nTaskMachine.ActualEndDate.HasValue)
@@ -652,6 +662,70 @@ namespace VipcoMachine.Controllers
         {
 
             return NotFound(new { Error = "" });
+        }
+
+        #endregion
+
+        #region REPORT
+
+        [HttpGet("GetReportTaskMachine/{TaskMachineId}")]
+        public async Task<IActionResult> GetReportTransportation(int TaskMachineId)
+        {
+            var Message = "Not found TaskMachineId";
+            try
+            {
+                if (TaskMachineId > 0)
+                {
+                    var Includes = new List<string> { "Machine", "JobCardDetail.CuttingPlan",
+                        "JobCardDetail.JobCardMaster.ProjectCodeDetail.ProjectCodeMaster", "Employee" };
+                    var paper = await this.repository.GetAsynvWithIncludes(TaskMachineId, "TaskMachineId", Includes);
+                    if (paper != null)
+                    {
+
+                        var JobNo = "-";
+                        if (paper?.JobCardDetail?.JobCardMaster?.ProjectCodeDetail != null)
+                        {
+                            if (paper?.JobCardDetail?.JobCardMaster?.ProjectCodeDetail?.ProjectCodeMaster != null)
+                            {
+                                JobNo = $"{paper.JobCardDetail.JobCardMaster.ProjectCodeDetail.ProjectCodeMaster.ProjectCode}" +
+                                    $"/{paper.JobCardDetail.JobCardMaster.ProjectCodeDetail.ProjectCodeDetailCode}";
+                            }
+                        }
+
+                        var onePage = new OnePage()
+                        {
+                            TemplateFolder = this.hostingEnvironment.WebRootPath + "\\reports\\"
+                        };//general class for work
+
+                        var PaperModel = new PaperTaskMachine()
+                        {
+                            PaperNo = paper?.TaskMachineName ?? "",
+                            CuttingNo = paper?.JobCardDetail?.CuttingPlan?.CuttingPlanNo ?? "-",
+                            Material = paper?.JobCardDetail?.CuttingPlan?.MaterialSize ?? "-",
+                            JobNo = JobNo,
+                            Assigned = paper?.Employee?.NameThai ?? "-",
+                            MachineNo = paper?.Machine?.MachineCode ?? "-",
+                            Quantity = paper.TotalQuantity == null ? "-" : paper.TotalQuantity.Value.ToString("0.00"),
+                            PStart = paper.PlannedStartDate.ToString("dd/MMMM/yyyy"),
+                            PEnd = paper.PlannedEndDate.ToString("dd/MMMM/yyyy"),
+                            AStart = paper.ActualStartDate == null ? "-" : paper.ActualStartDate.Value.ToString("dd/MMMM/yyyy"),
+                            AEnd = paper.ActualEndDate == null ? "-" : paper.ActualEndDate.Value.ToString("dd/MMMM/yyyy"),
+                        };
+                        var stream = onePage.Export<PaperTaskMachine>(PaperModel, "PaperTaskMachine");
+
+                        stream.Seek(0, SeekOrigin.Begin);
+                        // "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reports.xlsx"
+                        // "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Reports.docx"
+                        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reports.xlsx");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+
+            return NotFound(new { Error = Message });
         }
 
         #endregion

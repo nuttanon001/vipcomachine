@@ -83,7 +83,7 @@ namespace VipcoMachine.Helpers
                 .ForMember(x => x.StandardTime, o => o.Ignore())
                 // CuttingPlan
                 .ForMember(x => x.CuttingPlanString,
-                           o => o.MapFrom(s => s.CuttingPlan == null ? "-" : s.CuttingPlan.CuttingPlanNo))
+                           o => o.MapFrom(s => s.CuttingPlan == null ? "-" : s.CuttingPlan.CuttingPlanNo + (s.UnitNo != null ? $" | Unit.{s.UnitNo}" : "")))
                 .ForMember(x => x.CuttingPlan, o => o.Ignore());
 
             CreateMap<JobCardDetailViewModel, JobCardDetail>();

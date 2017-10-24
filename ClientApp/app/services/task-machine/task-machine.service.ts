@@ -1,5 +1,5 @@
 ﻿import { Injectable } from '@angular/core';
-import { Http } from "@angular/http";
+import { Http, ResponseContentType } from "@angular/http";
 // model
 import { TaskMachine,OptionSchedule } from "../../models/model.index";
 // base-service
@@ -27,6 +27,18 @@ export class TaskMachineService extends BaseRestService<TaskMachine> {
         return this.http.post(url, JSON.stringify(taskMachine), this.getRequestOption())
             .map(this.extractData).catch(this.handleError);
     }
+
+    //===================== TaskMachine Report ===========================\\
+    // get Task Machine Number
+    getTaskMachinePaper(taskMachineId: number): Observable<any> {
+        let url: string = this.actionUrl + "GetReportTaskMachine/" + taskMachineId + "/";
+        console.log(url);
+
+        return this.http.get(url, { responseType: ResponseContentType.Blob })
+            .map(res => res.blob())
+            .catch(this.handleError)
+    }
+
 }
 
 @Injectable()

@@ -42,7 +42,10 @@ export class StdtimeSelectDialogComponent
     }
 
     // on init
-    onInit(): void { }
+    onInit(): void {
+        this.fastSelectd = true;
+    }
+
     // on get data with lazy load
     loadDataScroll(scroll: Scroll): void {
         if (this.mode) {

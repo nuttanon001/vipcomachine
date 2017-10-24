@@ -52,7 +52,19 @@ export class JobCardWatingDialogComponent implements OnInit {
     onSelectedJobCardMasterSet(value: JobCardMaster) {
         if (value) {
             this.service.getCuttingPlanToJobCardDetail(value.JobCardMasterId)
-                .subscribe(undefined, undefined, () => {
+                .subscribe(undefined,
+                Error => {
+                    // console.log("Error :");
+
+                    this.service.getOneKeyNumber(value.JobCardMasterId)
+                        .subscribe(dbData => {
+                            this.selected = dbData;
+                            this.onCheckCancel();
+                            this.onCheckComplate();
+                        });
+                }, () => {
+                    // console.log("Complete :");
+
                     this.service.getOneKeyNumber(value.JobCardMasterId)
                         .subscribe(dbData => {
                             this.selected = dbData;

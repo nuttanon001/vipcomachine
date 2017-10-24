@@ -31,4 +31,5 @@ export interface TaskMachine {
     MachineString?: string;
     CuttingPlanNo?: string;
     AssignedByString?: string;
+    StandardTimeId?: number;
 }

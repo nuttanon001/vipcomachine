@@ -8,6 +8,7 @@ import { TaskMachine, Scroll, ScrollData } from "../../models/model.index";
 import { DialogsService } from "../../services/dialog/dialogs.service";
 import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
 import { TaskMachineService, TaskMachineServiceCommunicate } from "../../services/task-machine/task-machine.service";
+import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-detail.service";
 import { AuthService } from "../../services/auth/auth.service";
 // timezone
 import * as moment from "moment-timezone";
@@ -48,6 +49,7 @@ export class TaskMachineMasterComponent
         private router: Router,
         private route: ActivatedRoute,
         private serverAuth: AuthService,
+        private serviceJobDetail: JobCardDetailService,
     ) {
         super(
             service,
@@ -145,6 +147,13 @@ export class TaskMachineMasterComponent
         }
         // change timezone
         value = this.changeTimezone(value);
+
+        // change standard-time
+        if (value.StandardTimeId && value.JobCardDetailId) {
+            this.serviceJobDetail.getChangeStandardTime(value.JobCardDetailId, value.StandardTimeId, value.Creator || "Someone")
+                .subscribe(undefined, undefined);
+        }
+
         // insert data
         this.service.post(value).subscribe(
             (complete: any) => {
@@ -171,6 +180,13 @@ export class TaskMachineMasterComponent
         }
         // change timezone
         value = this.changeTimezone(value);
+
+        // change standard-time
+        if (value.StandardTimeId && value.JobCardDetailId) {
+            this.serviceJobDetail.getChangeStandardTime(value.JobCardDetailId, value.StandardTimeId, value.Creator || "Someone")
+                .subscribe(undefined, undefined);
+        }
+
         // update data
         this.service.putKeyNumber(value, value.TaskMachineId).subscribe(
             (complete: any) => {
@@ -224,5 +240,20 @@ export class TaskMachineMasterComponent
         }
 
         return value;
+    }
+
+    // on get paper taskmachine
+    onGetPaper(value?: TaskMachine):void {
+        if (value) {
+            this.service.getTaskMachinePaper(value.TaskMachineId)
+                .subscribe(data => {
+                    let link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(data);
+                    link.download = "report_" + value.TaskMachineName + ".xlsx";
+                    link.click();
+                },
+                error => this.dialogsService.error("Error Message", "ไม่พบข้อมููลที่ต้องการ", this.viewContainerRef),
+                () => console.log('Completed file download.'));
+        }
     }
 }

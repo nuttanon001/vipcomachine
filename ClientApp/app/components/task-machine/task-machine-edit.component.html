@@ -40,7 +40,7 @@
                         <label for="StandardTimeString" class="my-label">StandardTime :</label>
                         <div class="col-sm-4">
                             <input type="text" class="my-input-click" [value]="jobCardDetail.StandardTimeString"
-                                   (click)="onSelectJobCardDetail()" placeholder="Click to selected require machine"
+                                   (click)="onStandardTimeClick()" placeholder="Click to selected require machine"
                                    id="StandardTimeString" readonly>
                         </div>
                         <label for="Material" class="my-label">Material :</label>
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                <hr />
+                <hr class="w-100"/>
                 <form [formGroup]="editValueForm">
                     <div class="my-form">
                         <label for="TaskMachineName" class="my-label">Task Code:</label>
@@ -106,6 +106,7 @@
                         <div class="col-sm-4">
                             <p-calendar formControlName="PlannedStartDate" [showIcon]="true"
                                         id="PlannedStartDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        appendTo="body"
                                         [maxDate]="editValueForm.controls.PlannedEndDate.value">
                             </p-calendar>
                             <span class="is-request-date">**</span>
@@ -116,6 +117,7 @@
                         <div class="col-sm-4">
                             <p-calendar formControlName="PlannedEndDate" [showIcon]="true"
                                         id="PlannedEndDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        appendTo="body"
                                         [minDate]="editValueForm.controls.PlannedStartDate.value">
                             </p-calendar>
                             <span class="is-request-date">**</span>
@@ -128,6 +130,7 @@
                         <div class="col-sm-4">
                             <p-calendar formControlName="ActualStartDate" [showIcon]="true"
                                         id="ActualStartDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        appendTo="body"
                                         [minDate]="editValueForm.controls.PlannedStartDate.value"
                                         [maxDate]="editValueForm.controls.ActualEndDate.value">
                             </p-calendar>
@@ -138,6 +141,7 @@
                         <div class="col-sm-4">
                             <p-calendar formControlName="ActualEndDate" [showIcon]="true"
                                         id="ActualEndDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        appendTo="body"
                                         [minDate]="editValueForm.controls.ActualStartDate.value">
                             </p-calendar>
                             <validation-messages [control]="editValueForm.controls.ActualEndDate"></validation-messages>

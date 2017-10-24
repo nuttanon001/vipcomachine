@@ -47,7 +47,7 @@ export class TaskMachineEditComponent
     overTime: TaskMachineHasOverTime | undefined;
     indexOverTime: number;
     attachFiles: Array<AttachFile> = new Array;
-    /** task-machine-edit ctor */
+    // task-machine-edit ctor */
     constructor(
         service: TaskMachineService,
         serviceCom: TaskMachineServiceCommunicate,
@@ -108,12 +108,14 @@ export class TaskMachineEditComponent
                                     });
                                 });
                         }
-
                         // jobCardDetail
                         if (this.editValue.JobCardDetailId) {
                             this.serviceJobCardDetail.getOneKeyNumber(this.editValue.JobCardDetailId)
                                 .subscribe(dbJobCardDetail => {
                                     this.jobCardDetail = dbJobCardDetail;
+                                    if (this.jobCardDetail.StandardTimeString === "-") {
+                                        this.jobCardDetail.StandardTimeString = "Click to selected StandardTime here.";
+                                    }
                                     // get attach file
                                     this.getAttach();
                                 });
@@ -137,6 +139,12 @@ export class TaskMachineEditComponent
                         this.serviceJobCardDetail.getOneKeyNumber(this.editValue.JobCardDetailId)
                             .subscribe(dbJobCardDetail => {
                                 this.jobCardDetail = dbJobCardDetail;
+
+                                this.jobCardDetail = dbJobCardDetail;
+                                if (this.jobCardDetail.StandardTimeString === "-") {
+                                    this.jobCardDetail.StandardTimeString = "Click to selected StandardTime here.";
+                                }
+
                                 if (this.editValueForm) {
                                     this.editValueForm.patchValue({
                                         TotalQuantity: dbJobCardDetail.Quality,
@@ -224,7 +232,8 @@ export class TaskMachineEditComponent
             TaskMachineHasOverTimes: [this.editValue.TaskMachineHasOverTimes],
             MachineString: [this.editValue.MachineString],
             CuttingPlanNo: [this.editValue.CuttingPlanNo],
-            AssignedByString: [this.editValue.AssignedByString]
+            AssignedByString: [this.editValue.AssignedByString],
+            StandardTimeId: [this.editValue.StandardTimeId]
         });
         this.editValueForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
 
@@ -273,7 +282,7 @@ export class TaskMachineEditComponent
         }
 
         if (controlPS && controlPE && controlMC) {
-            if (controlPS.value && controlPE.value && controlPE.value) {
+            if (controlPS.value && controlPE.value && controlMC.value) {
                 // console.log("Check Task Machine");
                 this.service.postTaskMachineTime(form.value)
                     .subscribe(checkData => {
@@ -393,6 +402,37 @@ export class TaskMachineEditComponent
             });
     }
 
+    // on StandardTime click
+    onStandardTimeClick(): void {
+        let mode: number = 0;
+        if (this.jobCardDetail) {
+            if (this.jobCardDetail.JobCardMaster) {
+                mode = this.jobCardDetail.JobCardMaster.TypeMachineId || 0;
+            }
+        }
+
+        if (mode < 1) {
+            this.serviceDialogs.error("Warning Message", "Select \"Machine Required Detail\" befor select MachineNo.", this.viewContainerRef);
+            return;
+        }
+
+        // console.log(this.MachineTypeId);
+        this.serviceDialogs.dialogSelectStandardTime(this.viewContainerRef, mode)
+            .subscribe(resultStdTime => {
+                if (resultStdTime) {
+                    // to JobCardDetail
+                    this.jobCardDetail.StandardTimeId = resultStdTime.StandardTimeId;
+                    this.jobCardDetail.StandardTimeString = `${resultStdTime.GradeMaterialString} - ${resultStdTime.StandardTimeCode}`
+                    // patch value to FormGroup
+                    this.editValueForm.patchValue({
+                        StandardTimeId: resultStdTime.StandardTimeId,
+                    });
+
+                    this.onUpdatePlanStartAndEndDate(true);
+                }
+            });
+    }
+
     // assignedBy
     onSelectedAssignedBy(): void {
         this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef,"Once")
@@ -437,7 +477,7 @@ export class TaskMachineEditComponent
     }
 
     // update PlanDate
-    onUpdatePlanStartAndEndDate(): void {
+    onUpdatePlanStartAndEndDate(standard:boolean = false): void {
         if (!this.editValueForm || !this.jobCardDetail) { return; }
 
         const form:FormGroup = this.editValueForm;
@@ -456,15 +496,18 @@ export class TaskMachineEditComponent
             }
 
             // beark loop
-            if (this.oldDate) {
-                if (planViewModel.PlannedStartDate) {
-                    let compare :string= planViewModel.PlannedStartDate.toLocaleDateString();
-                    // console.log("Compare: " + compare + " : " + this.oldDate);
-                    if (this.oldDate === compare) {
-                        return;
+            if (!standard) {
+                if (this.oldDate) {
+                    if (planViewModel.PlannedStartDate) {
+                        let compare: string = planViewModel.PlannedStartDate.toLocaleDateString();
+                        // console.log("Compare: " + compare + " : " + this.oldDate);
+                        if (this.oldDate === compare) {
+                            return;
+                        }
                     }
                 }
             }
+
 
             planViewModel.Quantity = this.jobCardDetail.Quality;
             planViewModel.StandardTimeId = this.jobCardDetail.StandardTimeId;

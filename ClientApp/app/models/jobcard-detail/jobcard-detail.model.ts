@@ -7,6 +7,7 @@ export interface JobCardDetail {
     JobCardDetailId: number;
     Material?: string;
     Quality?: number;
+    UnitNo?: number;
     JobCardDetailStatus?: number;
     Remark?: string;
     Creator?: string;

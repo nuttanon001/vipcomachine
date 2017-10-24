@@ -55,6 +55,11 @@
                             [disabled]="!canSave" mdTooltip="Save" mdTooltipPosition="left">
                         <i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i>
                     </button>
+                    <hr />
+                    <button type="button" md-icon-button color="accent" (click)="onGetPaper(displayValue)"
+                            [disabled]="ShowEdit || DisplayDataNull" mdTooltip="Report" mdTooltipPosition="left">
+                        <i class="fa fa-2x fa-file-o" aria-hidden="true"></i>
+                    </button>
                 </div>
             </div>
         </split-area>

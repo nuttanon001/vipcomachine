@@ -43,6 +43,7 @@
                         <div class="col-sm-4">
                             <p-calendar formControlName="ActualStartDate" [showIcon]="true"
                                         id="ActualStartDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        appendTo="body"
                                         [minDate]="taskMachineForm.controls.PlannedStartDate.value"
                                         [maxDate]="taskMachineForm.controls.ActualEndDate.value">
                             </p-calendar>
@@ -52,6 +53,7 @@
                         <div class="col-sm-4">
                             <p-calendar formControlName="ActualEndDate" [showIcon]="true"
                                         id="ActualEndDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        appendTo="body"
                                         [minDate]="taskMachineForm.controls.ActualStartDate.value">
                             </p-calendar>
                         </div>
