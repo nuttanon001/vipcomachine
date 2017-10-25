@@ -1,10 +1,11 @@
 ﻿<div class="edit-container mx-3 my-2">
-    <div md-dialog-actions style="border-bottom:1px solid #32a8cc;">
+    <div style="border-bottom:1px solid #32a8cc;">
         <h5>
             New/Edit OverTime.
         </h5>
     </div>
     <form [formGroup]="editValueForm">
+
         <div class="my-form">
             <label for="EmpCode" class="my-label">Employee:</label>
             <div class="col-sm-4">
@@ -39,8 +40,9 @@
                 <validation-messages [control]="editValueForm.controls.OverTimePerDate"></validation-messages>
             </div>
         </div>
+
     </form>
-    <div md-dialog-actions style="border-top:1px solid #32a8cc;">
+    <div style="border-top:1px solid #32a8cc;">
         <button md-raised-button (click)="onNewOrUpdateClick()" [disabled]="!editValueForm.valid" color="primary" class="my-1">New/Update</button>
         <button md-raised-button (click)="onCancelClick()" color="warn" class="my-1">Cancel</button>
     </div>

@@ -176,7 +176,7 @@ export class MachineEditComponent
     // remove Detail
     onRemoveOperatore(operator: MachineHasOperator) {
         if (operator && this.editValue.MachineHasOperators) {
-            let index: number = this.editValue.MachineHasOperators.indexOf(operator)
+            let index: number = this.editValue.MachineHasOperators.indexOf(operator);
             if (index > -1) {
                 // remove item
                 this.editValue.MachineHasOperators.splice(index, 1);

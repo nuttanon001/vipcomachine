@@ -167,3 +167,7 @@ label {
 :host /deep/ .is-complate {
     background-color: lightgreen;
 }
+
+textarea {
+    resize:none;
+}

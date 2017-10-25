@@ -12,6 +12,7 @@ import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/login/register.component";
 import { ProjectMasterComponent } from "./components/project-master/project-master.component";
 import { JobCardViewComponent } from "./components/jobcard/jobcard-view.component";
+import { OvertimeMasterComponent } from "./components/developer/developer.index";
 // modules
 import {
     CustomMaterialModule, ValidationModule,
@@ -33,6 +34,7 @@ import "popper.js";
         LoginComponent,
         NavMenuComponent,
         RegisterComponent,
+        OvertimeMasterComponent,
         // JobCardViewComponent,
         // ProjectMasterComponent,
     ],
@@ -47,6 +49,7 @@ import "popper.js";
             { path: "home", component: HomeComponent },
             { path: "login", component: LoginComponent },
             { path: "register", component: RegisterComponent },
+            { path: "test", component: OvertimeMasterComponent },
             // { path: "project", component: ProjectMasterComponent },
             { path: "**", redirectTo: "home" }
         ]),

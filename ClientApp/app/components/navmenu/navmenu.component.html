@@ -95,7 +95,9 @@
                         <a class="username">
                             Welcome <i>{{authService.userName}}</i>
                         </a>-->
-                    <a class="mx-1">Welcome <i>{{userName}}</i>  </a>
+                    <a class="mx-1" [routerLink]="['/test']" routerLinkActive="active" >
+                        Welcome <i>{{userName}}</i>
+                    </a>
                     <a (click)="onLogOut()">
                         <i class="fa fa-sign-out" aria-hidden="true"></i>
                         Logout

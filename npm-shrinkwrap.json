@@ -9,7 +9,7 @@
     },
     "@angular/cdk": {
       "version": "2.0.0-beta.10",
-      "from": "@angular/cdk@latest",
+      "from": "https://registry.npmjs.org/@angular/cdk/-/cdk-2.0.0-beta.10.tgz",
       "resolved": "https://registry.npmjs.org/@angular/cdk/-/cdk-2.0.0-beta.10.tgz"
     },
     "@angular/common": {
@@ -51,7 +51,7 @@
     },
     "@angular/material": {
       "version": "2.0.0-beta.10",
-      "from": "@angular/material@latest",
+      "from": "https://registry.npmjs.org/@angular/material/-/material-2.0.0-beta.10.tgz",
       "resolved": "https://registry.npmjs.org/@angular/material/-/material-2.0.0-beta.10.tgz"
     },
     "@angular/platform-browser": {
@@ -111,7 +111,8 @@
     "@types/moment-timezone": {
       "version": "0.2.34",
       "from": "https://registry.npmjs.org/@types/moment-timezone/-/moment-timezone-0.2.34.tgz",
-      "resolved": "https://registry.npmjs.org/@types/moment-timezone/-/moment-timezone-0.2.34.tgz"
+      "resolved": "https://registry.npmjs.org/@types/moment-timezone/-/moment-timezone-0.2.34.tgz",
+      "dev": true
     },
     "@types/node": {
       "version": "6.0.88",

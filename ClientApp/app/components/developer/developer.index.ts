@@ -7,3 +7,4 @@ export { MaterialComponent } from "./material.component";
 export { ProjectcodeComponent } from "./projectcode.component";
 export { StandardTimeComponent } from "./standard-time.component";
 export { TaskMachineComponent } from "./task-machine.component";
+export { OvertimeMasterComponent } from "./overtime-master.component";

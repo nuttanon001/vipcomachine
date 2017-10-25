@@ -355,7 +355,7 @@ namespace VipcoMachine.Controllers
                         rowData.Add("MachineNo", Data?.Machine?.MachineCode ?? "-");
                         rowData.Add("JobNo", JobNo);
                         rowData.Add("CT/SD", Data?.JobCardDetail?.CuttingPlan?.CuttingPlanNo +
-                            (string.IsNullOrEmpty(Data?.JobCardDetail?.Material) ? "" : $" | {Data?.JobCardDetail?.Material}" ) +
+                            (string.IsNullOrEmpty(Data?.JobCardDetail?.Material.Trim()) ? "" : $" | {Data?.JobCardDetail?.Material.Trim()}" ) +
                             (Data?.JobCardDetail?.UnitNo == null ? "" : $" | UnitNo.{Data?.JobCardDetail?.UnitNo}"));
                         rowData.Add("Qty", Qty);
                         rowData.Add("Pro", Pro);
