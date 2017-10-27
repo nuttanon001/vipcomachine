@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit, Inject } from "@angular/core";
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 import { ProjectCodeDetail } from "../../models/model.index";
 // services
@@ -21,8 +21,8 @@ export class ProjectDetailEditComponent implements OnInit {
     constructor(
         private service: TemplateProjectDetailService,
         private fb: FormBuilder,
-        public dialogRef: MdDialogRef<ProjectDetailEditComponent>,
-        @Inject(MD_DIALOG_DATA) public detail: ProjectCodeDetail
+        public dialogRef: MatDialogRef<ProjectDetailEditComponent>,
+        @Inject(MAT_DIALOG_DATA) public detail: ProjectCodeDetail
     ) { }
 
     /** Called by Angular after project-detail-edit component initialized */

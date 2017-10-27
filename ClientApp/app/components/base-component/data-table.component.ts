@@ -9,16 +9,16 @@ import { Page, PageData, Scroll, ScrollData } from "../../models/model.index";
 import { DataTableServiceCommunicate } from "../../services/service.index";
 // rxjs
 import { Subscription } from "rxjs/Subscription";
-import { MdCheckbox } from "@angular/material";
+import { MatCheckbox } from "@angular/material";
 
 @Component({
     selector: "data-table",
     template: `
     <div class="upper-tool">
         <search-box (search)="onFilter($event)" class="w-50"></search-box>
-        <md-checkbox id="checkBox" #checkBox [disabled]="isDisabled" (change)="onCondition($event)" class="w-50">
+        <mat-checkbox id="checkBox" #checkBox [disabled]="isDisabled" (change)="onCondition($event)" class="w-50">
             Filter Only User
-        </md-checkbox>
+        </mat-checkbox>
     </div>
     <ngx-datatable
         class="material datatable-scrolling"
@@ -44,7 +44,7 @@ import { MdCheckbox } from "@angular/material";
 export class DataTableComponent implements OnInit,OnDestroy {
     rows: Array<any> = new Array<any>();
     // view chlid
-    @ViewChild("checkBox") checkBox: MdCheckbox;
+    @ViewChild("checkBox") checkBox: MatCheckbox;
     // input and output
     @Output("selected") selected = new EventEmitter<any>();
     @Input("height") height: string = "calc(100vh - 165px)";

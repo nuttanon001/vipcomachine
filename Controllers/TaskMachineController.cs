@@ -669,54 +669,98 @@ namespace VipcoMachine.Controllers
         #region REPORT
 
         [HttpGet("GetReportTaskMachine/{TaskMachineId}")]
-        public async Task<IActionResult> GetReportTransportation(int TaskMachineId)
+        public async Task<IActionResult> GetReportTaskMachine(int TaskMachineId)
         {
             var Message = "Not found TaskMachineId";
             try
             {
                 if (TaskMachineId > 0)
                 {
-                    var Includes = new List<string> { "Machine", "JobCardDetail.CuttingPlan",
-                        "JobCardDetail.JobCardMaster.ProjectCodeDetail.ProjectCodeMaster", "Employee" };
+                    var Includes = new List<string> { "JobCardDetail.CuttingPlan", "Employee" };
                     var paper = await this.repository.GetAsynvWithIncludes(TaskMachineId, "TaskMachineId", Includes);
                     if (paper != null)
                     {
-
-                        var JobNo = "-";
-                        if (paper?.JobCardDetail?.JobCardMaster?.ProjectCodeDetail != null)
+                        Includes = new List<string> { "ProjectCodeDetail.ProjectCodeMaster","EmployeeRequire","EmployeeWrite","JobCardMasterHasAttachs" };
+                        var jobMaster = await this.repositoryJobMaster.GetAsynvWithIncludes(paper?.JobCardDetail?.JobCardMasterId ?? 0, "JobCardMasterId", Includes);
+                        if (jobMaster != null)
                         {
-                            if (paper?.JobCardDetail?.JobCardMaster?.ProjectCodeDetail?.ProjectCodeMaster != null)
+                            var JobNo = "-";
+                            var Level23 = "-";
+                            if (jobMaster?.ProjectCodeDetail != null)
                             {
-                                JobNo = $"{paper.JobCardDetail.JobCardMaster.ProjectCodeDetail.ProjectCodeMaster.ProjectCode}" +
-                                    $"/{paper.JobCardDetail.JobCardMaster.ProjectCodeDetail.ProjectCodeDetailCode}";
+                                if (jobMaster?.ProjectCodeDetail?.ProjectCodeMaster != null)
+                                {
+                                    JobNo = $"{jobMaster.ProjectCodeDetail.ProjectCodeMaster.ProjectCode}";
+                                    Level23 = $"{jobMaster.ProjectCodeDetail.ProjectCodeDetailCode}";
+                                }
                             }
+
+                            var onePage = new OnePage()
+                            {
+                                TemplateFolder = this.hostingEnvironment.WebRootPath + "\\reports\\"
+                            };//general class for work
+
+                            var PaperModel = new PaperTaskMachine()
+                            {
+                                Actual = paper.ActualStartDate == null ? "-" : (paper.ActualStartDate.Value.ToString("dd/MMM/yy") + "  ถึง  " +
+                                         (paper.ActualEndDate == null ? "-" : paper.ActualEndDate.Value.ToString("dd/MMM/yy"))),
+                                CreateBy = jobMaster?.EmployeeWrite.NameThai ?? "-",
+                                DueDate = jobMaster.DueDate == null ? "-" : jobMaster.DueDate.Value.ToString("dd/MMM/yy"),
+                                DateRequired = jobMaster.JobCardDate == null ? "-" : jobMaster.JobCardDate.Value.ToString("dd/MMM/yy"),
+                                Employee1 = "-",
+                                Employee2 = "-",
+                                Employee3 = "-",
+                                Employee4 = "-",
+                                Level23 = Level23,
+                                JobNo = JobNo,
+                                Mate1 = paper?.JobCardDetail?.Material ?? "-",
+                                Plan = paper.PlannedStartDate.ToString("dd/MMM/yy") + "  ถึง  " + paper.PlannedEndDate.ToString("dd/MMM/yy"),
+                                Recevied = jobMaster?.EmployeeRequire?.NameThai ?? "-",
+                                Remark = paper?.Description ?? "-",
+                                ShopDrawing = paper?.JobCardDetail?.CuttingPlan?.CuttingPlanNo ?? "-",
+                                TaskMachineNo = paper?.TaskMachineName ?? "",
+                                TotalAttach = jobMaster?.JobCardMasterHasAttachs?.Count() > 0 ? jobMaster.JobCardMasterHasAttachs.Count().ToString("00") : "-",
+                            };
+
+                            Includes = new List<string>() { "TypeMachine", "MachineHasOperators.Employee" };
+                            var machine = await this.repositoryMachine.GetAsynvWithIncludes(paper?.MachineId ?? 0, "MachineId", Includes);
+                            if (machine != null)
+                            {
+                                PaperModel.MachineNo = machine?.MachineCode ?? "-";
+                                PaperModel.TypeMachine = machine?.TypeMachine?.TypeMachineCode ?? "-";
+
+                                int row = 1;
+                                foreach (var emp in machine.MachineHasOperators)
+                                {
+                                    switch (row)
+                                    {
+                                        case 1:
+                                            PaperModel.Employee1 = emp.Employee.NameThai;
+                                            break;
+                                        case 2:
+                                            PaperModel.Employee2 = emp.Employee.NameThai;
+                                            break;
+                                        case 3:
+                                            PaperModel.Employee3 = emp.Employee.NameThai;
+                                            break;
+                                        case 4:
+                                            PaperModel.Employee4 = emp.Employee.NameThai;
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    row++;
+                                }
+                            }
+
+
+                            var stream = onePage.Export<PaperTaskMachine>(PaperModel, "PaperTaskMachine2");
+
+                            stream.Seek(0, SeekOrigin.Begin);
+                            // "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reports.xlsx"
+                            // "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Reports.docx"
+                            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reports.xlsx");
                         }
-
-                        var onePage = new OnePage()
-                        {
-                            TemplateFolder = this.hostingEnvironment.WebRootPath + "\\reports\\"
-                        };//general class for work
-
-                        var PaperModel = new PaperTaskMachine()
-                        {
-                            PaperNo = paper?.TaskMachineName ?? "",
-                            CuttingNo = paper?.JobCardDetail?.CuttingPlan?.CuttingPlanNo ?? "-",
-                            Material = paper?.JobCardDetail?.CuttingPlan?.MaterialSize ?? "-",
-                            JobNo = JobNo,
-                            Assigned = paper?.Employee?.NameThai ?? "-",
-                            MachineNo = paper?.Machine?.MachineCode ?? "-",
-                            Quantity = paper.TotalQuantity == null ? "-" : paper.TotalQuantity.Value.ToString("0.00"),
-                            PStart = paper.PlannedStartDate.ToString("dd/MMMM/yyyy"),
-                            PEnd = paper.PlannedEndDate.ToString("dd/MMMM/yyyy"),
-                            AStart = paper.ActualStartDate == null ? "-" : paper.ActualStartDate.Value.ToString("dd/MMMM/yyyy"),
-                            AEnd = paper.ActualEndDate == null ? "-" : paper.ActualEndDate.Value.ToString("dd/MMMM/yyyy"),
-                        };
-                        var stream = onePage.Export<PaperTaskMachine>(PaperModel, "PaperTaskMachine");
-
-                        stream.Seek(0, SeekOrigin.Begin);
-                        // "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reports.xlsx"
-                        // "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Reports.docx"
-                        return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reports.xlsx");
                     }
                 }
             }
@@ -728,6 +772,80 @@ namespace VipcoMachine.Controllers
             return NotFound(new { Error = Message });
         }
 
+        [HttpGet("GetReportTaskMachineOverTime/{TaskMachineId}")]
+        public async Task<IActionResult> GetReportTaskMachineOverTime(int TaskMachineId)
+        {
+            var Message = "Not found TaskMachineId";
+            try
+            {
+                if (TaskMachineId > 0)
+                {
+                    var Includes = new List<string> {"TaskMachineHasOverTimes.Employee","Machine" };
+                    var taskMachine = await this.repository.GetAsynvWithIncludes(TaskMachineId, "TaskMachineId", Includes);
+
+                    if (taskMachine != null)
+                    {
+                        var overTimes = new List<PaperTaskMachineOverTime>();
+
+                        foreach (var item in taskMachine.TaskMachineHasOverTimes.OrderBy(x => x.OverTimeDate))
+                        {
+                            if (item.OverTimeDate == null)
+                                continue;
+
+                            var Stime = new TimeSpan();
+                            var Etime = new TimeSpan();
+
+                            if (item.OverTimeDate.Value.DayOfWeek == DayOfWeek.Sunday)
+                            {
+                                Stime = new TimeSpan(8, 0, 0);
+                                Etime = new TimeSpan((int)(item.OverTimePerDate ?? 0) + 8, 0, 0);
+                            }
+                            else
+                            {
+                                Stime = new TimeSpan(17, 0, 0);
+                                Etime = new TimeSpan((int)(item.OverTimePerDate ?? 0) + 17, 0, 0);
+                            }
+
+                            overTimes.Add(new PaperTaskMachineOverTime()
+                            {
+                                DateOverTime = item.OverTimeDate.Value.ToString("dd/MMM/yy") + " " + Stime.ToString("HH:mm"),
+                                EmpCode = item.EmpCode ?? "-",
+                                EmpName = item?.Employee?.NameThai ?? "-"
+                            });
+                        }
+
+                        if (overTimes.Any())
+                        {
+                            var worker = new Worker()
+                            {
+                                TemplateFolder = this.hostingEnvironment.WebRootPath + "\\reports\\",
+                            };
+
+                            var creDataTable = new MyDataTable();
+                            var dataTable = creDataTable.CreateMyDataTable<PaperTaskMachineOverTime>(overTimes);
+
+                            Dictionary<string, string> DicLabel = new Dictionary<string, string>()
+                            {
+                                { "TaskMachineNo", taskMachine?.TaskMachineName ?? "-" },
+                                { "MachineNo", taskMachine?.Machine?.MachineCode ?? "-" },
+                            };
+
+                            var stream = worker.Export(dataTable, DicLabel, "TaskMachineOverTime");
+                            stream.Seek(0, SeekOrigin.Begin);
+                            // "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reports.xlsx"
+                            // "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "Reports.docx"
+                            return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Reports.xlsx");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+
+            return NotFound(new { Error = Message });
+        }
         #endregion
     }
 }

@@ -1,6 +1,6 @@
-﻿<H5 md-dialog-title style="color:cadetblue">New or Update JobLevel2/3 Here</H5>
+﻿<H5 mat-dialog-title style="color:cadetblue">New or Update JobLevel2/3 Here</H5>
 <hr />
-<div md-dialog-content class="h-75">
+<div mat-dialog-content class="h-75">
     <form [formGroup]="detailForm">
         <div class="my-form">
             <label for="ProjectCodeDetailCode" class="my-label-col-3">Level Name:</label>
@@ -21,7 +21,7 @@
         </div>
     </form>
 </div>
-<div md-dialog-actions>
-    <button md-button (click)="onUpdateClick()" color="primary" [disabled]="!detailForm.valid">New/Update</button>
-    <button md-button (click)="onCancelClick()" color="warn" >Cancel</button>
+<div mat-dialog-actions>
+    <button mat-button (click)="onUpdateClick()" color="primary" [disabled]="!detailForm.valid">New/Update</button>
+    <button mat-button (click)="onCancelClick()" color="warn" >Cancel</button>
 </div>

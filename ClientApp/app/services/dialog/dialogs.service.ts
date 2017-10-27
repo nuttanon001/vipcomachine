@@ -1,4 +1,4 @@
-﻿import { MdDialogRef, MdDialog, MdDialogConfig } from "@angular/material";
+﻿import { MatDialogRef, MatDialog, MatDialogConfig } from "@angular/material";
 import { Injectable, ViewContainerRef } from "@angular/core";
 import { Observable } from "rxjs/Rx";
 
@@ -34,12 +34,12 @@ export class DialogsService {
     width: string = "950px";
     height: string = "500px";
 
-    constructor(private dialog: MdDialog) { }
+    constructor(private dialog: MatDialog) { }
 
     public confirm(title: string, message: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
-        let dialogRef: MdDialogRef<ConfirmDialog>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<ConfirmDialog>;
+        let config = new MatDialogConfig();
         config.viewContainerRef = viewContainerRef;
 
         dialogRef = this.dialog.open(ConfirmDialog, config);
@@ -52,8 +52,8 @@ export class DialogsService {
 
     public context(title: string, message: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
-        let dialogRef: MdDialogRef<ContextDialog>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<ContextDialog>;
+        let config = new MatDialogConfig();
         config.viewContainerRef = viewContainerRef;
 
         dialogRef = this.dialog.open(ContextDialog, config);
@@ -66,8 +66,8 @@ export class DialogsService {
 
     public error(title: string, message: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
-        let dialogRef: MdDialogRef<ErrorDialog>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<ErrorDialog>;
+        let config = new MatDialogConfig();
         config.viewContainerRef = viewContainerRef;
 
         dialogRef = this.dialog.open(ErrorDialog, config);
@@ -79,8 +79,8 @@ export class DialogsService {
     }
 
     public dialogSelectedDetail(viewContainerRef: ViewContainerRef): Observable<ProjectCodeDetail> {
-        let dialogRef: MdDialogRef<ProjectDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<ProjectDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -94,8 +94,8 @@ export class DialogsService {
     }
 
     public dialogSelectMaterial(viewContainerRef: ViewContainerRef): Observable<Material> {
-        let dialogRef: MdDialogRef<MaterialDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<MaterialDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -110,8 +110,8 @@ export class DialogsService {
 
     public dialogSelectEmployee(viewContainerRef: ViewContainerRef, mode:string = ""): Observable<Array<Employee>> {
 
-        let dialogRef: MdDialogRef<EmployeeDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<EmployeeDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -126,8 +126,8 @@ export class DialogsService {
     }
 
     public dialogSelectMachine(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<Machine> {
-        let dialogRef: MdDialogRef<MachineDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<MachineDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -142,8 +142,8 @@ export class DialogsService {
     }
 
     public dialogNewEditStandardTime(viewContainerRef: ViewContainerRef, standard: StandardTime,): Observable<StandardTime> {
-        let dialogRef: MdDialogRef<StandardTimeDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<StandardTimeDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -158,8 +158,8 @@ export class DialogsService {
     }
 
     public dialogSelectCuttingPlan(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<CuttingPlan> {
-        let dialogRef: MdDialogRef<CuttingPlanDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<CuttingPlanDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -176,8 +176,8 @@ export class DialogsService {
     }
 
     public dialogSelectStandardTime(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<StandardTime> {
-        let dialogRef: MdDialogRef<StdtimeSelectDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<StdtimeSelectDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -192,8 +192,8 @@ export class DialogsService {
     }
 
     public dialogSelectUom(viewContainerRef: ViewContainerRef): Observable<UnitsMeasure> {
-        let dialogRef: MdDialogRef<UomDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<UomDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -207,8 +207,8 @@ export class DialogsService {
     }
 
     public dialogSelectedJobCardDetail(viewContainerRef: ViewContainerRef,mode:number = 0): Observable<JobCardDetail>{
-        let dialogRef: MdDialogRef<JobcardDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<JobcardDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -223,8 +223,8 @@ export class DialogsService {
     }
 
     public dialogSelectedJobCardDetailForWait(viewContainerRef: ViewContainerRef, jobCardMasters:Array<JobCardMaster>): Observable<JobCardDetail> {
-        let dialogRef: MdDialogRef<JobCardWatingDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<JobCardWatingDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -239,8 +239,8 @@ export class DialogsService {
     }
 
     public dialogUpdateProgessTaskMachine(viewContainerRef: ViewContainerRef, TaskMachineId: number): Observable<TaskMachine> {
-        let dialogRef: MdDialogRef<TaskMachineDialogComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<TaskMachineDialogComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;

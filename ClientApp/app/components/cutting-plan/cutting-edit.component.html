@@ -1,7 +1,7 @@
 ﻿<div *ngIf="editValue; else elseBlock">
-    <md-tab-group>
-        <md-tab>
-            <ng-template md-tab-label>
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
                 <b>Cutting Plan</b>
             </ng-template>
             <div class="edit-container">
@@ -66,11 +66,11 @@
                     </div>
                 </form>
             </div>
-        </md-tab>
-    </md-tab-group>
+        </mat-tab>
+    </mat-tab-group>
 </div>
 
 <ng-template #elseBlock>
-    <md-progress-bar mode="indeterminate" style="margin-top:50px;"></md-progress-bar>
+    <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
     Waiting... for loading
 </ng-template>

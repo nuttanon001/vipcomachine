@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { MdMenuTrigger } from "@angular/material";
+import { MatMenuTrigger } from "@angular/material";
 // service
 // unmark this if AuthService complete
 import { AuthService } from "../../services/service.index";
@@ -12,8 +12,8 @@ import { User } from "../../models/model.index";
     styleUrls: ["../../styles/navmenu.style.scss"],
 })
 export class NavMenuComponent implements OnInit {
-    @ViewChild("mainMenu") mainMenu: MdMenuTrigger;
-    @ViewChild("subMenu") subMenu: MdMenuTrigger;
+    @ViewChild("mainMenu") mainMenu: MatMenuTrigger;
+    @ViewChild("subMenu") subMenu: MatMenuTrigger;
 
     constructor(
         // unmark this if AuthService complete

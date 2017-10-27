@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy, Inject, ViewChild } from "@angular/core";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 import {
     JobCardMaster, JobCardDetail,
@@ -62,8 +62,8 @@ export class JobcardDialogComponent
         private serviceMaster: JobCardMasterService,
         private serviceDetail: JobCardDetailService,
         private serviceDataTable: DataTableServiceCommunicate<JobCardMaster>,
-        public dialogRef: MdDialogRef<JobcardDialogComponent>,
-        @Inject(MD_DIALOG_DATA) public mode: number
+        public dialogRef: MatDialogRef<JobcardDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public mode: number
     ) { }
 
     /** Called by Angular after jobcard-dialog component initialized */

@@ -1,4 +1,4 @@
-﻿import { MdDialogRef } from '@angular/material';
+﻿import { MatDialogRef } from '@angular/material';
 import { Component } from '@angular/core';
 
 @Component({
@@ -11,8 +11,8 @@ import { Component } from '@angular/core';
         </h4>
     </div>
     <p>{{ message }}</p>
-    <button type="submit" md-raised-button (click)="dialogRef.close(true)" color="accent">Yes</button>
-    <button type="button" md-button (click)="dialogRef.close()" color="warn">No</button>
+    <button type="submit" mat-raised-button (click)="dialogRef.close(true)" color="accent">Yes</button>
+    <button type="button" mat-button (click)="dialogRef.close()" color="warn">No</button>
     `,
 })
 export class ConfirmDialog {
@@ -20,7 +20,7 @@ export class ConfirmDialog {
     public title: string;
     public message: string;
 
-    constructor(public dialogRef: MdDialogRef<ConfirmDialog>) {
+    constructor(public dialogRef: MatDialogRef<ConfirmDialog>) {
 
     }
 }

@@ -61,18 +61,18 @@
                 </form>
             </div>
             <ng-template #WaitingBlock>
-                <md-progress-bar mode="indeterminate" class="w-100 my-5"></md-progress-bar>
+                <mat-progress-bar mode="indeterminate" class="w-100 my-5"></mat-progress-bar>
                 Waiting... for loading
             </ng-template>
         </div>
         <div class="right-content">
-            <button type="button" md-icon-button color="primary" (click)="onUpdateTaskMachine()"
-                    [disabled]="!taskMachineForm.valid" mdTooltip="Save" mdTooltipPosition="left">
+            <button type="button" mat-icon-button color="primary" (click)="onUpdateTaskMachine()"
+                    [disabled]="!taskMachineForm.valid" matTooltip="Save" matTooltipPosition="left">
                 <i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i>
             </button>
 
-            <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
-                    mdTooltip="Cancel" mdTooltipPosition="left">
+            <button type="button" mat-icon-button color="warn" (click)="onCancelClick()"
+                    matTooltip="Cancel" matTooltipPosition="left">
                 <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
             </button>
         </div>

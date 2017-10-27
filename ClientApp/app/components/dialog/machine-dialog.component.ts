@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy, Inject, ViewChild } from "@angular/core";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 import {
     Machine, TypeMachine,
@@ -51,8 +51,8 @@ export class MachineDialogComponent
     constructor(
         private serviceMachine: MachineService,
         private serviceTypeMachine: TypeMachineService,
-        public dialogRef: MdDialogRef<MachineDialogComponent>,
-        @Inject(MD_DIALOG_DATA) public mode: number
+        public dialogRef: MatDialogRef<MachineDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public mode: number
     ) { }
 
     /** Called by Angular after machine-dialog component initialized */

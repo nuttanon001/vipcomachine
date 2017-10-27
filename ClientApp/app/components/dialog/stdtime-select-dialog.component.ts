@@ -1,5 +1,5 @@
 ﻿import { Component, OnDestroy, Inject } from "@angular/core";
-import { MdDialogRef, MD_DIALOG_DATA } from "@angular/material";
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 // models
 import { StandardTime, Scroll } from "../../models/model.index";
 // service
@@ -23,8 +23,8 @@ export class StdtimeSelectDialogComponent
     constructor(
         public service: StandardTimeService,
         public serviceDataTable: DataTableServiceCommunicate<StandardTime>,
-        public dialogRef: MdDialogRef<StdtimeSelectDialogComponent>,
-        @Inject(MD_DIALOG_DATA) public mode: number
+        public dialogRef: MatDialogRef<StdtimeSelectDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public mode: number
     ) {
         super(
             service,

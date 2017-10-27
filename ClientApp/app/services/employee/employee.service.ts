@@ -1,6 +1,6 @@
 ﻿import { Injectable,ViewContainerRef } from '@angular/core';
 import { Http } from "@angular/http";
-import { MdDialogRef, MdDialog, MdDialogConfig } from "@angular/material";
+import { MatDialogRef, MatDialog, MatDialogConfig } from "@angular/material";
 // rxjs
 import { Observable } from "rxjs/Rx";
 // model
@@ -12,7 +12,7 @@ import { BaseRestService } from "../service.index";
 export class EmployeeService extends BaseRestService<Employee> {
     constructor(
         http: Http,
-        private dialog: MdDialog
+        private dialog: MatDialog
     ) {
         super(http, "api/Employee/");
     }

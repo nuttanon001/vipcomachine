@@ -6,33 +6,33 @@
             <div>
                 <i class="fa fa-search" aria-hidden="true"></i>
                 <input type="text" formControlName="Filter" placeholder="Insert require machine code to filter"
-                       style="width:250px;" mdTooltip="Selected training">
+                       style="width:250px;" matTooltip="Selected training">
             </div>
 
             <div>
                 <i class="fa fa-chain" aria-hidden="true"></i>
-                <p-dropdown [options]="proMasters" formControlName="JobNo" [filter]="true" mdTooltip="Selected location of employee"
+                <p-dropdown [options]="proMasters" formControlName="JobNo" [filter]="true" matTooltip="Selected location of employee"
                             [style]="{'width':'250px'}" placeholder="Filter by job number">
                 </p-dropdown>
             </div>
 
             <div>
                 <i class="fa fa-chain" aria-hidden="true"></i>
-                <p-dropdown [options]="proDetails" formControlName="Level2" [filter]="true" mdTooltip="Selected location of employee"
+                <p-dropdown [options]="proDetails" formControlName="Level2" [filter]="true" matTooltip="Selected location of employee"
                             [style]="{'width':'250px'}" placeholder="Filter by job level2/3">
                 </p-dropdown>
             </div>
 
             <div>
                 <i class="fa fa-chain" aria-hidden="true"></i>
-                <p-dropdown [options]="typeMachine" formControlName="TypeMachineId" [filter]="true" mdTooltip="Selected group of employee"
+                <p-dropdown [options]="typeMachine" formControlName="TypeMachineId" [filter]="true" matTooltip="Selected group of employee"
                             [style]="{'width':'250px'}" placeholder="Filter by machine type">
                 </p-dropdown>
             </div>
 
             <div >
-                <button type="button" md-mini-fab color="warn" (click)="resetFilter()"
-                        mdTooltip="Reset all filter" style="margin:4px;">
+                <button type="button" mat-mini-fab color="warn" (click)="resetFilter()"
+                        matTooltip="Reset all filter" style="margin:4px;">
                     <i class="fa fa-2x fa-minus" aria-hidden="true" style="margin:0px;"></i>
                 </button>
             </div>
@@ -46,8 +46,8 @@
 
         Reload data in {{message}} sec.
         <div style="width:98%;">
-            <md-progress-bar color="primary" [value]="count" mode="determinate">
-            </md-progress-bar>
+            <mat-progress-bar color="primary" [value]="count" mode="determinate">
+            </mat-progress-bar>
         </div>
     </div>
     <div class="bottom-container my-2">

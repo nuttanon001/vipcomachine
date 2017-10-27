@@ -1,9 +1,9 @@
 ﻿<div class="master-container">
     <div class="child-container">
         <div class="edit-center-content">
-            <md-tab-group>
-                <md-tab>
-                    <ng-template md-tab-label>
+            <mat-tab-group>
+                <mat-tab>
+                    <ng-template mat-tab-label>
                         <b>Import CSV</b>
                     </ng-template>
 
@@ -14,11 +14,11 @@
                         <div class="border border-info border-right-0 border-left-0">
                             <div class="my-form">
                                 <div class="col-sm-1">
-                                    <button md-button (click)="onClearData()" color="warn">ClearData</button>
+                                    <button mat-button (click)="onClearData()" color="warn">ClearData</button>
                                 </div>
                                 <label for="fileFormat" class="my-label">FileFormat:</label>
                                 <div class="col-sm-2">
-                                    <button md-button color="primary" (click)="onOpenDownLoadFormatFile('/files/ImportFormat.csv')">Download File Import</button>
+                                    <button mat-button color="primary" (click)="onOpenDownLoadFormatFile('/files/ImportFormat.csv')">Download File Import</button>
                                 </div>
 
                                 <label for="inputFile" class="my-label">ImageMachine:</label>
@@ -72,13 +72,13 @@
                         </div>
                     </div>
 
-                </md-tab>
-            </md-tab-group>
+                </mat-tab>
+            </mat-tab-group>
         </div>
         <!--Right-->
         <div class="right-content m-2">
-            <button type="button" md-icon-button color="primary" (click)="onSubmit()"
-                    [disabled]="!importDatas.length" mdTooltip="Save" mdTooltipPosition="left">
+            <button type="button" mat-icon-button color="primary" (click)="onSubmit()"
+                    [disabled]="!importDatas.length" matTooltip="Save" matTooltipPosition="left">
                 <i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i>
             </button>
         </div>

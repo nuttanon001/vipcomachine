@@ -1,5 +1,5 @@
 ﻿<div class="edit-container mx-3 my-2">
-    <div md-dialog-actions style="border-bottom:1px solid #32a8cc;">
+    <div mat-dialog-actions style="border-bottom:1px solid #32a8cc;">
         <h5>
             New/Edit Require Machine Detail.
         </h5>
@@ -71,8 +71,8 @@
             </div>
         </div>
     </form>
-    <div md-dialog-actions style="border-top:1px solid #32a8cc;">
-        <button md-raised-button (click)="onNewOrUpdateClick()" [disabled]="!editValueForm.valid" color="primary" class="my-1">New/Update</button>
-        <button md-raised-button (click)="onCancelClick()" color="warn" class="my-1">Cancel</button>
+    <div mat-dialog-actions style="border-top:1px solid #32a8cc;">
+        <button mat-raised-button (click)="onNewOrUpdateClick()" [disabled]="!editValueForm.valid" color="primary" class="my-1">New/Update</button>
+        <button mat-raised-button (click)="onCancelClick()" color="warn" class="my-1">Cancel</button>
     </div>
 </div>

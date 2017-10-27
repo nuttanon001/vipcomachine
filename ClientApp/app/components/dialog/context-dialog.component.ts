@@ -1,4 +1,4 @@
-﻿import { MdDialogRef } from '@angular/material';
+﻿import { MatDialogRef } from '@angular/material';
 import { Component } from '@angular/core';
 
 @Component({
@@ -13,7 +13,7 @@ import { Component } from '@angular/core';
     <p>
         {{ message }}
     </p>
-    <button type="submit" md-raised-button (click)="dialogRef.close(true)" color="accent">รับทราบ</button>
+    <button type="submit" mat-raised-button (click)="dialogRef.close(true)" color="accent">รับทราบ</button>
     `,
 })
 export class ContextDialog {
@@ -21,7 +21,7 @@ export class ContextDialog {
     public title: string;
     public message: string;
 
-    constructor(public dialogRef: MdDialogRef<ContextDialog>) {
+    constructor(public dialogRef: MatDialogRef<ContextDialog>) {
 
     }
 }

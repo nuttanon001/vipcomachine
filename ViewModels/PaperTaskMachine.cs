@@ -7,16 +7,27 @@ namespace VipcoMachine.ViewModels
 {
     public class PaperTaskMachine
     {
-        public string PaperNo { get; set; }
-        public string CuttingNo { get; set; }
+        public string DateRequired { get; set; }
+        public string CreateBy { get; set; }
         public string JobNo { get; set; }
-        public string Material { get; set; }
-        public string Quantity { get; set; }
+        public string TypeMachine { get; set; }
+        public string Level23 { get; set; }
+        public string ShopDrawing { get; set; }
+        public string TotalAttach { get; set; }
+        /// <summary>
+        /// Mate and Quantity
+        /// </summary>
+        public string Mate1 { get; set; }
+        public string DueDate { get; set; }
+        public string Recevied { get; set; }
+        public string TaskMachineNo { get; set; }
         public string MachineNo { get; set; }
-        public string Assigned { get; set; }
-        public string PStart { get; set; }
-        public string PEnd { get; set; }
-        public string AStart { get; set; }
-        public string AEnd { get; set; }
+        public string Employee1 { get; set; }
+        public string Employee2 { get; set; }
+        public string Employee3 { get; set; }
+        public string Employee4 { get; set; }
+        public string Plan { get; set; }
+        public string Actual { get; set; }
+        public string Remark { get; set; }
     }
 }

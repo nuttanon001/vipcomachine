@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy, Inject, ViewChild } from "@angular/core";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 import { Material, Scroll } from "../../models/model.index";
 // service
@@ -40,7 +40,7 @@ export class MaterialDialogComponent implements OnInit, OnDestroy
     constructor(
         private serviceMaterial: MaterialService,
         private serviceDataTable: DataTableServiceCommunicate<Material>,
-        public dialogRef: MdDialogRef<MaterialDialogComponent>
+        public dialogRef: MatDialogRef<MaterialDialogComponent>
     ) { }
 
     /** Called by Angular after material-dialog component initialized */

@@ -10,7 +10,7 @@
             <div class="child-container">
                 <!--Left-->
                 <div class="left-content">
-                    <div class="hide-table my-2" (click)="hideleft = !hideleft" mdTooltip="Hide/Show Table" mdTooltipPosition="right">
+                    <div class="hide-table my-2" (click)="hideleft = !hideleft" matTooltip="Hide/Show Table" matTooltipPosition="right">
                     </div>
                 </div>
                 <!--Center-->
@@ -33,8 +33,8 @@
                 </div>
                 <!--Right-->
                 <div class="right-content">
-                    <button type="button" md-icon-button color="primary" (click)="onSubmit()"
-                            [disabled]="!canSave" mdTooltip="Save" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="primary" (click)="onSubmit()"
+                            [disabled]="!canSave" matTooltip="Save" matTooltipPosition="left">
                         <i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i>
                     </button>
                 </div>

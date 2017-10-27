@@ -1,6 +1,6 @@
 ﻿import { Injectable, ViewContainerRef } from "@angular/core";
 import { Http } from "@angular/http";
-import { MdDialogRef, MdDialog, MdDialogConfig } from "@angular/material";
+import { MatDialogRef, MatDialog, MatDialogConfig } from "@angular/material";
 // rxjs
 import { Observable } from "rxjs/Rx";
 // component
@@ -14,14 +14,14 @@ import { BaseRestService } from "../service.index";
 export class ProjectCodeDetailService extends BaseRestService<ProjectCodeDetail> {
     constructor(
         http: Http,
-        private dialog: MdDialog
+        private dialog: MatDialog
     ) {
         super(http, "api/ProjectCodeDetail/");
     }
 
     public dialogProjectDetail(detail: ProjectCodeDetail, viewContainerRef: ViewContainerRef): Observable<ProjectCodeDetail> {
-        let dialogRef: MdDialogRef<ProjectDetailEditComponent>;
-        let config = new MdDialogConfig();
+        let dialogRef: MatDialogRef<ProjectDetailEditComponent>;
+        let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;

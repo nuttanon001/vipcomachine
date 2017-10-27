@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy, Inject, ViewChild } from "@angular/core";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 import {
     ProjectCodeMaster, ProjectCodeDetail,
@@ -60,7 +60,7 @@ export class ProjectDialogComponent
         private serviceMaster: ProjectCodeMasterService,
         private serviceDetail: ProjectCodeDetailEditService,
         private serviceDataTable: DataTableServiceCommunicate<ProjectCodeMaster>,
-        public dialogRef: MdDialogRef<ProjectDialogComponent>
+        public dialogRef: MatDialogRef<ProjectDialogComponent>
     ) { }
 
     /** Called by Angular after project-dialog component initialized */

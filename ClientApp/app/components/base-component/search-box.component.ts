@@ -19,9 +19,9 @@ import "rxjs/add/operator/switch";
 @Component({
   selector: "search-box",
   template: `
-    <md-input-container floatPlaceholder="never">
-        <input type="text" mdInput placeholder="Search here..." autofocus>
-    </md-input-container>
+    <mat-input-container floatPlaceholder="never">
+        <input type="text" matInput placeholder="Search here..." autofocus>
+    </mat-input-container>
   `
   //<input type="text" class="form-control" placeholder="Search" autofocus>
 })

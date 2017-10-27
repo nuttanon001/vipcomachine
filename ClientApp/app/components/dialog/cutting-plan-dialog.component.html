@@ -1,5 +1,5 @@
 ﻿
-<div md-dialog-content class="master-dialog">
+<div mat-dialog-content class="master-dialog">
     <H5 style="color:cadetblue">Cutting-Plan</H5>
     <div class="child-container">
         <div class="center-content">
@@ -48,22 +48,22 @@
             </ng-template>
         </div>
 
-        <div md-dialog-actions class="right-content">
-            <button type="button" md-icon-button color="accent" (click)="onNewModel()"
-                    [disabled]="!showNewModel" mdTooltip="Create new" mdTooltipPosition="left">
+        <div mat-dialog-actions class="right-content">
+            <button type="button" mat-icon-button color="accent" (click)="onNewModel()"
+                    [disabled]="!showNewModel" matTooltip="Create new" matTooltipPosition="left">
                 <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
             </button>
-            <button type="button" md-icon-button color="warn" (click)="onCancelNewModel()"
-                    [disabled]="showNewModel" mdTooltip="Cancel" mdTooltipPosition="left">
+            <button type="button" mat-icon-button color="warn" (click)="onCancelNewModel()"
+                    [disabled]="showNewModel" matTooltip="Cancel" matTooltipPosition="left">
                 <i class="fa fa-2x fa-times" aria-hidden="true"></i>
             </button>
             <hr class="w-100"/>
-            <button type="button" md-icon-button color="primary" (click)="onSelectedClick()"
-                    [disabled]="!CanSelected" mdTooltip="Selected" mdTooltipPosition="left">
+            <button type="button" mat-icon-button color="primary" (click)="onSelectedClick()"
+                    [disabled]="!CanSelected" matTooltip="Selected" matTooltipPosition="left">
                 <i class="fa fa-2x fa-hand-pointer-o" aria-hidden="true"></i>
             </button>
-            <button type="button" md-icon-button color="warn" (click)="onCancelClick()"
-                    mdTooltip="Cancel" mdTooltipPosition="left">
+            <button type="button" mat-icon-button color="warn" (click)="onCancelClick()"
+                    matTooltip="Cancel" matTooltipPosition="left">
                 <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
             </button>
         </div>

@@ -1,4 +1,4 @@
-﻿import { MdDialogRef } from '@angular/material';
+﻿import { MatDialogRef } from '@angular/material';
 import { Component } from '@angular/core';
 
 @Component({
@@ -11,7 +11,7 @@ import { Component } from '@angular/core';
         </h4>
     </div>
     <p>{{ message }}</p>
-    <button type="submit" md-raised-button (click)="dialogRef.close(true)" color="warn">รับทราบ</button>
+    <button type="submit" mat-raised-button (click)="dialogRef.close(true)" color="warn">รับทราบ</button>
 `,
 })
 export class ErrorDialog {
@@ -19,7 +19,7 @@ export class ErrorDialog {
     public title: string;
     public message: string;
 
-    constructor(public dialogRef: MdDialogRef<ErrorDialog>) {
+    constructor(public dialogRef: MatDialogRef<ErrorDialog>) {
 
     }
 }

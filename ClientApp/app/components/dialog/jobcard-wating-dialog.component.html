@@ -30,34 +30,34 @@
                                 <h5>{{message}}</h5>
                             </div>
                             <div class="mt-3 align-content-center">
-                                <button type="button" md-raised-button color="accent" (click)="onChangeStatusJobCard()">Yes</button>
-                                <button type="button" md-raised-button color="warn" (click)="showContext = !showContext">Cancel</button>
+                                <button type="button" mat-raised-button color="accent" (click)="onChangeStatusJobCard()">Yes</button>
+                                <button type="button" mat-raised-button color="warn" (click)="showContext = !showContext">Cancel</button>
                             </div>
                         </div>
                     </ng-template>
                 </div>
                 <!--Right-->
                 <div class="right-content">
-                    <button type="button" md-icon-button color="primary" (click)="onShowComfirmBox(2)"
-                            [disabled]="!onComplate" mdTooltip="Complate Require Machine" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="primary" (click)="onShowComfirmBox(2)"
+                            [disabled]="!onComplate" matTooltip="Complate Require Machine" matTooltipPosition="left">
                         <i class="fa fa-2x fa-check" aria-hidden="true"></i>
                     </button>
-                    <button type="button" md-icon-button color="warn" (click)="onShowComfirmBox(3)"
-                            [disabled]="!onCancel" mdTooltip="Cancel Require Machine" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="warn" (click)="onShowComfirmBox(3)"
+                            [disabled]="!onCancel" matTooltip="Cancel Require Machine" matTooltipPosition="left">
                         <i class="fa fa-2x fa-times" aria-hidden="true"></i>
                     </button>
                     <hr class="w-100"/>
-                    <button type="button" md-icon-button color="primary" (click)="onAddOrEditJobCard(-77)"
-                            mdTooltip="Add Require Machine Detail" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="primary" (click)="onAddOrEditJobCard(-77)"
+                            matTooltip="Add Require Machine Detail" matTooltipPosition="left">
                         <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
                     </button>
-                    <button type="button" md-icon-button color="accent" (click)="onAddOrEditJobCard(-88)"
-                            mdTooltip="Edit Require Machine Master" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="accent" (click)="onAddOrEditJobCard(-88)"
+                            matTooltip="Edit Require Machine Master" matTooltipPosition="left">
                         <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>
                     </button>
                     <hr class="w-100" />
-                    <button type="button" md-icon-button color="warn" (click)="onCancelDialog()"
-                            mdTooltip="Cancel" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="warn" (click)="onCancelDialog()"
+                            matTooltip="Cancel" matTooltipPosition="left">
                         <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
                     </button>
                 </div>

@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, OnDestroy ,Inject } from "@angular/core";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 // import { Employee, Scroll } from "../../models/model.index";
 import { Employee } from "../../models/employee/employee.model";
@@ -54,8 +54,8 @@ export class EmployeeDialogComponent implements OnInit, OnDestroy
     constructor(
         private service: EmployeeService,
         private serviceComDTable: DataTableServiceCommunicate<Employee>,
-        public dialogRef: MdDialogRef<EmployeeDialogComponent>,
-        @Inject(MD_DIALOG_DATA) public mode: string
+        public dialogRef: MatDialogRef<EmployeeDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public mode: string
     ) { }
 
     /** Called by Angular after employee-dialog component initialized */

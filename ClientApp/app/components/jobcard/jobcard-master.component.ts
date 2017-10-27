@@ -27,6 +27,8 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 export class JobCardMasterComponent
     extends BaseMasterComponent<JobCardMaster, JobCardMasterService> {
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
+    useTemplate: boolean = false;
+    templateScroll: Scroll;
     // parameter
     columns = [
         { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
@@ -105,18 +107,27 @@ export class JobCardMasterComponent
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
-        if (scroll.HasCondition) {
-            if (this.serverAuth.getAuth) {
-                scroll.Where = this.serverAuth.getAuth.UserName || "";
-            }
+        if (this.useTemplate) {
+            scroll = this.templateScroll;
+            scroll.Reload = true;
         } else {
-            scroll.Where = "";
+            if (scroll.HasCondition) {
+                if (this.serverAuth.getAuth) {
+                    scroll.Where = this.serverAuth.getAuth.UserName || "";
+                }
+            } else {
+                scroll.Where = "";
+            }
+
+            this.templateScroll = scroll;
         }
+
 
         this.service.getAllWithScroll(scroll)
             .subscribe((scrollData: ScrollData<JobCardMaster>) => {
                 if (scrollData) {
                     this.dataTableServiceCom.toChild(scrollData);
+                    this.useTemplate = false;
                 }
             }, error => console.error(error));
     }
@@ -176,6 +187,7 @@ export class JobCardMasterComponent
                     this.onAttactFileToDataBase(complete.JobCardMasterId, attachs);
                 }
                 this.displayValue = complete;
+                this.useTemplate = true;
                 this.onSaveComplete();
             },
             (error: any) => {
@@ -214,6 +226,7 @@ export class JobCardMasterComponent
                     this.onAttactFileToDataBase(complete.JobCardMasterId, attachs);
                 }
                 this.displayValue = complete;
+                this.useTemplate = true;
                 this.onSaveComplete();
             },
             (error: any) => {

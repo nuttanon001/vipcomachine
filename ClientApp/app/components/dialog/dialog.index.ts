@@ -1,5 +1,4 @@
-﻿import { JobcardDialogComponent } from './jobcard-dialog.component';
-export { ConfirmDialog } from "./confirm-dialog.component";
+﻿export { ConfirmDialog } from "./confirm-dialog.component";
 export { ContextDialog } from "./context-dialog.component";
 export { CuttingPlanDialogComponent } from "./cutting-plan-dialog.component";
 export { EmployeeDialogComponent } from "./employee-dialog.component";

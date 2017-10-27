@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, Inject } from "@angular/core";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // pipes
 import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 // models
@@ -38,8 +38,8 @@ export class JobCardWatingDialogComponent implements OnInit {
     // jobCard-wating-dialog ctor */
     constructor(
         private service : JobCardMasterService,
-        public dialogRef: MdDialogRef<JobCardWatingDialogComponent>,
-        @Inject(MD_DIALOG_DATA) public jobCardMasters: Array<JobCardMaster>
+        public dialogRef: MatDialogRef<JobCardWatingDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public jobCardMasters: Array<JobCardMaster>
     ) { }
 
     // called by Angular after jobCard-wating-dialog component initialized */

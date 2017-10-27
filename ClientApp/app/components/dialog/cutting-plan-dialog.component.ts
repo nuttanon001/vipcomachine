@@ -1,6 +1,6 @@
 ﻿import { Component, ViewContainerRef, Inject, ViewChild, OnDestroy } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 import { CuttingPlan, Scroll } from "../../models/model.index";
 // service
@@ -42,9 +42,9 @@ export class CuttingPlanDialogComponent
     constructor(
         public service: CuttingPlanService,
         public serviceDataTable: DataTableServiceCommunicate<CuttingPlan>,
-        public dialogRef: MdDialogRef<CuttingPlanDialogComponent>,
+        public dialogRef: MatDialogRef<CuttingPlanDialogComponent>,
         private serviceProDetail: ProjectCodeDetailEditService,
-        @Inject(MD_DIALOG_DATA) public mode: number,
+        @Inject(MAT_DIALOG_DATA) public mode: number,
         // private viewContainerRef: ViewContainerRef,
         // private serviceDialogs: DialogsService,
         private fb: FormBuilder

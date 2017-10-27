@@ -4,8 +4,8 @@
             <h4>Required Machine Work Wating...</h4><hr />
             Reload data in {{message}} sec.
             <div style="width:100%;">
-                <md-progress-bar color="primary" [value]="count" mode="determinate">
-                </md-progress-bar>
+                <mat-progress-bar color="primary" [value]="count" mode="determinate">
+                </mat-progress-bar>
             </div>
         </div>
         <div class="center-content my-2">
@@ -16,11 +16,11 @@
                     <ng-template *ngIf="column.isButton" let-col let-data1="rowData" pTemplate="body">
                         <div *ngIf="data1[col.field]">
                             <i>{{data1[col.field] | slice:0:28}}</i>
-                            <button type="button" md-icon-button color="primary" mdTooltip="More detail"
+                            <button type="button" mat-icon-button color="primary" matTooltip="More detail"
                                     (click)="onSelectData(data1[col.field])">
                                 <i class="fa fa-2x fa-search" aria-hidden="true"></i>
                             </button>
-                            <!--<button type="button" md-icon-button color="warn" mdTooltip="Cancel required"
+                            <!--<button type="button" mat-icon-button color="warn" matTooltip="Cancel required"
                                 (click)="onCancelData(data1[col.field])">
                             <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
                         </button>-->

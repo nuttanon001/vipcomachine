@@ -18,70 +18,70 @@
                 </a>
             </li>
             <li class="nav-item" *ngIf="GetLevel1">
-                <a #mainMenu="mdMenuTrigger" [mdMenuTriggerFor]="menu1"
+                <a #mainMenu="matMenuTrigger" [matMenuTriggerFor]="menu1"
                    (onMenuOpen)="menuOnCloseMenu1()" (mouseover)="menuOnOpenMenu1()"
                    class="nav-link">
                     <i class="fa fa-flag" aria-hidden="true"></i>
                     Require Machine
                 </a>
-                <md-menu #menu1="mdMenu" [overlapTrigger]="false">
-                    <button md-menu-item [routerLink]="['/jobcard']" routerLinkActive="active">
+                <mat-menu #menu1="matMenu" [overlapTrigger]="false">
+                    <button mat-menu-item [routerLink]="['/jobcard']" routerLinkActive="active">
                         <i class="fa fa-flag" aria-hidden="true"></i>
                         <span>Require Machine</span>
                     </button>
-                </md-menu>
+                </mat-menu>
             </li>
             <li class="nav-item" *ngIf="GetLevel2">
-                <a #subMenu="mdMenuTrigger" [mdMenuTriggerFor]="menu2"
+                <a #subMenu="matMenuTrigger" [matMenuTriggerFor]="menu2"
                    (onMenuOpen)="menuOnCloseMenu2()" (mouseover)="menuOnOpenMenu2()"
                    class="nav-link">
                     <i class="fa fa-comments-o" aria-hidden="true"></i>
                     For Machine
                 </a>
-                <md-menu #menu2="mdMenu" [overlapTrigger]="false">
+                <mat-menu #menu2="matMenu" [overlapTrigger]="false">
                     <div>
-                        <button md-menu-item [routerLink]="['/jobcard/jobcard-waiting']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['/jobcard/jobcard-waiting']" routerLinkActive="active">
                             <i class="fa fa-history" aria-hidden="true"></i>
                             <span>Require Machine Waiting</span>
                         </button>
 
-                        <button md-menu-item [routerLink]="['/task-machine/task-machine-schedule','2']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['/task-machine/task-machine-schedule','2']" routerLinkActive="active">
                             <i class="fa fa-tasks" aria-hidden="true"></i>
                             <span>Progress Machine</span>
                         </button>
                         <hr />
-                        <button md-menu-item [routerLink]="['/task-machine']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['/task-machine']" routerLinkActive="active">
                             <i class="fa fa-tachometer" aria-hidden="true"></i>
                             <span>Task Machine</span>
                         </button>
 
-                        <button md-menu-item [routerLink]="['/machine']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['/machine']" routerLinkActive="active">
                             <i class="fa fa-plug" aria-hidden="true"></i>
                             <span>Machine</span>
                         </button>
-                        <button md-menu-item [routerLink]="['/project']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['/project']" routerLinkActive="active">
                             <i class="fa fa-product-hunt" aria-hidden="true"></i>
                             <span>Job Master</span>
                         </button>
-                        <button md-menu-item [routerLink]="['/cutting-plan']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['/cutting-plan']" routerLinkActive="active">
                             <i class="fa fa-cube" aria-hidden="true"></i>
                             <span>Cutting Plan</span>
                         </button>
-                        <button md-menu-item [routerLink]="['/standard-time']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['/standard-time']" routerLinkActive="active">
                             <i class="fa fa-hourglass-end" aria-hidden="true"></i>
                             <span>StandardTime</span>
                         </button>
                         <hr/>
-                        <button md-menu-item [routerLink]="['/cutting-plan/import-csv']" routerLinkActive="active">
+                        <button mat-menu-item [routerLink]="['/cutting-plan/import-csv']" routerLinkActive="active">
                             <i class="fa fa-inbox" aria-hidden="true"></i>
                             <span>Cutting Plan Import</span>
                         </button>
-                        <!--<button md-menu-item [routerLink]="['/developer']" routerLinkActive="active">
+                        <!--<button mat-menu-item [routerLink]="['/developer']" routerLinkActive="active">
                             <i class="fa fa-university" aria-hidden="true"></i>
                             <span>Developer</span>
                         </button>-->
                     </div>
-                </md-menu>
+                </mat-menu>
             </li>
         </ul>
         <ul class="navbar-nav">

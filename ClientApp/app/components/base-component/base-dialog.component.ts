@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, Inject, ViewChild } from "@angular/core";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // services
 import { DialogsService, DataTableServiceCommunicate } from "../../services/service.index";
 // models
@@ -23,7 +23,7 @@ export abstract class BaseDialogComponent
     constructor(
         protected service: Service,
         protected serviceDataTable: DataTableServiceCommunicate<Model>,
-        protected dialogRef: MdDialogRef<any>
+        protected dialogRef: MatDialogRef<any>
     ) { }
 
     //Property

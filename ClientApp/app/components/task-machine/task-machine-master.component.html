@@ -10,7 +10,7 @@
             <div class="child-container">
                 <!--Left-->
                 <div class="left-content">
-                    <div class="hide-table my-2" (click)="hideleft = !hideleft" mdTooltip="Hide/Show Table" mdTooltipPosition="right">
+                    <div class="hide-table my-2" (click)="hideleft = !hideleft" matTooltip="Hide/Show Table" matTooltipPosition="right">
                     </div>
                 </div>
                 <!--Center-->
@@ -38,26 +38,26 @@
                 </div>
                 <!--Right-->
                 <div class="right-content">
-                    <button type="button" md-icon-button color="accent" (click)="onDetailEdit()"
-                            [disabled]="ShowEdit" mdTooltip="Create new" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="accent" (click)="onDetailEdit()"
+                            [disabled]="ShowEdit" matTooltip="Create new" matTooltipPosition="left">
                         <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
                     </button>
-                    <button type="button" md-icon-button color="accent" (click)="onDetailEdit(displayValue)"
-                            [disabled]="ShowEdit || DisplayDataNull" mdTooltip="Edit" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="accent" (click)="onDetailEdit(displayValue)"
+                            [disabled]="ShowEdit || DisplayDataNull" matTooltip="Edit" matTooltipPosition="left">
                         <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>
                     </button>
                     <hr />
-                    <button type="button" md-icon-button color="warn" (click)="onCancelEdit()"
-                            [disabled]="!ShowEdit" mdTooltip="Cancel" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="warn" (click)="onCancelEdit()"
+                            [disabled]="!ShowEdit" matTooltip="Cancel" matTooltipPosition="left">
                         <i class="fa fa-2x fa-minus" aria-hidden="true"></i>
                     </button>
-                    <button type="button" md-icon-button color="primary" (click)="onSubmit()"
-                            [disabled]="!canSave" mdTooltip="Save" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="primary" (click)="onSubmit()"
+                            [disabled]="!canSave" matTooltip="Save" matTooltipPosition="left">
                         <i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i>
                     </button>
                     <hr />
-                    <button type="button" md-icon-button color="accent" (click)="onGetPaper(displayValue)"
-                            [disabled]="ShowEdit || DisplayDataNull" mdTooltip="Report" mdTooltipPosition="left">
+                    <button type="button" mat-icon-button color="accent" (click)="onGetPaper(displayValue)"
+                            [disabled]="ShowEdit || DisplayDataNull" matTooltip="Report" matTooltipPosition="left">
                         <i class="fa fa-2x fa-file-o" aria-hidden="true"></i>
                     </button>
                 </div>

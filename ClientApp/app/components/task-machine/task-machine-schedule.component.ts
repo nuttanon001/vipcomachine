@@ -202,7 +202,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
                 // column Row1
                 this.columnsUpper.push({ header: "MachineNo", rowspan: 2, style: { "width": McNoWidth, }});
                 this.columnsUpper.push({ header: "JobNo", rowspan: 2, style: { "width": JbNoWidth, } });
-                this.columnsUpper.push({ header: "CT/SD", rowspan: 2, style: { "width": CtNoWidth, } });
+                this.columnsUpper.push({ header: "CuttingPlan/ShopDrawing | Mat'l | UnitNo", rowspan: 2, style: { "width": CtNoWidth, } });
                 this.columnsUpper.push({ header: "Qty", rowspan: 2, style: { "width": NumWidth, } });
                 this.columnsUpper.push({ header: "Pro", rowspan: 2, style: { "width": NumWidth, } });
                 this.columnsUpper.push({ header: "Per", rowspan: 2, style: { "width": NumWidth, } });

@@ -1,5 +1,5 @@
 ﻿import { Component, OnInit, Inject, ViewChild } from "@angular/core";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { FormBuilder,FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
 // models
 import { TaskMachine } from "../../models/model.index";
@@ -36,8 +36,8 @@ export class TaskMachineDialogComponent implements OnInit {
     constructor(
         private service: TaskMachineService,
         private serviceAuth: AuthService,
-        public dialogRef: MdDialogRef<TaskMachineDialogComponent>,
-        @Inject(MD_DIALOG_DATA) public TaskMachineId: number,
+        public dialogRef: MatDialogRef<TaskMachineDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public TaskMachineId: number,
         private fb: FormBuilder
     ) { }
 

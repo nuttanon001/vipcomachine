@@ -1,7 +1,7 @@
 ﻿<div *ngIf="displayValue,else elseBlock">
-    <md-tab-group>
-        <md-tab>
-            <ng-template md-tab-label>
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
                 <b>Job Master</b>
             </ng-template>
             <div class="view-container">
@@ -38,9 +38,9 @@
                     </div>
                 </div>
             </div>
-        </md-tab>
-        <md-tab>
-            <ng-template md-tab-label>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
                 <b>Job Detail Level2/3</b>
             </ng-template>
             <div class="view-container">
@@ -53,11 +53,11 @@
                                [rowHeight]="50">
                 </ngx-datatable>
             </div>
-        </md-tab>
-    </md-tab-group>
+        </mat-tab>
+    </mat-tab-group>
 </div>
 
 <ng-template #elseBlock>
-    <md-progress-bar mode="indeterminate" style="margin-top:50px;"></md-progress-bar>
+    <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
     Waiting... for loading
 </ng-template>

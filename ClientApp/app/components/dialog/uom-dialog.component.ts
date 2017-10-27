@@ -1,7 +1,7 @@
 ﻿// angular
 import { Component, Inject, ViewChild, OnDestroy } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 import { UnitsMeasure, Scroll } from "../../models/model.index";
 // service
@@ -38,7 +38,7 @@ export class UomDialogComponent
     constructor(
         public service: UnitMeasureService,
         public serviceDataTable: DataTableServiceCommunicate<UnitsMeasure>,
-        public dialogRef: MdDialogRef<UomDialogComponent>,
+        public dialogRef: MatDialogRef<UomDialogComponent>,
         private fb: FormBuilder
     ) {
         super(

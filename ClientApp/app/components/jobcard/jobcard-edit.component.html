@@ -1,7 +1,7 @@
 ﻿<div *ngIf="editValue; else elseBlock">
-    <md-tab-group>
-        <md-tab>
-            <ng-template md-tab-label>
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
                 <b>Require Machine Master</b>
             </ng-template>
             <div class="edit-container mx-3">
@@ -122,7 +122,7 @@
                                 </td>
                                 <td>
                                     <div>
-                                        <a class="btn btn-sm btn-danger" mdTooltip="Remove Attach File" (click)="onDeleteAttachFile(file)">
+                                        <a class="btn btn-sm btn-danger" matTooltip="Remove Attach File" (click)="onDeleteAttachFile(file)">
                                             <em class="fa fa-remove"></em>
                                         </a>
                                     </div>
@@ -132,9 +132,9 @@
                     </table>
                 </div>
             </div>
-        </md-tab>
-        <!--<md-tab>
-            <ng-template md-tab-label>
+        </mat-tab>
+        <!--<mat-tab>
+            <ng-template mat-tab-label>
                 <b>Attach File</b>
             </ng-template>
             <div class="edit-container mx-3">
@@ -168,7 +168,7 @@
                                 </td>
                                 <td>
                                     <div>
-                                        <a class="btn btn-sm btn-danger" mdTooltip="Remove Attach File" (click)="onDeleteAttachFile(file)">
+                                        <a class="btn btn-sm btn-danger" matTooltip="Remove Attach File" (click)="onDeleteAttachFile(file)">
                                             <em class="fa fa-remove"></em>
                                         </a>
                                     </div>
@@ -178,14 +178,14 @@
                     </table>
                 </div>
             </div>
-        </md-tab>-->
-        <md-tab>
-            <ng-template md-tab-label>
+        </mat-tab>-->
+        <mat-tab>
+            <ng-template mat-tab-label>
                 <b>Require Machine Detail</b>
             </ng-template>
             <div *ngIf="!jobDetail;else editDetail" class="edit-container" >
                 <div class="mb-2">
-                    <button (click)="onNewOrEditDetail()" md-raised-button style="float:left">
+                    <button (click)="onNewOrEditDetail()" mat-raised-button style="float:left">
                         <i class="fa fa-get-pocket" aria-hidden="true"></i>
                         <span>Add Detail</span>
                     </button>
@@ -204,12 +204,12 @@
                     <ngx-datatable-column name="Status" prop="StatusString" [flexGrow]="1" [cellClass]="getCellClass"></ngx-datatable-column>
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
-                            <button md-button (click)="onNewOrEditDetail(row)" color="accent">Edit</button>
+                            <button mat-button (click)="onNewOrEditDetail(row)" color="accent">Edit</button>
                         </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
-                            <button md-button (click)="onRemoveDetail(row)" color="warn">Remove</button>
+                            <button mat-button (click)="onRemoveDetail(row)" color="warn">Remove</button>
                         </ng-template>
                     </ngx-datatable-column>
                 </ngx-datatable>
@@ -221,11 +221,11 @@
                                          [ProjectDetailId]="editValueForm.controls.ProjectCodeDetailId.value"></jobcard-detail-edit>
                 </div>
             </ng-template>
-        </md-tab>
-    </md-tab-group>
+        </mat-tab>
+    </mat-tab-group>
 </div>
 
 <ng-template #elseBlock>
-    <md-progress-bar mode="indeterminate" style="margin-top:50px;"></md-progress-bar>
+    <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
     Waiting... for loading
 </ng-template>

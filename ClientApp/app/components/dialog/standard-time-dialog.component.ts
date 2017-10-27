@@ -1,6 +1,6 @@
 ﻿import { Component, OnInit, OnDestroy, Inject } from "@angular/core";
 import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
-import { MD_DIALOG_DATA, MdDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 import { StandardTime, GradeMaterial } from "../../models/model.index";
 // service
@@ -32,8 +32,8 @@ export class StandardTimeDialogComponent implements OnInit
     constructor(
         private service: GradeMaterialService,
         private fb: FormBuilder,
-        public dialogRef: MdDialogRef<StandardTimeDialogComponent>,
-        @Inject(MD_DIALOG_DATA) public standardTime: StandardTime
+        public dialogRef: MatDialogRef<StandardTimeDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public standardTime: StandardTime
     ) { }
 
     /** Called by Angular after standard-time-dialog.component component initialized */

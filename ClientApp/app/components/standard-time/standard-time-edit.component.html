@@ -1,7 +1,7 @@
 ﻿<div *ngIf="editValue; else elseBlock">
-    <md-tab-group>
-        <md-tab>
-            <ng-template md-tab-label>
+    <mat-tab-group>
+        <mat-tab>
+            <ng-template mat-tab-label>
                 <b>Group Standard Time</b>
             </ng-template>
             <div class="edit-container">
@@ -24,14 +24,14 @@
                     </div>
                 </form>
             </div>
-        </md-tab>
-        <md-tab>
-            <ng-template md-tab-label>
+        </mat-tab>
+        <mat-tab>
+            <ng-template mat-tab-label>
                 <b>Standard Time Values</b>
             </ng-template>
             <div class="edit-container">
                 <div >
-                    <button (click)="onNewStandardTime()" md-raised-button style="float:left">
+                    <button (click)="onNewStandardTime()" mat-raised-button style="float:left">
                         <i class="fa fa-get-pocket" aria-hidden="true"></i>
                         <span>Add StandardTime</span>
                     </button>
@@ -52,21 +52,21 @@
 
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
-                            <button md-button (click)="onEditStandardTime(row)" color="accent">Edit</button>
+                            <button mat-button (click)="onEditStandardTime(row)" color="accent">Edit</button>
                         </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
-                            <button md-button (click)="onRemoveStandardTime(row)" color="warn">Remove</button>
+                            <button mat-button (click)="onRemoveStandardTime(row)" color="warn">Remove</button>
                         </ng-template>
                     </ngx-datatable-column>
                 </ngx-datatable>
             </div>
-        </md-tab>
-    </md-tab-group>
+        </mat-tab>
+    </mat-tab-group>
 </div>
 
 <ng-template #elseBlock>
-    <md-progress-bar mode="indeterminate" style="margin-top:50px;"></md-progress-bar>
+    <mat-progress-bar mode="indeterminate" style="margin-top:50px;"></mat-progress-bar>
     Waiting... for loading
 </ng-template>
