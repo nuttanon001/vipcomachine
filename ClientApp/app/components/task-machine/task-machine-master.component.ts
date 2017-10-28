@@ -31,7 +31,7 @@ export class TaskMachineMasterComponent
     extends BaseMasterComponent<TaskMachine, TaskMachineService> {
     // parameter
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
-
+    hasOverTime: boolean = false;
     columns: Array<TableColumn> = [
         { prop: "TaskMachineName", name: "Code", flexGrow :1 },
         { prop: "MachineString", name: "Machine", flexGrow: 2 },
@@ -211,6 +211,10 @@ export class TaskMachineMasterComponent
             this.service.getOneKeyNumber(value.TaskMachineId)
                 .subscribe(dbData => {
                     this.displayValue = dbData;
+                    this.service.getTaskMachineHasOverTime(dbData.TaskMachineId)
+                        .subscribe(Result => {
+                            this.hasOverTime = Result.Result;
+                        });
                 }, error => this.displayValue = undefined);
         } else {
             this.displayValue = undefined;
@@ -251,9 +255,24 @@ export class TaskMachineMasterComponent
                     link.href = window.URL.createObjectURL(data);
                     link.download = "report_" + value.TaskMachineName + ".xlsx";
                     link.click();
+                    // get paper for over time
+                    // this.onGetPaperTaskMachineOverTime(value);
                 },
                 error => this.dialogsService.error("Error Message", "ไม่พบข้อมููลที่ต้องการ", this.viewContainerRef),
                 () => console.log('Completed file download.'));
+        }
+    }
+
+    // on get paper TaskMachine OverTime
+    onGetPaperTaskMachineOverTime(value?: TaskMachine): void {
+        if (value) {
+            this.service.GetTaskMachinePaperOverTime(value.TaskMachineId)
+                .subscribe(data => {
+                    let link = document.createElement('a');
+                    link.href = window.URL.createObjectURL(data);
+                    link.download = "overtime_" + value.TaskMachineName + ".xlsx";
+                    link.click();
+                }, error => console.error(error));
         }
     }
 }

@@ -13,6 +13,13 @@ export class TaskMachineService extends BaseRestService<TaskMachine> {
         super(http, "api/TaskMachine/");
     }
 
+    // get TaskMachine Has OverTime
+    getTaskMachineHasOverTime(taskMachineId:number): Observable<any> {
+        let url: string = `${this.actionUrl}GetTaskMachineHasOverTime/${taskMachineId}`;
+        return this.http.get(url)
+            .map(this.extractData).catch(this.handleError);
+    }
+
     //===================== TaskMachine Schedule ===========================\\
     // get TaskMachine WaitAndProcess
     getTaskMachineWaitAndProcess(option: OptionSchedule): Observable<any> {
@@ -32,7 +39,17 @@ export class TaskMachineService extends BaseRestService<TaskMachine> {
     // get Task Machine Number
     getTaskMachinePaper(taskMachineId: number): Observable<any> {
         let url: string = this.actionUrl + "GetReportTaskMachine/" + taskMachineId + "/";
-        console.log(url);
+        // console.log(url);
+
+        return this.http.get(url, { responseType: ResponseContentType.Blob })
+            .map(res => res.blob())
+            .catch(this.handleError)
+    }
+
+    // get Task Machine Number
+    GetTaskMachinePaperOverTime(taskMachineId: number): Observable<any> {
+        let url: string = this.actionUrl + "GetReportTaskMachineOverTime/" + taskMachineId + "/";
+        // console.log(url);
 
         return this.http.get(url, { responseType: ResponseContentType.Blob })
             .map(res => res.blob())

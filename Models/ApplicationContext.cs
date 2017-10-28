@@ -9,7 +9,7 @@ namespace VipcoMachine.Models
 {
     public class ApplicationContext : DbContext
     {
-        public ApplicationContext(DbContextOptions<ApplicationContext> options): base(options)
+        public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,6 +19,7 @@ namespace VipcoMachine.Models
             modelBuilder.Entity<CuttingPlan>().ToTable("CuttingPlan");
             modelBuilder.Entity<Employee>().ToTable("Employee");
             modelBuilder.Entity<GradeMaterial>().ToTable("GradeMaterial");
+            modelBuilder.Entity<EmployeeGroup>().ToTable("EmployeeGroup");
             modelBuilder.Entity<JobCardDetail>().ToTable("JobCardDetail");
             modelBuilder.Entity<JobCardMaster>().ToTable("JobCardMaster");
             modelBuilder.Entity<JobCardMasterHasAttach>().ToTable("JobCardMasterHasAttach");
@@ -31,7 +32,8 @@ namespace VipcoMachine.Models
             //modelBuilder.Entity<Material>()
             //    .HasAlternateKey(m => m.Size)
             //    .HasName("Unique_Size");
-
+            modelBuilder.Entity<OverTimeDetail>().ToTable("OverTimeDetail");
+            modelBuilder.Entity<OverTimeMaster>().ToTable("OverTimeMaster");
             modelBuilder.Entity<ProjectCodeDetail>().ToTable("ProjectCodeDetail");
             modelBuilder.Entity<ProjectCodeMaster>().ToTable("ProjectCodeMaster");
             modelBuilder.Entity<PropertyMachine>().ToTable("PropertyMachine");
@@ -51,12 +53,15 @@ namespace VipcoMachine.Models
         public DbSet<CuttingPlan> CuttingPlans { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<GradeMaterial> GradeMaterials { get; set; }
+        public DbSet<EmployeeGroup> EmpoyeeGroups { get; set; }
         public DbSet<JobCardDetail> JobCardDetails { get; set; }
         public DbSet<JobCardMaster> JobCardMasters { get; set; }
         public DbSet<JobCardMasterHasAttach> JobCardMasterHasAttachs { get; set; }
         public DbSet<Machine> Machines { get; set; }
         public DbSet<MachineHasOperator> MachineHasOperators { get; set; }
         public DbSet<Material> Materials { get; set; }
+        public DbSet<OverTimeDetail> OverTimeDetails { get; set; }
+        public DbSet<OverTimeMaster> OverTimeMasters { get; set; }
         public DbSet<ProjectCodeDetail> ProjectCodeDetails { get; set; }
         public DbSet<ProjectCodeMaster> ProjectCodeMasters { get; set; }
         public DbSet<PropertyMachine> PropertyMachines { get; set; }

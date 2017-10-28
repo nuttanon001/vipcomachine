@@ -1,11 +1,11 @@
-﻿<div class="master-dialog">
+﻿<div class="master-dialog-vh">
     <H5 style="color:cadetblue">Unit Measure</H5>
     <div class="child-container">
         <div class="center-content">
             <div *ngIf="showNewModel; else detailEdit">
                 <data-table (selected)="onSelectedValue($event)"
                             [columns]="columns"
-                            [height]="'calc(100vh - 270px)'">
+                            [height]="'55vh'">
                 </data-table>
             </div>
             <ng-template #detailEdit>
@@ -35,6 +35,10 @@
             <button type="button" mat-icon-button color="warn" (click)="onCancelNewModel()"
                     [disabled]="showNewModel" matTooltip="Cancel" matTooltipPosition="left">
                 <i class="fa fa-2x fa-times" aria-hidden="true"></i>
+            </button>
+            <button type="button" mat-icon-button color="accent" (click)="onValueSave()"
+                    [disabled]="!CanSaveAndSelected" matTooltip="SaveAndSelected" matTooltipPosition="left">
+                <i class="fa fa-2x fa-save" aria-hidden="true"></i>
             </button>
             <hr />
             <button type="button" mat-icon-button color="primary" (click)="onSelectedClick()"

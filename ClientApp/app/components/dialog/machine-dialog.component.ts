@@ -72,6 +72,7 @@ export class MachineDialogComponent
                     this.serviceMachine.getByMasterId(this.mode)
                         .subscribe(dbMachine => {
                             this.machines = dbMachine.slice();
+                            this.templates = dbMachine.slice();
                         });
                 } else {
                     dbTypeMachines = dbTypeMachines.slice();
@@ -96,7 +97,7 @@ export class MachineDialogComponent
     onSelectedTypeMachine(selected?: any): void {
         if (selected) {
             // debug here
-            console.log("selected :", selected);
+            // console.log("selected :", selected);
             //this.typeMachine = selected.selected[0];
             //this.serviceMachine.getByMasterId(this.typeMachine.TypeMachineId)
             //    .subscribe(dbMachine => {
@@ -110,6 +111,10 @@ export class MachineDialogComponent
         // filter our data
         const temp = this.templates.slice().filter((item, index) => {
             let searchStr = ((item.MachineName || "") + (item.MachineCode || "") + (item.TypeMachineString || "")).toLowerCase();
+            // debug here
+            // console.log(searchStr);
+            // console.log(searchStr.indexOf(search.toLowerCase()));
+
             return searchStr.indexOf(search.toLowerCase()) != -1;
         });
 

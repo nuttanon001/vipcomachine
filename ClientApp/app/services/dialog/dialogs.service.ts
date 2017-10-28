@@ -84,8 +84,8 @@ export class DialogsService {
 
         // config
         config.viewContainerRef = viewContainerRef;
-        config.height = this.height;
-        config.width= this.width;
+        //config.height = this.height;
+        //config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -116,8 +116,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        config.height = this.height;
-        config.width= this.width;
+        //config.height = this.height;
+        //config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -132,8 +132,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        config.height = this.height;
-        config.width = this.width;
+        //config.height = this.height;
+        //config.width = this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -148,8 +148,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = standard;
-        config.height = this.height;
-        config.width= this.width;
+        //config.height = this.height;
+        //config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -166,8 +166,8 @@ export class DialogsService {
         if (mode) {
             config.data = mode;
         }
-        config.height = this.height;
-        config.width= this.width;
+        //config.height = this.height;
+        //config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -182,8 +182,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        config.height = this.height;
-        config.width= this.width;
+        //config.height = this.height;
+        //config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -197,8 +197,8 @@ export class DialogsService {
 
         // config
         config.viewContainerRef = viewContainerRef;
-        config.height = this.height;
-        config.width= this.width;
+        //config.height = this.height;
+        //config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -213,8 +213,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        config.height = this.height;
-        config.width = this.width;
+        //config.height = this.height;
+        //config.width = this.width;
         config.hasBackdrop = true;
 
         //open dialog
@@ -229,8 +229,8 @@ export class DialogsService {
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = jobCardMasters;
-        config.height = this.height;
-        config.width = this.width;
+        //config.height = this.height;
+        //config.width = this.width;
         config.hasBackdrop = true;
 
         // open dialog

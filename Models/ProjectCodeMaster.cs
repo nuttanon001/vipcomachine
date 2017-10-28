@@ -27,5 +27,7 @@ namespace VipcoMachine.Models
         //Fk
         // ProjectCodeDetail
         public ICollection<ProjectCodeDetail> ProjectCodeDetails { get; set; }
+        // OverTimeMaster
+        public ICollection<OverTimeMaster> OverTimeMasters { get; set; }
     }
 }

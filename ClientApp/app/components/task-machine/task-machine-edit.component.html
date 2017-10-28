@@ -204,7 +204,10 @@
                 <div class="m-2" style="border:1px solid #e16958">
                     <over-time-edit (ComplateOrCancel)="onComplateOrCancel($event)"
                                     [EditValueOverTime]="overTime"
-                                    [machineId]="editValueForm.controls.MachineId.value"></over-time-edit>
+                                    [machineId]="editValueForm.controls.MachineId.value"
+                                    [minDate]="editValueForm.controls.ActualStartDate.value"
+                                    [maxDate]="editValueForm.controls.ActualEndDate.value">
+                    </over-time-edit>
                 </div>
             </ng-template>
         </mat-tab>

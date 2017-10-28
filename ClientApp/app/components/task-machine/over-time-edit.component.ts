@@ -1,7 +1,7 @@
 ﻿// angular
 import { Component, Input, Output } from "@angular/core";
 import { OnInit, ViewContainerRef, EventEmitter } from "@angular/core";
-import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
 // model
 import { TaskMachineHasOverTime,MachineHasOperator } from "../../models/model.index";
 // service
@@ -26,6 +26,8 @@ export class OverTimeEditComponent implements OnInit {
     @Output("ComplateOrCancel") ComplateOrCancel = new EventEmitter<any>();
     @Input("EditValueOverTime") EditValueOverTime: TaskMachineHasOverTime;
     @Input("machineId") machineId: number;
+    @Input("minDate") minDate: Date;
+    @Input("maxDate") maxDate: Date;
     /** over-time-edit ctor */
     constructor(
         private serviceOperator: MachineHasOperatorService,
@@ -48,6 +50,14 @@ export class OverTimeEditComponent implements OnInit {
                         this.operators.push({ label: `${(item.EmpCode || "")} ${(item.EmployeeName || "")} `, value: item.EmpCode });
                     }
                 });
+        }
+
+        if (!this.minDate) {
+            this.minDate = new Date();
+        }
+
+        if (!this.maxDate) {
+            this.maxDate = new Date();
         }
     }
 
@@ -80,6 +90,35 @@ export class OverTimeEditComponent implements OnInit {
                     Validators.required
                 ]
             ]
+        });
+
+        this.editValueForm.valueChanges.subscribe((data: any) => {
+            if (!this.editValueForm)
+                return;
+
+            const form: FormGroup = this.editValueForm;
+            const controlDate: AbstractControl | null = form.get("OverTimeDate");
+
+            if (controlDate) {
+                if (controlDate.value) {
+                    let selectedDate: number = Number(controlDate.value.getDate().toString() + controlDate.value.getMonth().toString() + controlDate.value.getFullYear().toString());
+                    let minDate: number = Number(this.minDate.getDate().toString() + this.minDate.getMonth().toString() + this.minDate.getFullYear().toString());
+                    let maxDate: number = Number(this.maxDate.getDate().toString() + this.maxDate.getMonth().toString() + this.maxDate.getFullYear().toString());
+
+                    let message: string = `Selected: ${selectedDate} Min: ${minDate} Max: ${maxDate}`;
+                    // console.log(message);
+
+                    if (!(selectedDate >= minDate && selectedDate <= maxDate)) {
+                        this.editValueForm.patchValue({
+                            OverTimeDate: undefined
+                        });
+
+                        this.serviceDialogs.context("Error Message",
+                            "This date must be in range of actual date.",
+                            this.viewContainerRef);
+                    }
+                }
+            }
         });
     }
 

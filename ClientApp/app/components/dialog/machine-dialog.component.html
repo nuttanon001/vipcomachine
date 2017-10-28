@@ -1,4 +1,4 @@
-﻿<div class="master-dialog">
+﻿<div class="master-dialog-vh">
     <div class="child-container">
         <div class="center-content">
             <div class="master-form-content">
@@ -6,7 +6,7 @@
                 </search-box>
                 <p-dropdown class="my-input-combobox"
                             [options]="typeMachines"
-                            [style]="{'width':'250px'}"
+                            [style]="{'width':'300px'}"
                             (onChange)="onSelectedTypeMachine($event)">
                 </p-dropdown>
             </div>
@@ -19,7 +19,7 @@
                             [footerHeight]="0"
                             [rowHeight]="50"
                             [scrollbarV]="true"
-                            [style.height]="'calc(100vh - 270px)'"
+                            [style.height]="'55vh'"
                             [selectionType]="'single'"
                             (select)="onSelectedMachine($event)">
             </ngx-datatable>

@@ -32,6 +32,8 @@ export class UomDialogComponent
 {
     subscription2: Subscription;
     showNewModel: boolean = true;
+    CanSaveAndSelected: boolean = false;
+
     // FormGroup
     editValueForm: FormGroup;
     /** uom-dialog ctor */
@@ -109,9 +111,15 @@ export class UomDialogComponent
         if (!this.editValueForm) { return; }
         const form = this.editValueForm;
         // on form valid or not
-        if (form.valid) {
-            this.onSelectedValue(form.value);
-        }
+        this.CanSaveAndSelected = form.valid;
+    }
+
+    // on save CuttingPlan
+    onValueSave(): void {
+        if (!this.editValueForm) { return; }
+        const form = this.editValueForm;
+        // on form valid or not
+        this.onSelectedValue(form.value);
     }
 
     // on cancel new model

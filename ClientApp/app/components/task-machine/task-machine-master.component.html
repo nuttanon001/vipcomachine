@@ -57,8 +57,12 @@
                     </button>
                     <hr />
                     <button type="button" mat-icon-button color="accent" (click)="onGetPaper(displayValue)"
-                            [disabled]="ShowEdit || DisplayDataNull" matTooltip="Report" matTooltipPosition="left">
+                            [disabled]="ShowEdit || DisplayDataNull" matTooltip="Report Paper" matTooltipPosition="left">
                         <i class="fa fa-2x fa-file-o" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" mat-icon-button color="accent" (click)="onGetPaperTaskMachineOverTime(displayValue)"
+                            [disabled]="ShowEdit || DisplayDataNull || !hasOverTime" matTooltip="Report OverTime" matTooltipPosition="left">
+                        <i class="fa fa-2x fa-files-o" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>

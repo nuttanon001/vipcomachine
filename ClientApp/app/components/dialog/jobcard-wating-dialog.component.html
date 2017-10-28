@@ -1,4 +1,4 @@
-﻿<div class="master-dialog">
+﻿<div class="master-dialog-vh">
     <split direction="horizontal">
         <split-area [size]="20">
             <div class="child-left-container">
@@ -11,7 +11,8 @@
                                [footerHeight]="0"
                                [rowHeight]="50"
                                [selectionType]="'single'"
-                               (select)="onSelectedJobCardMaster($event)">
+                               (select)="onSelectedJobCardMaster($event)"
+                               [style.height]="'55vh'">
                 </ngx-datatable>
             </div>
         </split-area>

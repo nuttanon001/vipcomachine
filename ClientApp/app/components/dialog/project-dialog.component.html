@@ -1,4 +1,4 @@
-﻿<div class="master-dialog">
+﻿<div class="master-dialog-vh">
     <H5 style="color:cadetblue">Selected Job Level2/3</H5>
     <split direction="horizontal"
            [gutterSize]="4"
@@ -7,7 +7,7 @@
             <div class="child-left-container">
                 <data-table (selected)="onSelectedMaster($event)"
                             [columns]="columns"
-                            [height]="'calc(100vh - 270px)'">
+                            [height]="'55vh'">
                 </data-table>
             </div>
         </split-area>
@@ -25,7 +25,8 @@
                                    [footerHeight]="0"
                                    [rowHeight]="50"
                                    [selectionType]="'single'"
-                                   (select)="onSelectedDetail($event)">
+                                   (select)="onSelectedDetail($event)"
+                                   [style.height]="'55vh'">
                     </ngx-datatable>
                 </div>
                 <div class="right-content">

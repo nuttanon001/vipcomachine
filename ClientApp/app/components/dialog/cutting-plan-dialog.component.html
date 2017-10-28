@@ -1,14 +1,16 @@
 ﻿
-<div mat-dialog-content class="master-dialog">
+<div class="master-dialog-vh">
     <H5 style="color:cadetblue">Cutting-Plan</H5>
     <div class="child-container">
         <div class="center-content">
             <div *ngIf="showNewModel; else detailEdit" class="w-100">
-                <data-table (selected)="onSelectedValue($event)" [columns]="columns" [height]="'calc(100vh - 400px)'">
+                <data-table (selected)="onSelectedValue($event)"
+                            [columns]="columns"
+                            [height]="'55vh'">
                 </data-table>
             </div>
             <ng-template #detailEdit>
-                <div class="edit-container" style="height:350px;">
+                <div class="edit-container" style="height:55vh;">
                     <form [formGroup]="editValueForm">
                         <div class="my-form">
                             <label for="CuttingPlanNo" class="my-label">CuttingPlanNo:</label>
@@ -48,7 +50,7 @@
             </ng-template>
         </div>
 
-        <div mat-dialog-actions class="right-content">
+        <div class="right-content">
             <button type="button" mat-icon-button color="accent" (click)="onNewModel()"
                     [disabled]="!showNewModel" matTooltip="Create new" matTooltipPosition="left">
                 <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
@@ -56,6 +58,10 @@
             <button type="button" mat-icon-button color="warn" (click)="onCancelNewModel()"
                     [disabled]="showNewModel" matTooltip="Cancel" matTooltipPosition="left">
                 <i class="fa fa-2x fa-times" aria-hidden="true"></i>
+            </button>
+            <button type="button" mat-icon-button color="accent" (click)="onValueSave()"
+                    [disabled]="!CanSaveAndSelected" matTooltip="SaveAndSelected" matTooltipPosition="left">
+                <i class="fa fa-2x fa-save" aria-hidden="true"></i>
             </button>
             <hr class="w-100"/>
             <button type="button" mat-icon-button color="primary" (click)="onSelectedClick()"

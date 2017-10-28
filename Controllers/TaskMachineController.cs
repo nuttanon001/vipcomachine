@@ -212,6 +212,16 @@ namespace VipcoMachine.Controllers
             // return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
         }
 
+        // GET: api/TaskMachine/GetTaskMachineHasOverTime
+        [HttpGet("GetTaskMachineHasOverTime/{key}")]
+        public async Task<IActionResult> GetTaskMachineHasOverTime(int key)
+        {
+            var Includes = new List<string> { "TaskMachineHasOverTimes" };
+            var taskMachine = await this.repository.GetAsynvWithIncludes(key, "TaskMachineId", Includes);
+
+            return new JsonResult(new { Result = taskMachine.TaskMachineHasOverTimes.Any() }, this.DefaultJsonSettings);
+        }
+
         #endregion
 
         #region POST
@@ -798,7 +808,7 @@ namespace VipcoMachine.Controllers
                             if (item.OverTimeDate.Value.DayOfWeek == DayOfWeek.Sunday)
                             {
                                 Stime = new TimeSpan(8, 0, 0);
-                                Etime = new TimeSpan((int)(item.OverTimePerDate ?? 0) + 8, 0, 0);
+                                Etime = new TimeSpan((int)(item.OverTimePerDate ?? 0) + 9, 0, 0);
                             }
                             else
                             {
@@ -808,9 +818,11 @@ namespace VipcoMachine.Controllers
 
                             overTimes.Add(new PaperTaskMachineOverTime()
                             {
-                                DateOverTime = item.OverTimeDate.Value.ToString("dd/MMM/yy") + " " + Stime.ToString("HH:mm"),
+                                DateOverTime = (item.OverTimeDate.Value.Date + Stime).ToString("dd/MMM/yy HH:mm") + " ถึง " + Etime.ToString(@"hh\:mm"),
                                 EmpCode = item.EmpCode ?? "-",
-                                EmpName = item?.Employee?.NameThai ?? "-"
+                                EmpName = item?.Employee?.NameThai ?? "-",
+                                Remark = string.IsNullOrEmpty(item.Description) ? "-" : item.Description.Trim(),
+                                Row = (overTimes.Count() + 1).ToString("00")
                             });
                         }
 

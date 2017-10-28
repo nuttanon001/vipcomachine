@@ -27,7 +27,9 @@
             <label for="OverTimeDate" class="my-label">OverTimeDate:</label>
             <div class="col-sm-4">
                 <p-calendar formControlName="OverTimeDate" [showIcon]="true"
-                            id="OverTimeDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
+                            id="OverTimeDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                            [minDate]="minDate"
+                            [maxDate]="maxDate">
                 </p-calendar>
                 <span class="is-request-date">**</span>
                 <validation-messages [control]="editValueForm.controls.OverTimeDate"></validation-messages>

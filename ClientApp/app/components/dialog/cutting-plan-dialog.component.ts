@@ -33,6 +33,7 @@ export class CuttingPlanDialogComponent
     extends BaseDialogComponent<CuttingPlan, CuttingPlanService> implements OnDestroy
 {
     showNewModel: boolean = true;
+    CanSaveAndSelected: boolean = false;
     // ComboBox
     cuttingTypes: Array<SelectItem>;
     projectDetails: Array<SelectItem>;
@@ -156,9 +157,16 @@ export class CuttingPlanDialogComponent
         if (!this.editValueForm) { return; }
         const form = this.editValueForm;
         // on form valid or not
-        if (form.valid) {
-            this.onSelectedValue(form.value);
-        }
+        this.CanSaveAndSelected = form.valid;
+        // this.onSelectedValue(form.value);
+    }
+
+    // on save CuttingPlan
+    onValueSave(): void {
+        if (!this.editValueForm) { return; }
+        const form = this.editValueForm;
+        // on form valid or not
+        this.onSelectedValue(form.value);
     }
 
     // on cancel new model

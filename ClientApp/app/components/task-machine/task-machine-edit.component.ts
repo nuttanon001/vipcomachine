@@ -245,6 +245,10 @@ export class TaskMachineEditComponent
 
     // on Value Change Override
     onValueChanged(data?: any): void {
+        if (!this.editValueForm) {
+            return;
+        }
+
         const form: FormGroup = this.editValueForm;
         const controlT: AbstractControl | null = form.get("TotalQuantity");
         const controlC: AbstractControl | null = form.get("CurrentQuantity");
@@ -289,9 +293,11 @@ export class TaskMachineEditComponent
                         // console.log("checkData", checkData);
 
                         if (checkData.AnyData) {
-                            this.serviceDialogs.context("Same Date", "This machine already has planed in same date. but it 's up to you.", this.viewContainerRef);
+                            this.serviceDialogs.context("Same Date",
+                                "This machine already has planed in same date. but it 's up to you.",
+                                this.viewContainerRef);
                         }
-                    })
+                    });
             }
         }
 
@@ -300,6 +306,13 @@ export class TaskMachineEditComponent
 
     // new OverTime
     onNewOrEditOverTime(overTime?: TaskMachineHasOverTime): void {
+        const controlMin: AbstractControl | null = this.editValueForm.get("ActualStartDate");
+        let break1: boolean = (!controlMin) || (!controlMin.value);
+        if (break1){
+            this.serviceDialogs.error("Actual Date not found.", "Please set actual date befor add overtime to TaskMachine.", this.viewContainerRef);
+            return;
+        }
+
         const control: AbstractControl | null = this.editValueForm.get("MachineId");
         if (control) {
             if (control.value) {
@@ -313,7 +326,7 @@ export class TaskMachineEditComponent
                 } else {
                     this.overTime = {
                         OverTimeId: 0,
-                        OverTimeDate: new Date,
+                        OverTimeDate: controlMin === null ? new Date : controlMin.value,
                         TaskMachineId: this.editValue.TaskMachineId
                     };
                     this.indexOverTime = -1;
@@ -330,14 +343,14 @@ export class TaskMachineEditComponent
             this.editValue.TaskMachineHasOverTimes = new Array;
         } else {
             // debug here
-            console.log("Check overtime");
+            // console.log("Check overtime");
             if (this.editValue.TaskMachineHasOverTimes.find(
                 (item) => {
                     if (item && overTime) {
-                        console.log("Data", item, overTime);
                         if (item.EmpCode === overTime.EmpCode) {
                             if (item.OverTimeDate && overTime.OverTimeDate) {
-                                return item.OverTimeDate.toLocaleDateString === overTime.OverTimeDate.toLocaleDateString;
+                                // console.log("Data", item.OverTimeDate.toLocaleDateString(), overTime.OverTimeDate.toLocaleDateString());
+                                return item.OverTimeDate.toLocaleDateString() === overTime.OverTimeDate.toLocaleDateString();
                             }
                         }
                     }
@@ -388,16 +401,20 @@ export class TaskMachineEditComponent
         this.serviceDialogs.dialogSelectedJobCardDetail(this.viewContainerRef,1)
             .subscribe(jobCardDetail => {
                 if (jobCardDetail) {
-                    // console.log(jobCardDetail);
-                    this.jobCardDetail = Object.assign({}, jobCardDetail);
-                    // cloning an object
-                    this.editValueForm.patchValue({
-                        JobCardDetailId: jobCardDetail.JobCardDetailId,
-                        TotalQuantity: jobCardDetail.Quality,
-                    });
+                    this.serviceJobCardDetail.getOneKeyNumber(jobCardDetail.JobCardDetailId)
+                        .subscribe(dbJobCardDetail => {
+                            this.jobCardDetail = dbJobCardDetail;
+                            if (this.jobCardDetail.StandardTimeString === "-") {
+                                this.jobCardDetail.StandardTimeString = "Click to selected StandardTime here.";
+                            }
 
-                    this.getAttach();
-                    this.onUpdatePlanStartAndEndDate();
+                            this.editValueForm.patchValue({
+                                JobCardDetailId: this.jobCardDetail.JobCardDetailId,
+                                TotalQuantity: this.jobCardDetail.Quality,
+                            });
+                            this.getAttach();
+                            this.onUpdatePlanStartAndEndDate();
+                        });
                 }
             });
     }
@@ -412,7 +429,9 @@ export class TaskMachineEditComponent
         }
 
         if (mode < 1) {
-            this.serviceDialogs.error("Warning Message", "Select \"Machine Required Detail\" befor select MachineNo.", this.viewContainerRef);
+            this.serviceDialogs.error("Warning Message",
+                "Select \"Machine Required Detail\" befor select MachineNo.",
+                this.viewContainerRef);
             return;
         }
 
@@ -422,7 +441,7 @@ export class TaskMachineEditComponent
                 if (resultStdTime) {
                     // to JobCardDetail
                     this.jobCardDetail.StandardTimeId = resultStdTime.StandardTimeId;
-                    this.jobCardDetail.StandardTimeString = `${resultStdTime.GradeMaterialString} - ${resultStdTime.StandardTimeCode}`
+                    this.jobCardDetail.StandardTimeString = `${resultStdTime.GradeMaterialString} - ${resultStdTime.StandardTimeCode}`;
                     // patch value to FormGroup
                     this.editValueForm.patchValue({
                         StandardTimeId: resultStdTime.StandardTimeId,
@@ -461,7 +480,9 @@ export class TaskMachineEditComponent
         // console.log("Mode", mode);
 
         if (mode < 1) {
-            this.serviceDialogs.error("Warning Message", "Select \"Machine Required Detail\" befor select MachineNo.", this.viewContainerRef);
+            this.serviceDialogs.error("Warning Message",
+                "Select \"Machine Required Detail\" befor select MachineNo.",
+                this.viewContainerRef);
             return;
         }
 

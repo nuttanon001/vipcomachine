@@ -14,6 +14,13 @@
     height: 460px;
 }
 
+.master-dialog-vh {
+    display: flex;
+    flex-direction: column;
+    width: 70vw;
+    height: 70vh;
+}
+
 .child-left-container {
     display: flex;
     flex-direction: column;
