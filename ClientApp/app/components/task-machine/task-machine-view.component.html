@@ -163,14 +163,8 @@
                 <b>Over-Time</b>
             </ng-template>
             <div class="view-container">
-                <ngx-datatable class="material my-scrolling"
-                               [rows]="overtimes"
-                               [columns]="columns"
-                               [columnMode]="'flex'"
-                               [headerHeight]="50"
-                               [footerHeight]="0"
-                               [rowHeight]="50">
-                </ngx-datatable>
+                <reuse-table [rows]="overtimes" [columns]="columns">
+                </reuse-table>
             </div>
         </mat-tab>
         <mat-tab>

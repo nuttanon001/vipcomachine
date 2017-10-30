@@ -39,6 +39,7 @@
     <None Remove="ClientApp\app\components\base-component\base-master.component.ts" />
     <None Remove="ClientApp\app\components\base-component\base-view.component.ts" />
     <None Remove="ClientApp\app\components\base-component\data-table.component.ts" />
+    <None Remove="ClientApp\app\components\base-component\reuse-table.component.ts" />
     <None Remove="ClientApp\app\components\developer\developer-center.component.ts" />
     <None Remove="ClientApp\app\components\developer\developer-jobcard.component.ts" />
     <None Remove="ClientApp\app\components\developer\developer-machine-type.component.ts" />
@@ -50,6 +51,7 @@
     <None Remove="ClientApp\app\components\jobcard\jobcard-master.component.ts" />
     <None Remove="ClientApp\app\components\jobcard\jobcard-view-waiting.component.ts" />
     <None Remove="ClientApp\app\components\machine\machine-center.component.ts" />
+    <None Remove="ClientApp\app\components\overtime\overtime-center.component.ts" />
     <None Remove="ClientApp\app\components\project-master\project-center.component.ts" />
     <None Remove="ClientApp\app\components\project-master\project.index.ts" />
     <None Remove="ClientApp\app\components\standard-time\standard-time-center.component.ts" />
@@ -58,6 +60,7 @@
     <None Remove="ClientApp\app\models\classification-material\classification-material.model.ts" />
     <None Remove="ClientApp\app\models\cutting-plan\cutting-plan-import.model.ts" />
     <None Remove="ClientApp\app\models\cutting-plan\cutting-plan.model.ts" />
+    <None Remove="ClientApp\app\models\employee-group\employee-group.model.ts" />
     <None Remove="ClientApp\app\models\employee\employee.model.ts" />
     <None Remove="ClientApp\app\models\grade-material\grade-material.model.ts" />
     <None Remove="ClientApp\app\models\jobcard-detail\jobcard-detail.model.ts" />
@@ -65,6 +68,8 @@
     <None Remove="ClientApp\app\models\machine\machine.model.ts" />
     <None Remove="ClientApp\app\models\material\material.model.ts" />
     <None Remove="ClientApp\app\models\over-time\over-time.model.ts" />
+    <None Remove="ClientApp\app\models\overtime-detail\overtime-detail.model.ts" />
+    <None Remove="ClientApp\app\models\overtime-master\overtime-master.model.ts" />
     <None Remove="ClientApp\app\models\page\page-data.model.ts" />
     <None Remove="ClientApp\app\models\page\page.model.ts" />
     <None Remove="ClientApp\app\models\projectcode-detail\projectcode-detail.model.ts" />
@@ -95,6 +100,7 @@
     <None Remove="ClientApp\app\services\base-service\base-communicate.service.ts" />
     <None Remove="ClientApp\app\services\cutting-plan\cutting-plan.service.ts" />
     <None Remove="ClientApp\app\services\data-table\data-table.service.ts" />
+    <None Remove="ClientApp\app\services\employee-group\employee-group.service.ts" />
     <None Remove="ClientApp\app\services\employee\employee.service.ts" />
     <None Remove="ClientApp\app\services\jobcard-detail\jobcard-detail.service.ts" />
     <None Remove="ClientApp\app\services\jobcard-master\jobcard-master.service.ts" />
@@ -102,6 +108,8 @@
     <None Remove="ClientApp\app\services\machine\machine.service.ts" />
     <None Remove="ClientApp\app\services\material\material.service.ts" />
     <None Remove="ClientApp\app\services\over-time\over-time.service.ts" />
+    <None Remove="ClientApp\app\services\overtime-detail\overtime-detail.service.ts" />
+    <None Remove="ClientApp\app\services\overtime-master\overtime-master.service.ts" />
     <None Remove="ClientApp\app\services\projectcode-detail\projectcode-detail-edit.service.ts" />
     <None Remove="ClientApp\app\services\projectcode-detail\projectcode-detail.service.ts" />
     <None Remove="ClientApp\app\services\projectcode-master\projectcode-master.service.ts" />
@@ -126,6 +134,7 @@
     <TypeScriptCompile Include="ClientApp\app\components\base-component\base-master.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\base-component\base-view.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\base-component\data-table.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\base-component\reuse-table.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\cutting-plan\cutting-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\developer\developer-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\developer\developer-jobcard.component.ts" />
@@ -138,6 +147,7 @@
     <TypeScriptCompile Include="ClientApp\app\components\jobcard\jobcard-master.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\jobcard\jobcard-view-waiting.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\machine\machine-center.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\overtime\overtime-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\project-master\project-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\project-master\project.index.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\standard-time\standard-time-center.component.ts" />
@@ -146,6 +156,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\classification-material\classification-material.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\cutting-plan\cutting-plan-import.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\cutting-plan\cutting-plan.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\employee-group\employee-group.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\employee\employee.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\grade-material\grade-material.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\jobcard-detail\jobcard-detail.model.ts" />
@@ -155,6 +166,8 @@
     <TypeScriptCompile Include="ClientApp\app\models\material\material.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\model.index.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\over-time\over-time.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\overtime-detail\overtime-detail.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\overtime-master\overtime-master.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\page\page-data.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\page\page.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\projectcode-detail\projectcode-detail.model.ts" />
@@ -186,6 +199,7 @@
     <TypeScriptCompile Include="ClientApp\app\services\base-service\base-communicate.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\cutting-plan\cutting-plan.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\data-table\data-table.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\employee-group\employee-group.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\employee\employee.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\grade-material\grade-material.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\jobcard-detail\jobcard-detail.service.ts" />
@@ -194,6 +208,8 @@
     <TypeScriptCompile Include="ClientApp\app\services\machine\machine.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\material\material.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\over-time\over-time.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\overtime-detail\overtime-detail.service.ts" />
+    <TypeScriptCompile Include="ClientApp\app\services\overtime-master\overtime-master.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\projectcode-detail\projectcode-detail-edit.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\projectcode-detail\projectcode-detail.service.ts" />
     <TypeScriptCompile Include="ClientApp\app\services\projectcode-master\projectcode-master.service.ts" />

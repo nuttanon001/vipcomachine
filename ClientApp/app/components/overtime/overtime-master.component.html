@@ -2,7 +2,8 @@
     <split direction="horizontal" [gutterSize]="7" [visibleTransition]="true">
         <split-area [size]="35" [visible]="hideleft" [order]="1">
             <div class="child-left-container">
-                <data-table (selected)="onDetailView($event)" [columns]="columns">
+                <!--<mat-checkbox [(ngModel)]="OnlyMe"> Filter Only User </mat-checkbox>-->
+                <data-table (selected)="onDetailView($event)" [isDisabled]="false" [columns]="columns">
                 </data-table>
             </div>
         </split-area>
@@ -19,16 +20,16 @@
                         <!--Component-->
                         <div *ngIf="displayValue || ShowEdit; else elseBlock">
                             <div *ngIf="!ShowEdit; else detailEdit">
-                                <task-machine-view [displayValue]="displayValue"></task-machine-view>
+                                <overtime-view [displayValue]="displayValue"></overtime-view>
                             </div>
                             <ng-template #detailEdit>
-                                <task-machine-edit></task-machine-edit>
+                                <overtime-edit></overtime-edit>
                             </ng-template>
                         </div>
                         <ng-template #elseBlock>
                             <!--Title-->
                             <h4 class="card-title text-info">
-                                Task Machine Information
+                                Require OverTime
                             </h4>
                             <h5 class="text-muted">
                                 Selected data from list to show information or new data
@@ -43,7 +44,7 @@
                         <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
                     </button>
                     <button type="button" mat-icon-button color="accent" (click)="onDetailEdit(displayValue)"
-                            [disabled]="ShowEdit || DisplayDataNull" matTooltip="Edit" matTooltipPosition="left">
+                            [disabled]="ShowEdit || DisplayDataNull || StatusJobCardMaster" matTooltip="Edit" matTooltipPosition="left">
                         <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>
                     </button>
                     <hr />
@@ -54,15 +55,6 @@
                     <button type="button" mat-icon-button color="primary" (click)="onSubmit()"
                             [disabled]="!canSave" matTooltip="Save" matTooltipPosition="left">
                         <i class="fa fa-2x fa-floppy-o" aria-hidden="true"></i>
-                    </button>
-                    <hr />
-                    <button type="button" mat-icon-button color="accent" (click)="onGetPaper(displayValue)"
-                            [disabled]="ShowEdit || DisplayDataNull" matTooltip="Report Paper" matTooltipPosition="left">
-                        <i class="fa fa-2x fa-file-o" aria-hidden="true"></i>
-                    </button>
-                    <button type="button" mat-icon-button color="accent" (click)="onGetPaperTaskMachineOverTime(displayValue)"
-                            [disabled]="ShowEdit || DisplayDataNull || !hasOverTime" matTooltip="Report OverTime" matTooltipPosition="left">
-                        <i class="fa fa-2x fa-files-o" aria-hidden="true"></i>
                     </button>
                 </div>
             </div>

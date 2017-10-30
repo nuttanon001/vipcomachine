@@ -34,13 +34,17 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DataTableComponent } from "../../components/base-component/data-table.component";
 import { SearchBoxComponent } from "../../components/base-component/search-box.component";
 import { AttactFileComponent } from "../../components/base-component/attact-file.component";
+import { ReuseTableComponent } from "../../components/base-component/reuse-table.component";
 import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 
 @NgModule({
     declarations: [
+        // component
         DataTableComponent,
         SearchBoxComponent,
         AttactFileComponent,
+        ReuseTableComponent,
+        // pipe
         DateOnlyPipe,
     ],
     imports: [
@@ -104,6 +108,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         SearchBoxComponent,
         DataTableComponent,
         AttactFileComponent,
+        ReuseTableComponent,
         //Pipe
         DateOnlyPipe
     ],
@@ -111,6 +116,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         SearchBoxComponent,
         DataTableComponent,
         AttactFileComponent,
+        ReuseTableComponent,
     ]
 })
 export class CustomMaterialModule { }

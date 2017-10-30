@@ -184,6 +184,40 @@ namespace VipcoMachine.Helpers
                 .ForMember(x => x.Employee, o => o.Ignore());
 
             #endregion
+
+            #region OverTimeMaster
+            // OverTimeMaster
+            CreateMap<OverTimeMaster, OverTimeMasterViewModel>()
+                // EmployeeGroup
+                .ForMember(x => x.GroupString,
+                           o => o.MapFrom(s => s.EmployeeGroup == null ? "-" : s.EmployeeGroup.Description))
+                .ForMember(x => x.EmployeeGroup, o => o.Ignore())
+                // ProjectCodeMaster
+                .ForMember(x => x.ProjectMasterString,
+                           o => o.MapFrom(s => s.ProjectCodeMaster == null ? "-" : $"{s.ProjectCodeMaster.ProjectCode}/{s.ProjectCodeMaster.ProjectName}"))
+                .ForMember(x => x.ProjectCodeMaster, o => o.Ignore())
+                // Require
+                .ForMember(x => x.RequireString,
+                           o => o.MapFrom(s => s.RequireBy == null ? "-" : $"คุณ{s.RequireBy.NameThai}"))
+                .ForMember(x => x.RequireBy,o => o.Ignore())
+                // Approve
+                .ForMember(x => x.ApproveString,
+                           o => o.MapFrom(s => s.ApproveBy == null ? "-" : $"คุณ{s.ApproveBy.NameThai}"))
+                .ForMember(x => x.ApproveBy, o => o.Ignore());
+
+            CreateMap<OverTimeMasterViewModel, OverTimeMaster>();
+            #endregion
+
+            #region OverTimeDetail
+
+            CreateMap<OverTimeDetail, OverTimeDetailViewModel>()
+                // Employee
+                .ForMember(x => x.EmployeeString,
+                           o => o.MapFrom(s => s.Employee == null ? "-" : $"คุณ{s.Employee.NameThai}"))
+                .ForMember(x => x.Employee, o => o.Ignore());
+
+            CreateMap<OverTimeDetailViewModel, OverTimeDetail>();
+            #endregion
         }
     }
 }

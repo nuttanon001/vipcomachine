@@ -28,19 +28,18 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         DataTableServiceCommunicate
     ]
 })
-/** project-dialog component*/
+// project-dialog component*/
 export class ProjectDialogComponent
-    implements OnInit, OnDestroy
-{
+    implements OnInit, OnDestroy {
     details: Array<ProjectCodeDetail>;
     templates: Array<ProjectCodeDetail>;
-    //Detail
+    // detail
     selectedDetails: ProjectCodeDetail | undefined;
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
-    //Subscription
+    // subscription
     subscription: Subscription;
     @ViewChild(DatatableComponent) table: DatatableComponent;
-    //Column
+    // column
     columns:Array<TableColumn> = [
         { prop: "ProjectCode", name: "Code", flexGrow: 1 },
         { prop: "ProjectName", name: "Name", flexGrow: 1 },
@@ -60,7 +59,8 @@ export class ProjectDialogComponent
         private serviceMaster: ProjectCodeMasterService,
         private serviceDetail: ProjectCodeDetailEditService,
         private serviceDataTable: DataTableServiceCommunicate<ProjectCodeMaster>,
-        public dialogRef: MatDialogRef<ProjectDialogComponent>
+        public dialogRef: MatDialogRef<ProjectDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public mode: number
     ) { }
 
     /** Called by Angular after project-dialog component initialized */
@@ -90,20 +90,23 @@ export class ProjectDialogComponent
             }, error => console.error(error));
     }
 
-    // Selected Project Master
+    // selected Project Master
     onSelectedMaster(master?: ProjectCodeMaster): void {
         if (master) {
-            this.serviceDetail.getByMasterId(master.ProjectCodeMasterId)
-                .subscribe(dbDetail => {
-                    this.details = dbDetail.slice();
-                    this.templates = [...dbDetail];
-                    this.selectedDetails = undefined;
-                });
-
+            if (this.mode === 1) {
+                this.dialogRef.close(master);
+            } else {
+                this.serviceDetail.getByMasterId(master.ProjectCodeMasterId)
+                    .subscribe(dbDetail => {
+                        this.details = dbDetail.slice();
+                        this.templates = [...dbDetail];
+                        this.selectedDetails = undefined;
+                    });
+            }
         }
     }
 
-    // Selected Project Detail
+    // selected Project Detail
     onSelectedDetail(selected?: any): void {
         if (selected) {
             this.selectedDetails = selected.selected[0];
@@ -112,25 +115,25 @@ export class ProjectDialogComponent
     }
 
     // on Filter
-    onFilter(search: string) {
+    onFilter(search: string):void {
         // filter our data
-        const temp = this.templates.slice().filter((item, index) => {
-            let searchStr = ((item.Description || "") + (item.ProjectCodeDetailCode || "")).toLowerCase();
-            return searchStr.indexOf(search.toLowerCase()) != -1;
+        const temp:Array<ProjectCodeDetail> = this.templates.slice().filter((item, index) => {
+            let searchStr:string = ((item.Description || "") + (item.ProjectCodeDetailCode || "")).toLowerCase();
+            return searchStr.indexOf(search.toLowerCase()) !== -1;
         });
 
         // update the rows
         this.details = temp;
-        // Whenever the filter changes, always go back to the first page
+        // whenever the filter changes, always go back to the first page
         this.table.offset = 0;
     }
 
-    // No Click
+    // no Click
     onCancelClick(): void {
         this.dialogRef.close();
     }
 
-    // Update Click
+    // update Click
     onSelectedClick(): void {
         this.dialogRef.close(this.selectedDetails);
     }

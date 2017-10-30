@@ -14,3 +14,9 @@
     flex-direction: row;
     align-items: center;
 }
+
+.view-container {
+    display: flex;
+    flex-grow: 0;
+    flex-direction: column;
+}

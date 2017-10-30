@@ -82,19 +82,21 @@
                 <b>Operators</b>
             </ng-template>
             <div class="edit-container">
-                <div class="mb-2">
+                <div style="margin-bottom:5px;">
                     <button (click)="onNewOperatore()" mat-raised-button style="float:left">
                         <i class="fa fa-get-pocket" aria-hidden="true"></i>
                         <span>Add Operator</span>
                     </button>
                 </div>
-                <ngx-datatable class="material my-scrolling"
+                <ngx-datatable class="material"
                                [rows]="editValue.MachineHasOperators"
                                [columnMode]="'flex'"
                                [headerHeight]="50"
                                [footerHeight]="0"
                                [rowHeight]="50"
-                               [selectionType]="'single'">
+                               [selectionType]="'single'"
+                               [scrollbarV]="true"
+                               [style.height]="'calc(100vh - 214px)'">
                     <ngx-datatable-column name="Code" prop="EmpCode" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="Name" prop="EmployeeName" [flexGrow]="3"></ngx-datatable-column>
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">

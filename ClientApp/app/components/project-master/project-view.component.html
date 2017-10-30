@@ -44,14 +44,8 @@
                 <b>Job Detail Level2/3</b>
             </ng-template>
             <div class="view-container">
-                <ngx-datatable class="material my-scrolling"
-                               [rows]="details"
-                               [columns]="columns"
-                               [columnMode]="'flex'"
-                               [headerHeight]="50"
-                               [footerHeight]="0"
-                               [rowHeight]="50">
-                </ngx-datatable>
+                <reuse-table [rows]="details" [columns]="columns">
+                </reuse-table>
             </div>
         </mat-tab>
     </mat-tab-group>

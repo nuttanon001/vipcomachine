@@ -17,7 +17,7 @@ namespace VipcoMachine.Models
         public string InfoPlan { get; set; }
         [StringLength(500)]
         public string InfoActual { get; set; }
-        public OverTimeStatus OverTimeStatus { get; set; }
+        public OverTimeStatus? OverTimeStatus { get; set; }
 
         public string Creator { get; set; }
         public DateTime? CreateDate { get; set; }

@@ -205,7 +205,7 @@ namespace VipcoMachine.Controllers
                             {
                                 var PDetail = PMaster.ProjectCodeDetails
                                                 .FirstOrDefault(x => x.ProjectCodeDetailCode.Trim()
-                                                    .ToLower().Contains(JDetails.Key.Trim().ToLower()));
+                                                    .ToLower().Equals(JDetails.Key.Trim().ToLower()));
 
                                 if (PDetail != null)
                                 {
@@ -214,7 +214,7 @@ namespace VipcoMachine.Controllers
                                         var Cutting = PDetail.CuttingPlans
                                                         .FirstOrDefault(x =>
                                                         (x.CuttingPlanNo.ToLower() + x.MaterialSize.ToLower())
-                                                        .Contains(Import.Key.ToLower()));
+                                                        .Equals(Import.Key.ToLower()));
 
                                         if (Cutting == null)
                                         {

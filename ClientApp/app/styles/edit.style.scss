@@ -4,9 +4,9 @@
     display: flex;
     flex-direction: column;
     margin: 10px 0 5px 0;
-    height: -webkit-calc(100vh - 230px); /* google, safari */
-    height: calc(100vh - 230px);
-    overflow:scroll;
+    /*height: -webkit-calc(100vh - 230px); /* google, safari */
+    /*height: calc(100vh - 230px);*/
+    // overflow:scroll;
     @extend .mx-3;
 }
 

@@ -24,11 +24,11 @@ export class JobCardViewComponent extends BaseViewComponent<JobCardMaster>
     attachFiles: Array<AttachFile> = new Array;
     columns: Array<TableColumn> = [
         { prop: "CuttingPlanString", name: "CuttingPlan", flexGrow: 1 },
-        { prop: "StandardTimeString", name: "StandardTime", flexGrow: 1 },
         { prop: "Material", name: "Material", flexGrow: 1 },
         { prop: "Quality", name: "Quality", flexGrow: 1 },
-        { prop: "UnitsMeasureString", name: "Uom", flexGrow: 1 },
-        { prop: "StatusString", name: "Status", flexGrow: 1, cellClass: this.getCellClass}
+        //{ prop: "UnitsMeasureString", name: "Uom", flexGrow: 1 },
+        { prop: "StatusString", name: "Status", flexGrow: 1, cellClass: this.getCellClass },
+        { prop: "StandardTimeString", name: "StandardTime", flexGrow: 0 }
     ];
 
     /** jobcard-view ctor */

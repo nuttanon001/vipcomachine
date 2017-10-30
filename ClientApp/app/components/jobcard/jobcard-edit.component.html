@@ -184,7 +184,7 @@
                 <b>Require Machine Detail</b>
             </ng-template>
             <div *ngIf="!jobDetail;else editDetail" class="edit-container" >
-                <div class="mb-2">
+                <div style="margin-bottom:5px;">
                     <button (click)="onNewOrEditDetail()" mat-raised-button style="float:left">
                         <i class="fa fa-get-pocket" aria-hidden="true"></i>
                         <span>Add Detail</span>
@@ -195,7 +195,9 @@
                                [columnMode]="'flex'"
                                [headerHeight]="50"
                                [footerHeight]="0"
-                               [rowHeight]="50">
+                               [rowHeight]="50"
+                               [scrollbarV]="true"
+                               [style.height]="'calc(100vh - 214px)'">
                     <ngx-datatable-column name="CuttingPlan" prop="CuttingPlanString" [flexGrow]="3"></ngx-datatable-column>
                     <ngx-datatable-column name="StandardTime" prop="StandardTimeString" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="Material" prop="Material" [flexGrow]="2"></ngx-datatable-column>

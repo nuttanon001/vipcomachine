@@ -145,15 +145,9 @@
                 <b>Require Machine Detail</b>
             </ng-template>
             <div class="view-container">
-                <div *ngIf="!mode,else elseTable">
-                    <ngx-datatable class="material"
-                               [rows]="details"
-                               [columns]="columns"
-                               [columnMode]="'flex'"
-                               [headerHeight]="50"
-                               [footerHeight]="0"
-                               [rowHeight]="50">
-                    </ngx-datatable>
+                <div *ngIf="!mode,else elseTable" class="chlid-center-content">
+                    <reuse-table [rows]="details" [columns]="columns">
+                    </reuse-table>
                 </div>
                 <ng-template #elseTable>
                     <ngx-datatable class="material"
@@ -168,7 +162,7 @@
                         <ngx-datatable-column name="StandardTime" prop="StandardTimeString" [flexGrow]="1"></ngx-datatable-column>
                         <ngx-datatable-column name="Material" prop="Material" [flexGrow]="2"></ngx-datatable-column>
                         <ngx-datatable-column name="Quality" prop="Quality" [flexGrow]="1"></ngx-datatable-column>
-                        <ngx-datatable-column name="Uom" prop="UnitsMeasureString" [flexGrow]="1"></ngx-datatable-column>
+                        <!--<ngx-datatable-column name="Uom" prop="UnitsMeasureString" [flexGrow]="1"></ngx-datatable-column>-->
                         <ngx-datatable-column name="Status" prop="StatusString" [flexGrow]="1" [cellClass]="getCellClass"></ngx-datatable-column>
                     </ngx-datatable>
                 </ng-template>

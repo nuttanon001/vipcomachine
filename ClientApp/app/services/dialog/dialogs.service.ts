@@ -14,6 +14,7 @@ import {
     UnitsMeasure,
     JobCardMaster,
     TaskMachine,
+    ProjectCodeMaster,
 } from '../../models/model.index';
 
 // components
@@ -78,7 +79,7 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectedDetail(viewContainerRef: ViewContainerRef): Observable<ProjectCodeDetail> {
+    public dialogSelectedDetail(viewContainerRef: ViewContainerRef): Observable<ProjectCodeDetail|ProjectCodeMaster> {
         let dialogRef: MatDialogRef<ProjectDialogComponent>;
         let config = new MatDialogConfig();
 

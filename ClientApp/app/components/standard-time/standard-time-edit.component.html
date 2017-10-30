@@ -30,19 +30,21 @@
                 <b>Standard Time Values</b>
             </ng-template>
             <div class="edit-container">
-                <div >
+                <div style="margin-bottom:5px;">
                     <button (click)="onNewStandardTime()" mat-raised-button style="float:left">
                         <i class="fa fa-get-pocket" aria-hidden="true"></i>
                         <span>Add StandardTime</span>
                     </button>
                 </div>
-                <ngx-datatable class="material my-scrolling"
+                <ngx-datatable class="material"
                                [rows]="editValue.StandardTimes"
                                [columnMode]="'flex'"
                                [headerHeight]="50"
                                [footerHeight]="0"
                                [rowHeight]="50"
-                               [selectionType]="'single'">
+                               [selectionType]="'single'"
+                               [scrollbarV]="true"
+                               [style.height]="'calc(100vh - 214px)'">
                     <ngx-datatable-column name="Grade" prop="GradeMaterialString" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="Code" prop="StandardTimeCode" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="Spec" prop="Description" [flexGrow]="2"></ngx-datatable-column>

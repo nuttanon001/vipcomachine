@@ -2,36 +2,75 @@
     <mat-tab-group>
         <mat-tab>
             <ng-template mat-tab-label>
-                <b>Machine</b>
+                <b>Require OverTime</b>
             </ng-template>
             <div class="view-container">
                 <div class="row my-1">
                     <div class="my-label">
-                        Code :
+                        Require/McNo
                     </div>
                     <div class="my-value">
-                        {{displayValue.MachineCode || "-"}}
+                        {{displayValue.JobCardMasterNo || "-"}}
                     </div>
 
                     <div class="my-label">
-                        Name :
+                        Description
                     </div>
                     <div class="my-value">
-                        {{displayValue.MachineName || "-"}}
+                        {{displayValue.Description || "-"}}
                     </div>
-
                 </div>
 
                 <div class="row my-1">
                     <div class="my-label">
-                        Installed :
+                        DueDate
                     </div>
                     <div class="my-value">
-                        {{(displayValue.InstalledDate | date:'dd/MM/yyyy') || "-"}}
+                        {{(displayValue.DueDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+                    <div class="my-label">
+                        Date
+                    </div>
+                    <div class="my-value">
+                        {{(displayValue.JobCardDate | date:'dd/MM/yyyy') || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        Group Machine
+                    </div>
+                    <div class="my-value">
+                        {{displayValue?.TypeMachineString || "-"}}
                     </div>
 
                     <div class="my-label">
-                        Remark :
+                        Job Lv2/3
+                    </div>
+                    <div class="my-value">
+                        {{displayValue?.ProjectDetailString || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        Creator
+                    </div>
+                    <div class="my-value">
+                        {{displayValue?.EmployeeWriteString || "-"}}
+                    </div>
+
+                    <div class="my-label">
+                        Require
+                    </div>
+                    <div class="my-value">
+                        {{displayValue?.EmployeeRequireString || "-"}}
+                    </div>
+                </div>
+
+                <div class="row my-1">
+                    <div class="my-label">
+                        Remark
                     </div>
                     <div class="my-value">
                         {{displayValue.Remark || "-"}}
@@ -40,46 +79,20 @@
 
                 <div class="row my-1">
                     <div class="my-label">
-                        Model :
+                        Status
                     </div>
                     <div class="my-value">
-                        {{displayValue.Model || "-"}}
-                    </div>
-
-                    <div class="my-label">
-                        Brand :
-                    </div>
-                    <div class="my-value">
-                        {{displayValue.Brand || "-"}}
-                    </div>
-                </div>
-
-                <div class="row my-1">
-                    <div class="my-label">
-                        Group :
-                    </div>
-                    <div class="my-value">
-                        {{displayValue.TypeMachineString || "-"}}
-                    </div>
-                </div>
-
-                <div class="row my-1">
-                    <div class="my-label">
-                        Image :
-                    </div>
-                    <div>
-                        <img [src]="displayValue.MachineImageString" class="size-img" />
+                        {{(displayValue.StatusString) || "-"}}
                     </div>
                 </div>
             </div>
         </mat-tab>
         <mat-tab>
             <ng-template mat-tab-label>
-                <b>Operators</b>
+                <b>List of Employee</b>
             </ng-template>
             <div class="view-container">
-                <reuse-table [rows]="details" [columns]="columns">
-                </reuse-table>
+                <reuse-table [columns]="columns" [rows]="details"></reuse-table>
             </div>
         </mat-tab>
     </mat-tab-group>

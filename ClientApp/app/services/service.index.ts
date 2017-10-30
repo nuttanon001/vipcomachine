@@ -23,3 +23,6 @@ export { CuttingPlanService, CuttingPlanServiceCommunicate } from "./cutting-pla
 export { TemplateProjectDetailService, TemplateProjectDetailServiceCommunicate } from "./template-project-detail/template-project-detail.service";
 export { DataTableServiceCommunicate } from "./data-table/data-table.service";
 export { UserService } from "./user/user.service";
+export { EmployeeGroupService } from "./employee-group/employee-group.service";
+export { OverTimeMasterService, OverTimeMasterServiceCommunicate } from "./overtime-master/overtime-master.service";
+export { OverTimeDetailService } from "./overtime-detail/overtime-detail.service";

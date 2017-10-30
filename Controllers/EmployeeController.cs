@@ -68,6 +68,16 @@ namespace VipcoMachine.Controllers
             return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
         }
 
+        // GET: api/Employee/GetByMaster/5
+        [HttpGet("GetByMaster/{MasterId}")]
+        public async Task<IActionResult> GetByMaster(string MasterId)
+        {
+            var QueryData = this.repository.GetAllAsQueryable()
+                                           .Where(x => x.GroupCode == MasterId);
+            // .Include(x => x.ProjectCodeDetail.ProjectCodeMaster)
+            return new JsonResult(await QueryData.AsNoTracking().ToListAsync(),this.DefaultJsonSettings);
+        }
+
         #endregion
 
         #region POST

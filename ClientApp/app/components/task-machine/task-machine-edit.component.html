@@ -173,7 +173,7 @@
                 <b>Over-Time</b>
             </ng-template>
             <div *ngIf="!overTime;else editDetail" class="edit-container">
-                <div class="mb-2">
+                <div style="margin-bottom:5px;">
                     <button (click)="onNewOrEditOverTime()" mat-raised-button style="float:left">
                         <i class="fa fa-get-pocket" aria-hidden="true"></i>
                         <span>Add OverTime</span>
@@ -184,7 +184,9 @@
                                [columnMode]="'flex'"
                                [headerHeight]="50"
                                [footerHeight]="0"
-                               [rowHeight]="50">
+                               [rowHeight]="50"
+                               [scrollbarV]="true"
+                               [style.height]="'calc(100vh - 214px)'">
                     <ngx-datatable-column name="OT/Date" prop="OverTimeDate" [pipe]="datePipe" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="Hour" prop="OverTimePerDate" [flexGrow]="1"></ngx-datatable-column>
                     <ngx-datatable-column name="Employee" prop="NameThai" [flexGrow]="1"></ngx-datatable-column>
