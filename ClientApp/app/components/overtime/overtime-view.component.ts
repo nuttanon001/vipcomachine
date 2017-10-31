@@ -5,7 +5,8 @@ import { OverTimeMaster, OverTimeDetail } from "../../models/model.index";
 // components
 import { BaseViewComponent } from "../base-component/base-view.component";
 // services
-import { OverTimeDetailService, OverTimeMasterService } from "../../services/service.index";
+import { OverTimeMasterService } from "../../services/overtime-master/overtime-master.service";
+import { OverTimeDetailService } from "../../services/overtime-detail/overtime-detail.service";
 // 3rd party
 import { TableColumn } from "@swimlane/ngx-datatable";
 @Component({
@@ -13,9 +14,9 @@ import { TableColumn } from "@swimlane/ngx-datatable";
     templateUrl: "./overtime-view.component.html",
     styleUrls: ["../../styles/view.style.scss"],
 })
-/** overtime-view component*/
-export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster>
-{
+// overtime-view component*/
+export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster> {
+    lastOverTimeMaster: OverTimeMaster;
     details: Array<OverTimeDetail>;
     columns: Array<TableColumn> = [
         { prop: "EmpCode", name: "Employee Code", flexGrow: 1 },
@@ -26,15 +27,49 @@ export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster>
     ];
     /** overtime-view ctor */
     constructor(
-        private service: OverTimeDetailService
+        private service: OverTimeDetailService,
+        private serviceMaster: OverTimeMasterService,
     ) { super(); }
 
     // load more data
-    onLoadMoreData(value: OverTimeMaster) {
-        this.service.getByMasterId(value.OverTimeMasterId)
-            .subscribe(dbDetail => {
-                this.details = dbDetail.slice();
-            });
+    onLoadMoreData(value: OverTimeMaster): void {
+        if (this.displayValue) {
+            if (this.displayValue.InfoActual) {
+                this.displayValue.InfoActual = this.onReplaceMuitLine(this.displayValue.InfoActual);
+            }
+
+            if (this.displayValue.InfoPlan) {
+                this.displayValue.InfoPlan = this.onReplaceMuitLine(this.displayValue.InfoPlan);
+            }
+        }
+
+        if (value) {
+
+            this.service.getByMasterId(value.OverTimeMasterId)
+                .subscribe(dbDetail => this.details = dbDetail.slice());
+
+            if (value.LastOverTimeId) {
+                this.serviceMaster.getOneKeyNumber(value.LastOverTimeId)
+                    .subscribe(dbLastMaster => {
+                        this.lastOverTimeMaster = dbLastMaster;
+                        if (this.lastOverTimeMaster.InfoActual) {
+                            this.lastOverTimeMaster.InfoActual = this.onReplaceMuitLine(this.lastOverTimeMaster.InfoActual);
+                        }
+
+                        if (this.lastOverTimeMaster.InfoPlan) {
+                            this.lastOverTimeMaster.InfoPlan = this.onReplaceMuitLine(this.lastOverTimeMaster.InfoPlan);
+                        }
+                    });
+            }
+        }
+
+    }
+
+    onReplaceMuitLine(text: string): string {
+        if (text) {
+            return text.replace(new RegExp('\n', 'g'), "<br />");
+        }
+        return "";
     }
 
     // cell change style

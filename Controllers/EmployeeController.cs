@@ -69,11 +69,11 @@ namespace VipcoMachine.Controllers
         }
 
         // GET: api/Employee/GetByMaster/5
-        [HttpGet("GetByMaster/{MasterId}")]
-        public async Task<IActionResult> GetByMaster(string MasterId)
+        [HttpGet("GetByMaster/{MasterCode}")]
+        public async Task<IActionResult> GetByMaster(string MasterCode)
         {
             var QueryData = this.repository.GetAllAsQueryable()
-                                           .Where(x => x.GroupCode == MasterId);
+                                           .Where(x => x.GroupCode == MasterCode);
             // .Include(x => x.ProjectCodeDetail.ProjectCodeMaster)
             return new JsonResult(await QueryData.AsNoTracking().ToListAsync(),this.DefaultJsonSettings);
         }
@@ -87,6 +87,11 @@ namespace VipcoMachine.Controllers
         public async Task<IActionResult> GetScroll([FromBody] ScrollViewModel Scroll)
         {
             var QueryData = this.repository.GetAllAsQueryable();
+            // Where
+            if (!string.IsNullOrEmpty(Scroll.Where))
+            {
+                QueryData = QueryData.Where(x => x.GroupCode == Scroll.Where);
+            }
             // Filter
             var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
                                 : Scroll.Filter.ToLower().Split(null);

@@ -13,7 +13,7 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
     }
 
     // get last OverTimeMaster
-    getOverTimeMaster(LastOverTimeMasterId: number, GroupCode: string): Observable<OverTimeMaster> {
+    getLastOverTimeMaster(LastOverTimeMasterId: number, GroupCode: string): Observable<OverTimeMaster> {
         let url: string = `${this.actionUrl}GetLastOverTime/${LastOverTimeMasterId}/${GroupCode}/`;
         return this.http.get(url).map(this.extractData).catch(this.handleError);
     }

@@ -15,7 +15,7 @@ import { EmployeeService } from "../../services/employee/employee.service";
 // primeng
 import { SelectItem } from "primeng/primeng";
 // 3rdParty
-import { TableColumn } from "@swimlane/ngx-datatable"
+import { TableColumn } from "@swimlane/ngx-datatable";
 
 @Component({
     selector: 'machine-edit',
@@ -197,7 +197,7 @@ export class MachineEditComponent
         // console.log(file.type);
         if (!file.type.match(pattern)) {
             this.ImageFile.nativeElement.value = "";
-            this.serviceDialogs.error("ไม่เข้าเงื่อนไข", "ระบบบันทึกเฉพาะไฟล์รูปภาพเท่านั้น !!!", this.viewContainerRef)
+            this.serviceDialogs.error("ไม่เข้าเงื่อนไข", "ระบบบันทึกเฉพาะไฟล์รูปภาพเท่านั้น !!!", this.viewContainerRef);
             return;
         } else {
             this.readImageFileToString64($event.target);
@@ -211,7 +211,7 @@ export class MachineEditComponent
 
         myReader.onloadend = (e) => {
             this.editValueForm.patchValue({ MachineImageString: myReader.result });
-        }
+        };
         myReader.readAsDataURL(file);
     }
 }

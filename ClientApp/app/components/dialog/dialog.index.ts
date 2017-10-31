@@ -12,3 +12,5 @@ export { UomDialogComponent } from "./uom-dialog.component";
 export { JobcardDialogComponent } from "./jobcard-dialog.component";
 export { JobCardWatingDialogComponent } from "./jobcard-wating-dialog.component";
 export { TaskMachineDialogComponent } from "./task-machine-dialog.component";
+export { EmployeeGroupDialogComponent } from "./employee-group-dialog.component";
+export { EmployeeByGroupDialogComponent } from "./employee-by-group-dialog.component";

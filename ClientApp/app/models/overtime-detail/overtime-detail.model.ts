@@ -1,6 +1,6 @@
 ﻿export interface OverTimeDetail {
     OverTimeDetailId: number;
-    TotalHour?: number;
+    TotalHour: number;
     Remark?: string;
     OverTimeDetailStatus?: number;
     Creator?: string;
@@ -14,4 +14,6 @@
     EmpCode?: string;
     // ViewModel
     EmployeeString?: string;
+
+    [key: string]: string | number | Date | undefined;
 }

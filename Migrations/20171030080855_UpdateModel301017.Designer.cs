@@ -11,9 +11,10 @@ using VipcoMachine.Models;
 namespace VipcoMachine.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20171030080855_UpdateModel301017")]
+    partial class UpdateModel301017
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -417,7 +418,8 @@ namespace VipcoMachine.Migrations
                     b.Property<string>("Remark")
                         .HasMaxLength(500);
 
-                    b.Property<double>("TotalHour");
+                    b.Property<double>("TotalHour")
+                        .HasMaxLength(24);
 
                     b.HasKey("OverTimeDetailId");
 

@@ -74,6 +74,14 @@ export abstract class BaseRestService<Model>{
             .map(this.extractData).catch(this.handleError);
     }
 
+    // get by master id
+    getByMasterCode(masterCode: string, subAction: string = "GetByMaster/"): Observable<Array<Model>> {
+        let url: string = this.actionUrl + subAction + masterCode;
+
+        return this.http.get(url)
+            .map(this.extractData).catch(this.handleError);
+    }
+
     // get all with page
     getAllWithScroll(scroll: Scroll, subAction: string = "GetScroll/"): Observable<ScrollData<Model>> {
         return this.http.post(this.actionUrl + subAction, JSON.stringify(scroll), this.getRequestOption())

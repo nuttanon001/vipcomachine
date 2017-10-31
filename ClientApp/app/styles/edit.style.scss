@@ -46,6 +46,12 @@
     text-align: center;
 }
 
+.edit-form-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 .container {
     margin: 0;
     padding: 0;
@@ -158,14 +164,17 @@ label {
 
 :host /deep/ .is-cancel {
     background-color: red;
+    color: red !important;
 }
 
 :host /deep/ .is-wait {
     background-color: gold;
+    color: gold !important;
 }
 
 :host /deep/ .is-complate {
     background-color: lightgreen;
+    color: lightgreen !important;
 }
 
 textarea {

@@ -1,20 +1,15 @@
 ﻿// angular
 import { Component, ViewContainerRef, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
-import {
-    trigger, state, style,
-    animate, transition
-} from "@angular/animations";
 // models
 import { OverTimeMaster, OverTimeDetail, Employee, ProjectCodeMaster } from "../../models/model.index";
 // components
 import { BaseEditComponent } from "../base-component/base-edit.component";
 // services
-import {
-    OverTimeMasterService, OverTimeDetailService,
-    OverTimeMasterServiceCommunicate, DialogsService,
-    EmployeeGroupService, AuthService
-} from "../../services/service.index";
+import { DialogsService } from "../../services/dialog/dialogs.service";
+import { OverTimeMasterService,OverTimeMasterServiceCommunicate } from "../../services/overtime-master/overtime-master.service";
+import { OverTimeDetailService } from "../../services/overtime-detail/overtime-detail.service";
+import { AuthService } from "../../services/auth/auth.service";
 // 3rd party
 import { TableColumn } from "@swimlane/ngx-datatable";
 
@@ -22,25 +17,15 @@ import { TableColumn } from "@swimlane/ngx-datatable";
     selector: "overtime-edit",
     templateUrl: "./overtime-edit.component.html",
     styleUrls: ["../../styles/edit.style.scss"],
-    animations: [
-        trigger("flyInOut", [
-            state("in", style({ transform: "translateX(0)" })),
-            transition("void => *", [
-                style({ transform: "translateX(-100%)" }),
-                animate(250)
-            ]),
-            transition("* => void", [
-                animate("0.2s 0.1s ease-out", style({ opacity: 0, transform: "translateX(100%)" }))
-            ])
-        ])
-    ]
 })
 // overtime-edit component*/
 export class OvertimeEditComponent
     extends BaseEditComponent<OverTimeMaster, OverTimeMasterService> {
+    lastOverTimeMaster?: OverTimeMaster;
     overtimeDetail?: OverTimeDetail;
     indexOverTimeDetail: number;
     lockSave: boolean = false;
+    defaultHour: number;
     // overtime-edit ctor */
     constructor(
         service: OverTimeMasterService,
@@ -59,6 +44,8 @@ export class OvertimeEditComponent
 
     // on get data by key
     onGetDataByKey(value?: OverTimeMaster): void {
+        this.defaultHour = 3;
+
         if (value) {
             this.service.getOneKeyNumber(value.OverTimeMasterId)
                 .subscribe(dbJobCardMaster => {
@@ -78,6 +65,12 @@ export class OvertimeEditComponent
                                 });
                             });
                     }
+
+                    if (this.editValue.LastOverTimeId) {
+                        this.service.getOneKeyNumber(this.editValue.LastOverTimeId)
+                            .subscribe(dbLastMaster => this.lastOverTimeMaster);
+                    }
+
                 }, error => console.error(error), () => this.defineData());
         } else {
             this.editValue = {
@@ -153,14 +146,80 @@ export class OvertimeEditComponent
         this.editValueForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
     }
 
-    // new Detail
-    onSendOverTimeDetailToEdit(detail?: OverTimeDetail): void {
+    // onValueChanged Override
+    onValueChanged(data?: any): void {
+        if (!this.editValueForm) {
+            return;
+        }
 
+        const form: FormGroup = this.editValueForm;
+        const controlMaster: AbstractControl | null = form.get("ProjectCodeMasterId");
+        const controlGroup: AbstractControl | null = form.get("GroupCode");
+
+        if (controlMaster && controlGroup) {
+            if (controlMaster.value && controlGroup.value) {
+                // check if alrady have last overtime master check if don't same get new last over time master
+                let getData: boolean = false;
+                if (this.lastOverTimeMaster) {
+                    if (controlMaster.value !== this.lastOverTimeMaster.ProjectCodeMasterId ||
+                        controlGroup.value !== this.lastOverTimeMaster.GroupCode) {
+                        getData = true;
+                    }
+                } else {
+                    getData = true;
+                }
+
+                if (getData) {
+                    this.service.getLastOverTimeMaster(controlMaster.value, controlGroup.value)
+                        .subscribe(lastMaster => this.lastOverTimeMaster = lastMaster);
+                }
+            }
+        }
+
+        super.onValueChanged();
     }
 
-    // edit Detail
-    onReceiveOverTimeDetailFromEdit(detail?: OverTimeDetail): void {
+    // new Detail
+    onChooseEmployeeToOverTime(): void {
+        const form: FormGroup = this.editValueForm;
+        const controlGroup: AbstractControl | null = form.get("GroupCode");
 
+        let group: string = "";
+        if (controlGroup) {
+            if (controlGroup.value) {
+                group = controlGroup.value;
+            }
+        }
+
+        this.serviceDialogs.dialogSelectEmployeeWithGroup(this.viewContainerRef, group)
+            .subscribe(selectEmpoyee => {
+                if (selectEmpoyee) {
+                    selectEmpoyee.forEach(item => {
+                        let detail: OverTimeDetail = {
+                            OverTimeDetailId: 0,
+                            EmpCode: item.EmpCode,
+                            EmployeeString: item.NameThai,
+                            TotalHour: 3,
+                            OverTimeDetailStatus: 1,
+                            OverTimeMasterId : this.editValue.OverTimeMasterId
+                        };
+                        // if array is null
+                        if (!this.editValue.OverTimeDetails) {
+                            this.editValue.OverTimeDetails = new Array;
+                        }
+
+                        if (this.editValue.OverTimeDetails) {
+                            if (!this.editValue.OverTimeDetails.find(item2 => item2.EmpCode === item.EmpCode)) {
+                                // cloning an object
+                                this.editValue.OverTimeDetails.push(Object.assign({}, detail));
+                                this.editValueForm.patchValue({
+                                    OverTimeDetails: this.editValue.OverTimeDetails.slice(),
+                                });
+                            }
+                        }
+                    });
+                }
+            });
     }
 
     // remove Detail
@@ -196,13 +255,25 @@ export class OvertimeEditComponent
 
     // on ProjectDetail click
     onProjectMasterClick(): void {
-        // need edit
-        this.serviceDialogs.dialogSelectedDetail(this.viewContainerRef)
-            .subscribe(resultDetail => {
-                if (typeof resultDetail === "ProjectCodeMaster") {
+        this.serviceDialogs.dialogSelectedMaster(this.viewContainerRef)
+            .subscribe(resultMaster => {
+                if (resultMaster) {
                     this.editValueForm.patchValue({
-                        ProjectDetailString: resultDetail.ProjectCodeMasterId,
-                        ProjectCodeDetailId: resultDetail.ProjectCodeMasterId,
+                        ProjectMasterString: `${resultMaster.ProjectCode}/${resultMaster.ProjectName}`,
+                        ProjectCodeMasterId: resultMaster.ProjectCodeMasterId,
+                    });
+                }
+            });
+    }
+
+    // on Employee Group Click
+    onEmployeeGroupClick(): void {
+        this.serviceDialogs.dialogSelectedEmployeeGroup(this.viewContainerRef)
+            .subscribe(resultGroup => {
+                if (resultGroup) {
+                    this.editValueForm.patchValue({
+                        GroupCode: resultGroup.GroupCode,
+                        GroupString: resultGroup.Description,
                     });
                 }
             });
@@ -210,17 +281,18 @@ export class OvertimeEditComponent
 
     // on Employee Require click
     onEmployeeRequireClick(mode: string): void {
-        this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef, "singe")
+        this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef, "single")
             .subscribe(resultEmp => {
                 if (resultEmp) {
                     let emp: Employee = Object.assign({}, resultEmp[0]);
                     this.editValueForm.patchValue({
                         EmpRequire: emp.EmpCode,
-                        RequireString: emp.NameThai,
+                        RequireString: `คุณ${emp.NameThai}`,
                     });
                 }
             });
     }
+
     // cell change style
     getCellClass({ row, column, value }: any): any {
         // console.log("getCellClass", value);
@@ -235,5 +307,21 @@ export class OvertimeEditComponent
         } else {
             return { "is-wait": true };
         }
+    }
+
+    // update value
+    updateValue(event: any, cell: string, rowIndex: number): void {
+        // console.log("inline editing rowIndex", rowIndex);
+        // console.log(rowIndex + "-" + cell);
+        // console.log("value:", event.target.value);
+
+        if (this.editValue.OverTimeDetails) {
+            // console.log("Get By index!", this.editValue.OverTimeDetails[rowIndex][cell]);
+            // befor use index must add [key: string]: string | number | Date | undefined; in interface
+            this.editValue.OverTimeDetails[rowIndex][cell] = event.target.value;
+            this.editValue.OverTimeDetails = [...this.editValue.OverTimeDetails];
+        }
+
+        // console.log("UPDATED!", this.employees[rowIndex][cell]);
     }
 }

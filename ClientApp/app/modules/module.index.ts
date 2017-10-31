@@ -8,3 +8,4 @@ export { MachineModule } from "./machine/machine.module";
 export { CuttingPlanModule } from "./cutting-plan/cutting-plan.module";
 export { StandardTimeModule } from "./standard-time/standard-time.module";
 export { TaskMachineModule } from "./task-machine/task-machine.module";
+export { OverTimeModule } from "./overtime/overtime.module";

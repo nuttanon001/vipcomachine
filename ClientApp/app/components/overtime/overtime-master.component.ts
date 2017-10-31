@@ -5,11 +5,14 @@ import { BaseMasterComponent } from "../base-component/base-master.component";
 // models
 import { OverTimeMaster, Scroll, ScrollData } from "../../models/model.index";
 // services
+import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
+import { DialogsService } from "../../services/dialog/dialogs.service";
+import { OverTimeDetailService } from "../../services/overtime-detail/overtime-detail.service";
+import { AuthService } from "../../services/auth/auth.service";
 import {
-    DialogsService, OverTimeMasterService, OverTimeDetailService,
-    DataTableServiceCommunicate, OverTimeMasterServiceCommunicate,
-    AuthService
-} from "../../services/service.index";
+    OverTimeMasterService,
+    OverTimeMasterServiceCommunicate
+} from "../../services/overtime-master/overtime-master.service";
 // rxjs
 import "rxjs/add/operator/switchMap";
 // timezone
@@ -156,6 +159,7 @@ export class OvertimeMasterComponent
         // change timezone
         value = this.changeTimezone(value);
         // insert data
+        console.log("Value:", value);
         this.service.post(value).subscribe(
             (complete: any) => {
                 this.displayValue = complete;

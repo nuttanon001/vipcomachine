@@ -18,7 +18,8 @@ import {
     CustomMaterialModule, ValidationModule,
     DialogsModule, DeveloperModule, JobCardModule,
     ProjectModule, MachineModule, CuttingPlanModule,
-    StandardTimeModule,TaskMachineModule
+    StandardTimeModule, TaskMachineModule,
+    OverTimeModule
  } from "./modules/module.index";
 // services
 import { AuthGuard, AuthService } from "./services/service.index";
@@ -63,6 +64,7 @@ import "popper.js";
         CuttingPlanModule,
         StandardTimeModule,
         TaskMachineModule,
+        OverTimeModule,
         DialogsModule,
         // 3rd party
         // NgxDatatableModule,

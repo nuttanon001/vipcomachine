@@ -4,17 +4,11 @@ import { Observable } from "rxjs/Rx";
 
 // models
 import {
-    CuttingPlan,
-    Employee,
-    JobCardDetail,
-    Machine,
-    Material,
-    ProjectCodeDetail,
-    StandardTime,
-    UnitsMeasure,
-    JobCardMaster,
-    TaskMachine,
-    ProjectCodeMaster,
+    CuttingPlan,Employee,JobCardDetail,
+    Machine,Material,ProjectCodeDetail,
+    StandardTime,UnitsMeasure,JobCardMaster,
+    TaskMachine, ProjectCodeMaster,
+    EmployeeGroup
 } from '../../models/model.index';
 
 // components
@@ -25,7 +19,8 @@ import {
     MachineDialogComponent, StandardTimeDialogComponent,
     StdtimeSelectDialogComponent, CuttingPlanDialogComponent,
     UomDialogComponent, JobcardDialogComponent,
-    JobCardWatingDialogComponent, TaskMachineDialogComponent
+    JobCardWatingDialogComponent, TaskMachineDialogComponent,
+    EmployeeGroupDialogComponent, EmployeeByGroupDialogComponent
  } from "../../components/dialog/dialog.index";
 
 @Injectable()
@@ -79,12 +74,29 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectedDetail(viewContainerRef: ViewContainerRef): Observable<ProjectCodeDetail|ProjectCodeMaster> {
+    public dialogSelectedDetail(viewContainerRef: ViewContainerRef): Observable<ProjectCodeDetail> {
         let dialogRef: MatDialogRef<ProjectDialogComponent>;
         let config = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
+        config.data = 0;
+        //config.height = this.height;
+        //config.width= this.width;
+        config.hasBackdrop = true;
+
+        // open dialog
+        dialogRef = this.dialog.open(ProjectDialogComponent, config);
+        return dialogRef.afterClosed();
+    }
+
+    public dialogSelectedMaster(viewContainerRef: ViewContainerRef,mode:number = 1): Observable<ProjectCodeMaster> {
+        let dialogRef: MatDialogRef<ProjectDialogComponent>;
+        let config = new MatDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        config.data = mode;
         //config.height = this.height;
         //config.width= this.width;
         config.hasBackdrop = true;
@@ -123,6 +135,23 @@ export class DialogsService {
 
         // open dialog
         dialogRef = this.dialog.open(EmployeeDialogComponent, config);
+        return dialogRef.afterClosed();
+    }
+
+    public dialogSelectEmployeeWithGroup(viewContainerRef: ViewContainerRef, groupCode: string = ""): Observable<Array<Employee>> {
+
+        let dialogRef: MatDialogRef<EmployeeByGroupDialogComponent>;
+        let config = new MatDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        config.data = groupCode;
+        //config.height = this.height;
+        //config.width= this.width;
+        config.hasBackdrop = true;
+
+        // open dialog
+        dialogRef = this.dialog.open(EmployeeByGroupDialogComponent, config);
         return dialogRef.afterClosed();
     }
 
@@ -252,6 +281,21 @@ export class DialogsService {
 
         // open dialog
         dialogRef = this.dialog.open(TaskMachineDialogComponent, config);
+        return dialogRef.afterClosed();
+    }
+
+    public dialogSelectedEmployeeGroup(viewContainerRef: ViewContainerRef): Observable<EmployeeGroup> {
+        let dialogRef: MatDialogRef<EmployeeGroupDialogComponent>;
+        let config = new MatDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        //config.height = this.height;
+        //config.width = this.width;
+        config.hasBackdrop = true;
+
+        //open dialog
+        dialogRef = this.dialog.open(EmployeeGroupDialogComponent, config);
         return dialogRef.afterClosed();
     }
 }

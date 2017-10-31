@@ -11,8 +11,6 @@ namespace VipcoMachine.Models
         [Key]
         public int OverTimeDetailId { get; set; }
         [Required]
-        [MinLength(0)]
-        [MaxLength(24)]
         public double TotalHour { get; set; }
         [StringLength(500)]
         public string Remark { get; set; }

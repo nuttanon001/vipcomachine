@@ -90,6 +90,8 @@
     <None Remove="ClientApp\app\modules\machine\machine.module.ts" />
     <None Remove="ClientApp\app\modules\machine\machine.routing.ts" />
     <None Remove="ClientApp\app\modules\module.index.ts" />
+    <None Remove="ClientApp\app\modules\overtime\overtime.module.ts" />
+    <None Remove="ClientApp\app\modules\overtime\overtime.routing.ts" />
     <None Remove="ClientApp\app\modules\project\project.module.ts" />
     <None Remove="ClientApp\app\modules\project\project.routing.ts" />
     <None Remove="ClientApp\app\modules\standard-time\standard-time.module.ts" />
@@ -189,6 +191,8 @@
     <TypeScriptCompile Include="ClientApp\app\modules\machine\machine.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\machine\machine.routing.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\module.index.ts" />
+    <TypeScriptCompile Include="ClientApp\app\modules\overtime\overtime.module.ts" />
+    <TypeScriptCompile Include="ClientApp\app\modules\overtime\overtime.routing.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\project\project.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\project\project.routing.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\standard-time\standard-time.module.ts" />
