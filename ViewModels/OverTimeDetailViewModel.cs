@@ -9,5 +9,6 @@ namespace VipcoMachine.ViewModels
     public class OverTimeDetailViewModel:OverTimeDetail
     {
         public string EmployeeString { get; set; }
+        public string StatusString { get; set; }
     }
 }

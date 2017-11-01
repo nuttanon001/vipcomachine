@@ -6,10 +6,20 @@
 </div>-->
 
 <div class="app-layout">
-    <div class="navigation">
-        <nav-menu></nav-menu>
+    <div *ngIf="!option; else elseBlock">
+        <main-screen (SelectApp)="SelectApp($event)"></main-screen>
     </div>
-    <div class="main-content">
-        <router-outlet></router-outlet>
-    </div>
+    <ng-template #elseBlock>
+        <div class="navigation">
+            <div *ngIf="option == 'machine'; else elseNav">
+                <nav-menu></nav-menu>
+            </div>
+            <ng-template #elseNav>
+                <navmenu-overtime></navmenu-overtime>
+            </ng-template>
+        </div>
+        <div class="main-content">
+            <router-outlet></router-outlet>
+        </div>
+    </ng-template>
 </div>

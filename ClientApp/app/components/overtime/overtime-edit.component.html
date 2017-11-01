@@ -54,7 +54,7 @@
                     <div class="my-form">
                         <label for="LastInfoPlan" class="my-label">Last-Plan:</label>
                         <div class="col-sm-4">
-                            <textarea class="my-input" [value]="lastOverTimeMaster?.InfoPlan"
+                            <textarea class="my-input" [value]="lastOverTimeMaster?.InfoPlan || '-'"
                                       placeholder="Information of last plan for overtime"
                                       id="LastInfoPlan"
                                       rows="4" readonly>
@@ -74,18 +74,20 @@
                     <div class="my-form">
                         <label for="LastInfoActual" class="my-label">Last-Actual:</label>
                         <div class="col-sm-4">
-                            <textarea class="my-input" [value]="lastOverTimeMaster?.InfoActual"
+                            <textarea class="my-input" [value]="lastOverTimeMaster?.InfoActual || '-'"
                                       placeholder="Information of last actual for overtime"
                                       id="LastInfoActual"
                                       rows="4" readonly>
                             </textarea>
                         </div>
 
-                        <label for="InfoActual" class="my-label">Actual:</label>
-                        <div class="col-sm-4">
+                        <label for="InfoActual" class="my-label" *ngIf="editValueForm.controls.OverTimeStatus.value !== 1">
+                            Actual:
+                        </label>
+                        <div class="col-sm-4" *ngIf="editValueForm.controls.OverTimeStatus.value !== 1">
                             <textarea class="my-input" placeholder="Insert actual for overtime here"
-                                      id="InfoActual" formControlName="InfoActual"
-                                      rows="4">
+                                        id="InfoActual" formControlName="InfoActual"
+                                        rows="4">
                             </textarea>
                             <validation-messages [control]="editValueForm.controls.InfoActual"></validation-messages>
                         </div>
@@ -127,8 +129,15 @@
                                    [value]="value" />
                         </ng-template>
                     </ngx-datatable-column>
-                    <ngx-datatable-column name="Remark" prop="Remark" [flexGrow]="1"></ngx-datatable-column>
-                    <ngx-datatable-column name="Status" prop="OverTimeDetailStatus" [flexGrow]="1" [cellClass]="getCellClass"></ngx-datatable-column>
+                    <ngx-datatable-column name="Remark" prop="Remark" [flexGrow]="1">
+                        <ng-template ngx-datatable-cell-template let-rowIndex="rowIndex" let-value="value" let-row="row">
+                            <input autofocus (blur)="updateValue($event, 'Remark', rowIndex)"
+                                   type="text"
+                                   name="Remark" class="my-input"
+                                   [value]="value" />
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Status" prop="StatusString" [flexGrow]="1" [cellClass]="getCellClass"></ngx-datatable-column>
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
                             <button mat-button (click)="onRemoveOverTimeDetailOrCancelOverTimeDetail(row)" color="warn">Remove</button>

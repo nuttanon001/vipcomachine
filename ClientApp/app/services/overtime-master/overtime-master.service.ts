@@ -1,7 +1,7 @@
 ﻿import { Injectable } from '@angular/core';
 import { Http } from "@angular/http";
 // model
-import { OverTimeMaster } from "../../models/model.index";
+import { OverTimeMaster,OptionOverTimeSchedule } from "../../models/model.index";
 // base-service
 import { BaseRestService, BaseCommunicateService } from "../service.index";
 import { Observable } from 'rxjs/Observable';
@@ -13,9 +13,17 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
     }
 
     // get last OverTimeMaster
-    getLastOverTimeMaster(LastOverTimeMasterId: number, GroupCode: string): Observable<OverTimeMaster> {
-        let url: string = `${this.actionUrl}GetLastOverTime/${LastOverTimeMasterId}/${GroupCode}/`;
+    getLastOverTimeMaster(LastOverTimeMasterId: number, GroupCode: string, CurrentId:number): Observable<OverTimeMaster> {
+        let url: string = `${this.actionUrl}GetLastOverTime/${LastOverTimeMasterId}/${GroupCode}/${CurrentId}`;
         return this.http.get(url).map(this.extractData).catch(this.handleError);
+    }
+
+    //===================== OverTime Schedule ===========================\\
+    // get OverTime Schedule
+    getOverTimeMasterSchedule(option: OptionOverTimeSchedule): Observable<any> {
+        let url: string = `${this.actionUrl}OverTimeSchedule/`;
+        return this.http.post(url, JSON.stringify(option), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
     }
 }
 

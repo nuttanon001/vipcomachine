@@ -6,7 +6,8 @@ import { TaskMachine, Scroll, ScrollData } from "../../models/model.index";
 // services
 import { DialogsService } from "../../services/dialog/dialogs.service";
 import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
-import { TaskMachineService , TaskMachineServiceCommunicate } from "../../services/task-machine/task-machine.service";
+import { TaskMachineService, TaskMachineServiceCommunicate } from "../../services/task-machine/task-machine.service";
+import { AuthService } from "../../services/auth/auth.service";
 // timezone
 import * as moment from "moment-timezone";
 // 3rd party
@@ -35,6 +36,7 @@ export class TaskMachineProgressComponent
         service: TaskMachineService,
         serviceCom: TaskMachineServiceCommunicate,
         serviceComDataTable: DataTableServiceCommunicate<TaskMachine>,
+        private serverAuth : AuthService,
         dialogsService: DialogsService,
         viewContainerRef: ViewContainerRef,
     ) {
@@ -94,6 +96,10 @@ export class TaskMachineProgressComponent
 
     // on update data
     onUpdateToDataBase(value: TaskMachine): void {
+
+        if (this.serverAuth.getAuth) {
+            value.Modifyer = this.serverAuth.getAuth.UserName || "";
+        }
         // change timezone
         value = this.changeTimezone(value);
         // update data

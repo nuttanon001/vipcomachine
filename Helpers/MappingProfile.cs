@@ -188,6 +188,12 @@ namespace VipcoMachine.Helpers
             #region OverTimeMaster
             // OverTimeMaster
             CreateMap<OverTimeMaster, OverTimeMasterViewModel>()
+                // StatusString
+                .ForMember(x => x.StatusString,
+                           o => o.MapFrom(s => s.OverTimeStatus == null ? "Wait" :
+                          (s.OverTimeStatus == OverTimeStatus.Required ? "Required" :
+                          (s.OverTimeStatus == OverTimeStatus.WaitActual ? "In-Complate" :
+                          (s.OverTimeStatus == OverTimeStatus.Complate ? "Complate" : "Cancel")))))
                 // EmployeeGroup
                 .ForMember(x => x.GroupString,
                            o => o.MapFrom(s => s.EmployeeGroup == null ? "-" : s.EmployeeGroup.Description))
@@ -211,6 +217,9 @@ namespace VipcoMachine.Helpers
             #region OverTimeDetail
 
             CreateMap<OverTimeDetail, OverTimeDetailViewModel>()
+                // Status
+                .ForMember(x => x.StatusString,
+                           o => o.MapFrom(s => s.OverTimeDetailStatus == null ? "Use" : (s.OverTimeDetailStatus == OverTimeDetailStatus.Use ? "Use" : "Cancel")))
                 // Employee
                 .ForMember(x => x.EmployeeString,
                            o => o.MapFrom(s => s.Employee == null ? "-" : $"คุณ{s.Employee.NameThai}"))

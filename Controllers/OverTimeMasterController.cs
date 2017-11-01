@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -95,28 +96,208 @@ namespace VipcoMachine.Controllers
         }
 
         // GET: api/OverTimeMaster/GetOverTimeMasterHasOverTime
-        [HttpGet("GetLastOverTime/{ProjectCodeId}/{GroupCode}")]
-        public async Task<IActionResult> GetLastOverTime(int ProjectCodeId,string GroupCode)
+        [HttpGet("GetLastOverTime/{ProjectCodeId}/{GroupCode}/{CurrentId}")]
+        public async Task<IActionResult> GetLastOverTime(int ProjectCodeId,string GroupCode,int CurrentId)
         {
             if (ProjectCodeId > 0 && !string.IsNullOrEmpty(GroupCode))
             {
-                var LastOverTime = await this.repository.GetAllAsQueryable()
-                                                        .OrderByDescending(x => x.OverTimeDate)
-                                                        .Include(x => x.ApproveBy)
-                                                        .Include(x => x.RequireBy)
-                                                        .Include(x => x.ProjectCodeMaster)
-                                                        .Include(x => x.EmployeeGroup)
-                                                        .FirstOrDefaultAsync(x => x.ProjectCodeMasterId == ProjectCodeId &&
-                                                                                  x.GroupCode == GroupCode);
-                return new JsonResult(this.mapper.Map<OverTimeMaster,OverTimeMasterViewModel>(LastOverTime), this.DefaultJsonSettings);
+                var QueryData = this.repository.GetAllAsQueryable()
+                                                .Where(x => x.OverTimeStatus != OverTimeStatus.Cancel)
+                                                .OrderByDescending(x => x.OverTimeDate)
+                                                .Include(x => x.ApproveBy)
+                                                .Include(x => x.RequireBy)
+                                                .Include(x => x.ProjectCodeMaster)
+                                                .Include(x => x.EmployeeGroup).AsQueryable();
+
+                if (CurrentId > 0)
+                    QueryData = QueryData.Where(x => x.OverTimeMasterId != CurrentId);
+
+                var LastOverTime = await QueryData.FirstOrDefaultAsync(x => x.ProjectCodeMasterId == ProjectCodeId && x.GroupCode == GroupCode);
+
+                if (LastOverTime != null)
+                    return new JsonResult(this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>(LastOverTime), this.DefaultJsonSettings);
             }
 
-            return NotFound(new { Error = "Not found ProjectCodeMasterId or GroupCode." });
+            return NotFound(new { Error = "Not found ProjectCodeMasterId ,GroupCode or LastOverTime." });
         }
 
         #endregion
 
         #region POST
+        // POST: api/OverTimeMaster/OverTimeSchedule
+        [HttpPost("OverTimeSchedule")]
+        public async Task<IActionResult> OverTimeSchedule([FromBody] OptionOverTimeSchedule Scehdule)
+        {
+            string Message = "";
+            try
+            {
+                var QueryData = this.repository.GetAllAsQueryable()
+                                                .Include(x => x.ApproveBy)
+                                                .Include(x => x.RequireBy)
+                                                .Include(x => x.ProjectCodeMaster)
+                                                .Include(x => x.EmployeeGroup)
+                                                .AsQueryable();
+                int TotalRow;
+
+                if (Scehdule != null)
+                {
+                    if (!string.IsNullOrEmpty(Scehdule.Filter))
+                    {
+                        // Filter
+                        var filters = string.IsNullOrEmpty(Scehdule.Filter) ? new string[] { "" }
+                                            : Scehdule.Filter.ToLower().Split(null);
+                        foreach (var keyword in filters)
+                        {
+                            QueryData = QueryData.Where(x => x.EmpRequire.ToLower().Contains(keyword) ||
+                                                             x.RequireBy.NameThai.ToLower().Contains(keyword) ||
+                                                             x.ProjectCodeMaster.ProjectCode.ToLower().Contains(keyword) ||
+                                                             x.ProjectCodeMaster.ProjectName.ToLower().Contains(keyword) ||
+                                                             x.EmployeeGroup.Description.ToLower().Contains(keyword));
+                        }
+                    }
+
+                    // Option ProjectCodeMaster
+                    if (Scehdule.ProjectMasterId.HasValue)
+                    {
+                        QueryData = QueryData.Where(x => x.ProjectCodeMasterId == Scehdule.ProjectMasterId);
+                    }
+                    // Option GroupCode
+                    if (!string.IsNullOrEmpty(Scehdule.GroupCode))
+                    {
+                        QueryData = QueryData.Where(x => x.GroupCode == Scehdule.GroupCode);
+                    }
+                    // Option SDate
+                    if (Scehdule.SDate.HasValue)
+                    {
+                    }
+
+                    // Option EDate
+                    if (Scehdule.EDate.HasValue)
+                    {
+                    }
+
+                    // Option Status
+                    if (Scehdule.Status.HasValue)
+                    {
+                        if (Scehdule.Status == 1)
+                            QueryData = QueryData.Where(x => x.OverTimeStatus == OverTimeStatus.Required);
+                        else if (Scehdule.Status == 2)
+                            QueryData = QueryData.Where(x => x.OverTimeStatus == OverTimeStatus.WaitActual);
+                        else
+                            QueryData = QueryData.Where(x => x.OverTimeStatus != OverTimeStatus.Cancel);
+                    }
+                    else
+                    {
+                        QueryData = QueryData.Where(x => x.OverTimeStatus == OverTimeStatus.Required);
+                    }
+
+                    TotalRow = await QueryData.CountAsync();
+
+                    // Option Skip and Task
+                    if (Scehdule.Skip.HasValue && Scehdule.Take.HasValue)
+                        QueryData = QueryData.Skip(Scehdule.Skip ?? 0).Take(Scehdule.Take ?? 4);
+                    else
+                        QueryData = QueryData.Skip(0).Take(10);
+                }
+                else
+                {
+                    TotalRow = await QueryData.CountAsync();
+                }
+
+                var GetData = await QueryData.ToListAsync();
+                if (GetData.Any())
+                {
+                    List<string> Columns = new List<string>();
+
+                    var MinDate = GetData.Min(x => x.OverTimeDate);
+                    var MaxDate = GetData.Max(x => x.OverTimeDate);
+
+                    if (MinDate == null && MaxDate == null)
+                    {
+                        return NotFound(new { Error = "Data not found" });
+                    }
+
+                    foreach (DateTime day in EachDay(MinDate, MaxDate))
+                    {
+                        Columns.Add(day.Date.ToString("dd/MM/yy"));
+                    }
+
+                    var DataTable = new List<IDictionary<String, Object>>();
+
+                    foreach (var Data in GetData.OrderBy(x => x.ProjectCodeMaster.ProjectCode).ThenBy(x => x.EmployeeGroup.Description))
+                    {
+                        var JobNumber = $"{Data?.ProjectCodeMaster?.ProjectCode}/{Data?.ProjectCodeMaster.ProjectName}";
+                        IDictionary<String, Object> rowData;
+                        bool update = false;
+                        if (DataTable.Any(x => (string)x["JobNumber"] == JobNumber))
+                        {
+                            var FirstData = DataTable.FirstOrDefault(x => (string)x["JobNumber"] == JobNumber);
+                            if (FirstData != null)
+                            {
+                                rowData = FirstData;
+                                update = true;
+                            }
+                            else
+                                rowData = new ExpandoObject();
+                        }
+                        else
+                            rowData = new ExpandoObject();
+
+                        // Data is 1:Plan,2:Actual,3:PlanAndActual
+                        // For Plan
+                        if (Data.OverTimeDate != null)
+                        {
+                            //var key = columnNames.Where(y => y.Contains(dateString)).FirstOrDefault();
+                            //if (((IDictionary<String, Object>)data).Keys.Any(x => x == key))
+                            //    ((IDictionary<String, Object>)data)[key] += $"#{item.TransportId}";
+                            //else
+                            //    ((IDictionary<String, Object>)data).Add(key, $"{item.TransportId}");
+                            var Key = Data.OverTimeDate.ToString("dd/MM/yy");
+                            if (rowData.Any(x => x.Key == Key))
+                            {
+                                var ListMaster = (List<OverTimeMaster>)rowData[Key];
+                                ListMaster.Add(new OverTimeMaster
+                                {
+                                    OverTimeMasterId = Data.OverTimeMasterId,
+                                    GroupCode = Data.EmployeeGroup.Description,
+                                });
+
+                                rowData[Key] = ListMaster;
+                            }
+                            else // add new
+                            {
+                                var Master = new OverTimeMaster()
+                                {
+                                    OverTimeMasterId = Data.OverTimeMasterId,
+                                    GroupCode = Data.EmployeeGroup.Description,
+                                };
+                                rowData.Add(Key, new List<OverTimeMaster>() {Master});
+                            }
+                        }
+
+                        if (!update)
+                        {
+                            rowData.Add("JobNumber", JobNumber);
+                            DataTable.Add(rowData);
+                        }
+                    }
+
+                    return new JsonResult(new
+                    {
+                        TotalRow = TotalRow,
+                        Columns = Columns,
+                        DataTable = DataTable
+                    }, this.DefaultJsonSettings);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+
+            return NotFound(new { Error = Message });
+        }
 
         // POST: api/OverTimeMaster/GetScroll
         [HttpPost("GetScroll")]
@@ -146,20 +327,20 @@ namespace VipcoMachine.Controllers
                 // Order
                 switch (Scroll.SortField)
                 {
-                    case "RequireBy":
+                    case "RequireString":
                         if (Scroll.SortOrder == -1)
                             QueryData = QueryData.OrderByDescending(e => e.RequireBy.NameThai);
                         else
                             QueryData = QueryData.OrderBy(e => e.RequireBy.NameThai);
                         break;
 
-                    case "ProjectCode":
+                    case "ProjectMasterString":
                         if (Scroll.SortOrder == -1)
                             QueryData = QueryData.OrderByDescending(e => e.ProjectCodeMaster.ProjectCode);
                         else
                             QueryData = QueryData.OrderBy(e => e.ProjectCodeMaster.ProjectCode);
                         break;
-                    case "EmployeeGroup":
+                    case "GroupString":
                         if (Scroll.SortOrder == -1)
                             QueryData = QueryData.OrderByDescending(e => e.EmployeeGroup.Description);
                         else
@@ -243,6 +424,15 @@ namespace VipcoMachine.Controllers
 
                 uOverTimeMaster.ModifyDate = DateTime.Now;
                 uOverTimeMaster.Modifyer = uOverTimeMaster.Modifyer ?? "Someone";
+
+                if (uOverTimeMaster.Creator == uOverTimeMaster.Modifyer)
+                {
+                    if (uOverTimeMaster.OverTimeStatus == OverTimeStatus.WaitActual &&
+                        !string.IsNullOrEmpty(uOverTimeMaster.InfoActual))
+                    {
+                        uOverTimeMaster.OverTimeStatus = OverTimeStatus.Complate;
+                    }
+                }
 
                 if (uOverTimeMaster.ProjectCodeMaster != null)
                     uOverTimeMaster.ProjectCodeMaster = null;

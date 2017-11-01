@@ -14,3 +14,4 @@ export { JobCardWatingDialogComponent } from "./jobcard-wating-dialog.component"
 export { TaskMachineDialogComponent } from "./task-machine-dialog.component";
 export { EmployeeGroupDialogComponent } from "./employee-group-dialog.component";
 export { EmployeeByGroupDialogComponent } from "./employee-by-group-dialog.component";
+export { OvertimeDialogComponent } from "./overtime-dialog.component";

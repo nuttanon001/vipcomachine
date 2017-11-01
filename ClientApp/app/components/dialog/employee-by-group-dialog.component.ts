@@ -133,27 +133,24 @@ export class EmployeeByGroupDialogComponent
     // on dropdown selected change
     onDropDownSelectedChange(event?: any): void {
         if (event) {
-            if (event.value) {
-                // debug here
-                // console.log("event :", event);
-                this.template.Reload = true;
-                this.template.Skip = 0;
-                this.template.Take = 8;
-                this.template.Where = event.value;
-                this.groupCode = event.value;
+            // debug here
+            // console.log("event :", event);
+            this.template.Reload = true;
+            this.template.Skip = 0;
+            this.template.Take = 8;
+            this.template.Where = event.value;
+            this.groupCode = event.value;
+            this.loadDataScroll(this.template);
 
-                this.loadDataScroll(this.template);
-            }
-
-            //this.typeMachine = selected.selected[0];
-            //this.serviceMachine.getByMasterId(this.typeMachine.TypeMachineId)
+            // this.typeMachine = selected.selected[0];
+            // this.serviceMachine.getByMasterId(this.typeMachine.TypeMachineId)
             //    .subscribe(dbMachine => {
             //        this.machines = dbMachine.slice();
             //    });
         }
     }
 
-    // Selected Value override
+    // selected Value override
     onSelectedValue(value?: Employee): void {
         if (value) {
             if (!this.employees) {
@@ -162,8 +159,7 @@ export class EmployeeByGroupDialogComponent
 
             if (this.employees.length === 0) {
                 this.employees.push(Object.assign({}, value));
-            }
-            else {
+            } else {
                 if (!this.employees.find(item => item.EmpCode === value.EmpCode)) {
                     // cloning an object
                     this.employees.push(Object.assign({}, value));

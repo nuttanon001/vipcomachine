@@ -14,6 +14,7 @@
     EmpCode?: string;
     // ViewModel
     EmployeeString?: string;
-
+    StatusString?: string;
+    // Index
     [key: string]: string | number | Date | undefined;
 }

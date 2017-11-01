@@ -3,7 +3,7 @@ import {
   Output, EventEmitter, ElementRef
 } from "@angular/core";
 
-// By importing just the rxjs operators we need, We're theoretically able
+// by importing just the rxjs operators we need, We're theoretically able
 // to reduce our build size vs. importing all of them.
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/fromEvent";
@@ -13,8 +13,8 @@ import "rxjs/add/operator/debounceTime";
 import "rxjs/add/operator/do";
 import "rxjs/add/operator/switch";
 
-//import { YouTubeSearchService } from './you-tube-search.service';
-//import { SearchResult } from './search-result.model';
+// import { YouTubeSearchService } from './you-tube-search.service';
+// import { SearchResult } from './search-result.model';
 
 @Component({
   selector: "search-box",
@@ -23,7 +23,7 @@ import "rxjs/add/operator/switch";
         <input type="text" matInput placeholder="Search here..." autofocus>
     </mat-input-container>
   `
-  //<input type="text" class="form-control" placeholder="Search" autofocus>
+  // <input type="text" class="form-control" placeholder="Search" autofocus>
 })
 export class SearchBoxComponent implements OnInit {
   @Output() search: EventEmitter<string> = new EventEmitter<string>();

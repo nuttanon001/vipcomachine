@@ -23,7 +23,7 @@ export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster> {
         { prop: "EmployeeString", name: "Employee Name", flexGrow: 1 },
         { prop: "TotalHour", name: "Hour", flexGrow: 1 },
         { prop: "Remark", name: "Remark", flexGrow: 1 },
-        { prop: "OverTimeDetailStatus", name: "Status", flexGrow: 1, cellClass: this.getCellClass }
+        { prop: "StatusString", name: "Status", flexGrow: 1, cellClass: this.getCellClass }
     ];
     /** overtime-view ctor */
     constructor(
@@ -67,16 +67,16 @@ export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster> {
 
     onReplaceMuitLine(text: string): string {
         if (text) {
-            return text.replace(new RegExp('\n', 'g'), "<br />");
+            return text.replace(new RegExp("\n", "g"), "<br />");
         }
         return "";
     }
 
     // cell change style
     getCellClass({ row, column, value }: any): any {
-        if (value === 1) {
+        if (value === "Use") {
             return { "is-wait": true };
-        } else if (value === 2) {
+        } else if (value === "Cancel") {
             return { "is-cancel": true };
         } else {
             return { "is-wait": true };

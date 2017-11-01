@@ -164,17 +164,17 @@ label {
 
 :host /deep/ .is-cancel {
     background-color: red;
-    color: red !important;
+    // color: red !important;
 }
 
 :host /deep/ .is-wait {
     background-color: gold;
-    color: gold !important;
+    // color: gold !important;
 }
 
 :host /deep/ .is-complate {
     background-color: lightgreen;
-    color: lightgreen !important;
+    // color: lightgreen !important;
 }
 
 textarea {

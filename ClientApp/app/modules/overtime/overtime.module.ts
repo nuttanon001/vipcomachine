@@ -9,6 +9,7 @@ import { OverTimeCenterComponent } from "../../components/overtime/overtime-cent
 import { OvertimeEditComponent } from "../../components/overtime/overtime-edit.component";
 import { OvertimeMasterComponent } from "../../components/overtime/overtime-master.component";
 import { OvertimeViewComponent } from "../../components/overtime/overtime-view.component";
+import { OvertimeScheduleComponent } from "../../components/overtime/overtime-schedule.component";
 // module
 import { OverTimeRouters } from "./overtime.routing";
 import {
@@ -21,6 +22,8 @@ import {
 } from "../../services/overtime-master/overtime-master.service";
 import { OverTimeDetailService } from "../../services/overtime-detail/overtime-detail.service";
 import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
+import { EmployeeGroupService } from "../../services/employee-group/employee-group.service";
+import { ProjectCodeMasterService } from "../../services/projectcode-master/projectcode-master.service";
 
 @NgModule({
     declarations: [
@@ -28,6 +31,7 @@ import { DataTableServiceCommunicate } from "../../services/data-table/data-tabl
         OvertimeMasterComponent,
         OvertimeViewComponent,
         OvertimeEditComponent,
+        OvertimeScheduleComponent,
         //EmployeeDialogComponent,
     ],
     imports: [
@@ -47,6 +51,9 @@ import { DataTableServiceCommunicate } from "../../services/data-table/data-tabl
         OverTimeMasterService,
         OverTimeMasterServiceCommunicate,
         OverTimeDetailService,
+        ProjectCodeMasterService,
+        ProjectCodeMasterService,
+        EmployeeGroupService,
         // DataTableServiceCommunicate,
     ],
     //entryComponents: [

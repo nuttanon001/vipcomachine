@@ -8,7 +8,7 @@ import {
     Machine,Material,ProjectCodeDetail,
     StandardTime,UnitsMeasure,JobCardMaster,
     TaskMachine, ProjectCodeMaster,
-    EmployeeGroup
+    EmployeeGroup, OverTimeMaster
 } from '../../models/model.index';
 
 // components
@@ -20,7 +20,8 @@ import {
     StdtimeSelectDialogComponent, CuttingPlanDialogComponent,
     UomDialogComponent, JobcardDialogComponent,
     JobCardWatingDialogComponent, TaskMachineDialogComponent,
-    EmployeeGroupDialogComponent, EmployeeByGroupDialogComponent
+    EmployeeGroupDialogComponent, EmployeeByGroupDialogComponent,
+    OvertimeDialogComponent
  } from "../../components/dialog/dialog.index";
 
 @Injectable()
@@ -298,4 +299,19 @@ export class DialogsService {
         dialogRef = this.dialog.open(EmployeeGroupDialogComponent, config);
         return dialogRef.afterClosed();
     }
+
+    public dialogSelectedOverTimeWaiting(viewContainerRef: ViewContainerRef, overTimeMasterId: number): Observable<OverTimeMaster> {
+        let dialogRef: MatDialogRef<OvertimeDialogComponent>;
+        let config = new MatDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        config.data = overTimeMasterId;
+        config.hasBackdrop = true;
+
+        // open dialog
+        dialogRef = this.dialog.open(OvertimeDialogComponent, config);
+        return dialogRef.afterClosed();
+    }
+
 }

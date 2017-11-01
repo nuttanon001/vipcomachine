@@ -32,12 +32,13 @@ export class ReuseTableComponent implements OnInit {
     // input and output
     @Input("columns") columns: any;
     @Input("rows") rows: Array<any>;
+    @Input("height") height: string = "calc(100vh - 184px)";
     @Output("selected") selected = new EventEmitter<any>();
-    height: string;
+    // height: string;
     constructor() { }
     // angular hook init
     ngOnInit(): void {
-        this.height = "calc(100vh - 184px)";
+        // this.height = "calc(100vh - 184px)";
 
         //console.log(window);
     }

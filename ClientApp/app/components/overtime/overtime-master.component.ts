@@ -34,10 +34,10 @@ export class OvertimeMasterComponent
     templateScroll: Scroll;
 
     columns = [
-        { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
-        { prop: "ProjectDetailString", name: "Job Level2/3", flexGrow: 1 },
-        { prop: "EmployeeRequireString", name: "Require", flexGrow: 1 },
-        { prop: "JobCardDate", name: "Date", pipe: this.datePipe, flexGrow: 1 }
+        { prop: "RequireString", name: "Require", flexGrow: 1 },
+        { prop: "ProjectMasterString", name: "Job Number", flexGrow: 1 },
+        { prop: "GroupString", name: "Group", flexGrow: 1 },
+        { prop: "OverTimeDate", name: "Date", pipe: this.datePipe, flexGrow: 1 }
     ];
 
     // overtime-master ctor */
@@ -134,10 +134,10 @@ export class OvertimeMasterComponent
     // on detail edit override
     onDetailEdit(value?: OverTimeMaster): void {
         if (value) {
-            if (value.OverTimeStatus !== 1) {
-                this.dialogsService.error("Access Denied", "Status war not waited. you can't edit it.", this.viewContainerRef);
-                return;
-            }
+            //if (value.OverTimeStatus !== 1) {
+            //    this.dialogsService.error("Access Denied", "Status war not waited. you can't edit it.", this.viewContainerRef);
+            //    return;
+            //}
 
             if (this.serverAuth.getAuth) {
                 if (this.serverAuth.getAuth.LevelUser < 2) {

@@ -45,6 +45,7 @@ export class OvertimeEditComponent
     // on get data by key
     onGetDataByKey(value?: OverTimeMaster): void {
         this.defaultHour = 3;
+        this.lastOverTimeMaster = undefined;
 
         if (value) {
             this.service.getOneKeyNumber(value.OverTimeMasterId)
@@ -118,12 +119,13 @@ export class OvertimeEditComponent
             // fK
             EmpApprove: [this.editValue.EmpApprove],
             EmpRequire: [this.editValue.EmpRequire],
-            ProjectCodeMasterId: [this.editValue.ProjectCodeMasterId,
+            LastOverTimeId: [this.editValue.LastOverTimeId],
+            GroupCode: [this.editValue.GroupCode,
                 [
                     Validators.required
                 ]
             ],
-            GroupCode: [this.editValue.GroupCode,
+            ProjectCodeMasterId: [this.editValue.ProjectCodeMasterId,
                 [
                     Validators.required
                 ]
@@ -170,8 +172,22 @@ export class OvertimeEditComponent
                 }
 
                 if (getData) {
-                    this.service.getLastOverTimeMaster(controlMaster.value, controlGroup.value)
-                        .subscribe(lastMaster => this.lastOverTimeMaster = lastMaster);
+                    this.service.getLastOverTimeMaster(controlMaster.value, controlGroup.value,this.editValue.OverTimeMasterId)
+                        .subscribe(lastMaster => {
+                            console.log("LastMaster", lastMaster);
+                            if (lastMaster) {
+                                this.lastOverTimeMaster = lastMaster;
+                                this.editValueForm.patchValue({
+                                    LastOverTimeId: lastMaster.OverTimeMasterId,
+                                });
+
+                                if (lastMaster.OverTimeStatus !== 3) {
+                                    this.serviceDialogs.error("Error Message",
+                                        "Last OverTime was Incompleted. This overtime can't save.",
+                                        this.viewContainerRef);
+                                }
+                            }
+                        });
                 }
             }
         }
@@ -201,6 +217,7 @@ export class OvertimeEditComponent
                             EmployeeString: item.NameThai,
                             TotalHour: 3,
                             OverTimeDetailStatus: 1,
+                            StatusString: "Use",
                             OverTimeMasterId : this.editValue.OverTimeMasterId
                         };
                         // if array is null
@@ -240,6 +257,7 @@ export class OvertimeEditComponent
 
                     if (editJobDetail) {
                         editJobDetail.OverTimeDetailStatus = 2;
+                        editJobDetail.StatusString = "Cancel";
                     }
                 }
 
@@ -300,9 +318,9 @@ export class OvertimeEditComponent
         //    "is-cancel": value === "Cancel"
         // };
 
-        if (value === 1) {
+        if (value === "Use") {
             return { "is-wait": true };
-        } else if (value === 2) {
+        } else if (value === "Cancel") {
             return { "is-cancel": true };
         } else {
             return { "is-wait": true };
@@ -323,5 +341,19 @@ export class OvertimeEditComponent
         }
 
         // console.log("UPDATED!", this.employees[rowIndex][cell]);
+    }
+
+    // on valid data override
+    onFormValid(isValid: boolean): void {
+        this.editValue = this.editValueForm.value;
+        if (isValid) {
+            if (this.lastOverTimeMaster) {
+                if (this.lastOverTimeMaster.OverTimeStatus) {
+                    isValid = this.lastOverTimeMaster.OverTimeStatus === 3;
+                }
+            }
+        }
+
+        this.communicateService.toParent([this.editValue, isValid]);
     }
 }

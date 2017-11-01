@@ -33,7 +33,7 @@ export class JobCardWatingDialogComponent implements OnInit {
     selected: JobCardMaster;
     columns: Array<TableColumn> = [
         { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
-        { prop: "ProjectDetailString", name: "Job Level2/3", flexGrow: 2 },
+        { prop: "ProjectDetailString", name: "Job Level2/3", flexGrow: 1 },
     ];
     // jobCard-wating-dialog ctor */
     constructor(

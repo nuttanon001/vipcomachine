@@ -157,7 +157,9 @@
                                    [footerHeight]="0"
                                    [rowHeight]="50"
                                    [selectionType]="'single'"
-                                   (select)="onSelect($event)">
+                                   (select)="onSelect($event)"
+                                   [scrollbarV]="true"
+                                   [style.height]="'55vh'">
                         <ngx-datatable-column name="CuttingPlan" prop="CuttingPlanString" [flexGrow]="3"></ngx-datatable-column>
                         <ngx-datatable-column name="StandardTime" prop="StandardTimeString" [flexGrow]="1"></ngx-datatable-column>
                         <ngx-datatable-column name="Material" prop="Material" [flexGrow]="2"></ngx-datatable-column>

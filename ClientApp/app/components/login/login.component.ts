@@ -75,7 +75,7 @@ export class LoginComponent implements OnInit {
                 this.router.navigate([redirect]);
             },
             (err) => {
-                console.log(err);
+                console.error(err);
                 // login failure
                 this.dialogsService.error("Login failure", "Warning : Username or Password mismatch !!!", this.viewContainerRef)
             });

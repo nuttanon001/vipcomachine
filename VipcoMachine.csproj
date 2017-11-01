@@ -52,6 +52,7 @@
     <None Remove="ClientApp\app\components\jobcard\jobcard-view-waiting.component.ts" />
     <None Remove="ClientApp\app\components\machine\machine-center.component.ts" />
     <None Remove="ClientApp\app\components\overtime\overtime-center.component.ts" />
+    <None Remove="ClientApp\app\components\overtime\overtime-view-waiting.component.ts" />
     <None Remove="ClientApp\app\components\project-master\project-center.component.ts" />
     <None Remove="ClientApp\app\components\project-master\project.index.ts" />
     <None Remove="ClientApp\app\components\standard-time\standard-time-center.component.ts" />
@@ -69,6 +70,7 @@
     <None Remove="ClientApp\app\models\material\material.model.ts" />
     <None Remove="ClientApp\app\models\over-time\over-time.model.ts" />
     <None Remove="ClientApp\app\models\overtime-detail\overtime-detail.model.ts" />
+    <None Remove="ClientApp\app\models\overtime-master\option-overtime-schedule.model.ts" />
     <None Remove="ClientApp\app\models\overtime-master\overtime-master.model.ts" />
     <None Remove="ClientApp\app\models\page\page-data.model.ts" />
     <None Remove="ClientApp\app\models\page\page.model.ts" />
@@ -150,6 +152,7 @@
     <TypeScriptCompile Include="ClientApp\app\components\jobcard\jobcard-view-waiting.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\machine\machine-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\overtime\overtime-center.component.ts" />
+    <TypeScriptCompile Include="ClientApp\app\components\overtime\overtime-view-waiting.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\project-master\project-center.component.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\project-master\project.index.ts" />
     <TypeScriptCompile Include="ClientApp\app\components\standard-time\standard-time-center.component.ts" />
@@ -169,6 +172,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\model.index.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\over-time\over-time.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-detail\overtime-detail.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\overtime-master\option-overtime-schedule.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-master\overtime-master.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\page\page-data.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\page\page.model.ts" />

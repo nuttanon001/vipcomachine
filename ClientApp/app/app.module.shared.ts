@@ -6,7 +6,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
 import { RouterModule } from "@angular/router";
 // components
 import { AppComponent } from "./components/app/app.component";
+import { MainScreenComponent } from "./components/app/main-screen.component";
 import { NavMenuComponent } from "./components/navmenu/navmenu.component";
+import { NavMenuOvertimeComponent } from "./components/navmenu/navmenu-overtime.component";
 import { HomeComponent } from "./components/home/home.component";
 import { LoginComponent } from "./components/login/login.component";
 import { RegisterComponent } from "./components/login/register.component";
@@ -31,9 +33,11 @@ import "popper.js";
 @NgModule({
     declarations: [
         AppComponent,
+        MainScreenComponent,
         HomeComponent,
         LoginComponent,
         NavMenuComponent,
+        NavMenuOvertimeComponent,
         RegisterComponent,
         OvertimeMasterComponent,
         // JobCardViewComponent,

@@ -39,7 +39,7 @@
 
                 <div class="row my-1">
                     <div class="my-label">
-                        Last OverTime-Date
+                        Last OT/Date
                     </div>
                     <div class="my-value">
                         {{(lastOverTimeMaster?.OverTimeDate | date:'dd/MM/yyyy') || '-'}}
@@ -50,13 +50,13 @@
                     <div class="my-label">
                         Last-Plan
                     </div>
-                    <div class="my-value" [innerHTML]="'(lastOverTimeMaster?.InfoPlan || '-')'">
+                    <div class="my-value" [innerHTML]="(lastOverTimeMaster?.InfoPlan || '-')">
                     </div>
 
                     <div class="my-label">
                         Plan
                     </div>
-                    <div class="my-value" [innerHTML]="'(displayValue?.InfoPlan || '-')'">
+                    <div class="my-value" [innerHTML]="displayValue?.InfoPlan">
                     </div>
                 </div>
 
@@ -64,13 +64,13 @@
                     <div class="my-label">
                         Last-Actual
                     </div>
-                    <div class="my-value" [innerHTML]="'(lastOverTimeMaster?.InfoActual || '-')'">
+                    <div class="my-value" [innerHTML]="(lastOverTimeMaster?.InfoActual || '-')">
                     </div>
 
                     <div class="my-label">
                         Actual
                     </div>
-                    <div class="my-value" [innerHTML]="'(displayValue?.InfoActual || '-')'">
+                    <div class="my-value" [innerHTML]="(displayValue?.InfoActual || '-')">
                     </div>
                 </div>
 

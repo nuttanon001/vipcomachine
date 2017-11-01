@@ -46,6 +46,13 @@
     order: 2;
 }
 
+.center-content-nogrow {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    order: 1;
+}
+
 .master-form-content {
     display: flex;
     flex-direction: row;
@@ -56,6 +63,20 @@
     i {
         margin-left: 15px;
     }
+}
+
+.center-page {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.center-page-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .right-content {
