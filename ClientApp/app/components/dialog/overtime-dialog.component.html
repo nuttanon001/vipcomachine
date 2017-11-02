@@ -2,9 +2,9 @@
     <div class="child-container">
         <!--Center-->
         <div class="center-content">
-            <div class="card-body" *ngIf="!showContext,else CancelDiv">
+            <div *ngIf="!showContext,else CancelDiv">
                 <!--Component-->
-                <overtime-view-waiting [displayValue]="overTimeMaster"></overtime-view-waiting>
+                <overtime-view-waiting [displayValue]="overTimeMaster" [height]="'60vh'"></overtime-view-waiting>
             </div>
             <ng-template #CancelDiv>
                 <div class="center-page-col m-5">

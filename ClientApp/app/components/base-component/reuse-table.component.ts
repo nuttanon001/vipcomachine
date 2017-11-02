@@ -40,7 +40,7 @@ export class ReuseTableComponent implements OnInit {
     ngOnInit(): void {
         // this.height = "calc(100vh - 184px)";
 
-        //console.log(window);
+        // console.log(window);
     }
     // emit row selected to output
     onSelect(selected: any): void {

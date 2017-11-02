@@ -32,7 +32,6 @@ export class OvertimeDialogComponent implements OnInit
     status: number;
     message: string;
     overTimeMaster: OverTimeMaster;
-    template: OverTimeMaster;
     /** overtime-dialog ctor */
     constructor(
         private service: OverTimeMasterService,
@@ -46,7 +45,6 @@ export class OvertimeDialogComponent implements OnInit
             this.service.getOneKeyNumber(this.overTimeMasterId)
                 .subscribe(dbOverTime => {
                     this.overTimeMaster = dbOverTime;
-                    this.template = dbOverTime;
                 })
         }
     }
@@ -69,8 +67,6 @@ export class OvertimeDialogComponent implements OnInit
     onDoAction(): void {
         if (this.status) {
             this.overTimeMaster.OverTimeStatus = this.status;
-            this.overTimeMaster.InfoActual = this.template.InfoActual;
-            this.overTimeMaster.InfoPlan = this.template.InfoPlan;
             this.dialogRef.close(this.overTimeMaster);
         }
     }

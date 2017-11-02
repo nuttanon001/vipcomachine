@@ -14,8 +14,6 @@ import { DialogsService } from "../../services/dialog/dialogs.service";
 import { AuthService } from "../../services/auth/auth.service";
 // 3rd patry
 import { Column, SelectItem, LazyLoadEvent } from "primeng/primeng";
-// timezone
-import * as moment from "moment-timezone";
 
 @Component({
     selector: "overtime-schedule",
@@ -105,10 +103,15 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
             Status: this.status || 1,
         };
 
+        if (this.serverAuth.getAuth) {
+            this.schedule.Create = this.serverAuth.getAuth.UserName || "";
+        }
+
         this.reportForm = this.fb.group({
             Filter: [this.schedule.Filter],
             GroupCode: [this.schedule.GroupCode],
             ProjectMasterId: [this.schedule.ProjectMasterId],
+            Create: [this.schedule.Create],
             SDate: [this.schedule.SDate],
             EDate: [this.schedule.EDate],
             Status: [this.schedule.Status],
@@ -167,7 +170,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
     onGetOverTimeMasterSechduleData(schedule: OptionOverTimeSchedule): void {
         this.service.getOverTimeMasterSchedule(schedule)
             .subscribe(dbDataSchedule => {
-                console.log("Api Send is", dbDataSchedule);
+                // console.log("Api Send is", dbDataSchedule);
 
                 this.totalRecords = dbDataSchedule.TotalRow;
                 this.columns = new Array;
@@ -189,7 +192,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
                 }
 
                 this.overtimeMasters = dbDataSchedule.DataTable.slice();
-                console.log("OverTime is:", this.overtimeMasters);
+                // console.log("OverTime is:", this.overtimeMasters);
                 this.reloadData();
             }, error => {
                 this.columns = new Array;
@@ -263,10 +266,8 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
             value.Modifyer = this.serverAuth.getAuth.UserName || "";
             value.EmpApprove = this.serverAuth.getAuth.EmpCode;
         }
-        // change timezone
-        value = this.changeTimezone(value);
         // update data
-        this.service.putKeyNumber(value, value.OverTimeMasterId).subscribe(
+        this.service.putUpdateStatus(value, value.OverTimeMasterId).subscribe(
             (complete: any) => {
                 this.serviceDialogs.context("Update Complate", "Update progress was complated.", this.viewContainerRef);
                 this.onGetOverTimeMasterSechduleData(this.schedule);
@@ -277,22 +278,5 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
                     this.viewContainerRef);
             }
         );
-    }
-
-    // on change time zone befor update to webapi
-    changeTimezone(value: OverTimeMaster): OverTimeMaster {
-        let zone: string = "Asia/Bangkok";
-        if (value !== null) {
-            if (value.CreateDate !== null) {
-                value.CreateDate = moment.tz(value.CreateDate, zone).toDate();
-            }
-            if (value.ModifyDate !== null) {
-                value.ModifyDate = moment.tz(value.ModifyDate, zone).toDate();
-            }
-            if (value.OverTimeDate !== null) {
-                value.OverTimeDate = moment.tz(value.OverTimeDate, zone).toDate();
-            }
-        }
-        return value;
     }
 }

@@ -11,7 +11,8 @@
                         <div class="col-sm-4">
                             <p-calendar formControlName="OverTimeDate" [showIcon]="true" required
                                         appendTo="body"
-                                        id="OverTimeDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
+                                        id="OverTimeDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        [disabled]="CanEditInRequiredOnly">
                             </p-calendar>
                             <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.OverTimeDate"></validation-messages>
@@ -19,7 +20,7 @@
 
                         <label for="RequireString" class="my-label">Require By:</label>
                         <div class="col-sm-4">
-                            <input type="text" class="my-input" placeholder="Choose employee who require overtime"
+                            <input type="text"  class="my-input" placeholder="Choose employee who require overtime"
                                    (click)="onEmployeeRequireClick()" style="cursor:pointer;"
                                    id="RequireString" formControlName="RequireString" required readonly>
                             <validation-messages [control]="editValueForm.controls.RequireString"></validation-messages>
@@ -65,7 +66,7 @@
                         <div class="col-sm-4">
                             <textarea class="my-input" placeholder="Insert plan for overtime here"
                                       id="InfoPlan" formControlName="InfoPlan"
-                                      rows="4">
+                                      rows="4" [readonly]="CanEditInRequiredOnly">
                             </textarea>
                             <validation-messages [control]="editValueForm.controls.InfoPlan"></validation-messages>
                         </div>
@@ -126,7 +127,7 @@
                             <input autofocus (blur)="updateValue($event, 'TotalHour', rowIndex)"
                                    type="number" min="0"
                                    name="TotalHour" class="my-input"
-                                   [value]="value" />
+                                   [value]="value" [disabled]="CanEditInRequiredOnly"/>
                         </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="Remark" prop="Remark" [flexGrow]="1">
@@ -134,7 +135,7 @@
                             <input autofocus (blur)="updateValue($event, 'Remark', rowIndex)"
                                    type="text"
                                    name="Remark" class="my-input"
-                                   [value]="value" />
+                                   [value]="value" [disabled]="CanEditInRequiredOnly"/>
                         </ng-template>
                     </ngx-datatable-column>
                     <ngx-datatable-column name="Status" prop="StatusString" [flexGrow]="1" [cellClass]="getCellClass"></ngx-datatable-column>

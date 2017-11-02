@@ -26,6 +26,16 @@ export class OvertimeEditComponent
     indexOverTimeDetail: number;
     lockSave: boolean = false;
     defaultHour: number;
+    // propertity
+    get CanEditInRequiredOnly(): boolean {
+        if (this.editValue) {
+            if (this.editValue.OverTimeStatus) {
+                return this.editValue.OverTimeStatus !== 1;
+            }
+        }
+        return false;
+    }
+
     // overtime-edit ctor */
     constructor(
         service: OverTimeMasterService,
@@ -44,7 +54,7 @@ export class OvertimeEditComponent
 
     // on get data by key
     onGetDataByKey(value?: OverTimeMaster): void {
-        this.defaultHour = 3;
+        this.defaultHour = 4;
         this.lastOverTimeMaster = undefined;
 
         if (value) {
@@ -104,7 +114,7 @@ export class OvertimeEditComponent
                 [
                     Validators.maxLength(500),
                     Validators.required,
-                ]
+                ],
             ],
             InfoActual: [this.editValue.InfoActual,
                 [
@@ -171,10 +181,11 @@ export class OvertimeEditComponent
                     getData = true;
                 }
 
+
                 if (getData) {
-                    this.service.getLastOverTimeMaster(controlMaster.value, controlGroup.value,this.editValue.OverTimeMasterId)
+                    this.service.getLastOverTimeMaster(controlMaster.value, controlGroup.value, this.editValue.OverTimeMasterId)
                         .subscribe(lastMaster => {
-                            console.log("LastMaster", lastMaster);
+                            // console.log("LastMaster", lastMaster);
                             if (lastMaster) {
                                 this.lastOverTimeMaster = lastMaster;
                                 this.editValueForm.patchValue({
@@ -186,17 +197,36 @@ export class OvertimeEditComponent
                                         "Last OverTime was Incompleted. This overtime can't save.",
                                         this.viewContainerRef);
                                 }
+                            } else {
+                                this.lastOverTimeMaster = {
+                                    OverTimeMasterId: 0,
+                                    OverTimeDate: new Date(),
+                                    ProjectCodeMasterId: controlMaster.value,
+                                    GroupCode: controlGroup.value
+                                }
+                            }
+                        }, error => {
+                            this.lastOverTimeMaster = {
+                                OverTimeMasterId: 0,
+                                OverTimeDate: new Date(),
+                                ProjectCodeMasterId: controlMaster.value,
+                                GroupCode: controlGroup.value
                             }
                         });
                 }
             }
         }
-
         super.onValueChanged();
     }
 
     // new Detail
     onChooseEmployeeToOverTime(): void {
+        if (this.CanEditInRequiredOnly) {
+            this.onCanEditInRequiredOnly();
+
+            return;
+        }
+
         const form: FormGroup = this.editValueForm;
         const controlGroup: AbstractControl | null = form.get("GroupCode");
 
@@ -215,7 +245,7 @@ export class OvertimeEditComponent
                             OverTimeDetailId: 0,
                             EmpCode: item.EmpCode,
                             EmployeeString: item.NameThai,
-                            TotalHour: 3,
+                            TotalHour: this.defaultHour,
                             OverTimeDetailStatus: 1,
                             StatusString: "Use",
                             OverTimeMasterId : this.editValue.OverTimeMasterId
@@ -241,6 +271,11 @@ export class OvertimeEditComponent
 
     // remove Detail
     onRemoveOverTimeDetailOrCancelOverTimeDetail(detail?: OverTimeDetail): void {
+        if (this.CanEditInRequiredOnly) {
+            this.onCanEditInRequiredOnly();
+            return;
+        }
+
         if (detail && this.editValue.OverTimeDetails) {
             // find id
             let index: number = this.editValue.OverTimeDetails.indexOf(detail);
@@ -273,6 +308,12 @@ export class OvertimeEditComponent
 
     // on ProjectDetail click
     onProjectMasterClick(): void {
+        if (this.CanEditInRequiredOnly) {
+            this.onCanEditInRequiredOnly();
+
+            return;
+        }
+
         this.serviceDialogs.dialogSelectedMaster(this.viewContainerRef)
             .subscribe(resultMaster => {
                 if (resultMaster) {
@@ -286,6 +327,12 @@ export class OvertimeEditComponent
 
     // on Employee Group Click
     onEmployeeGroupClick(): void {
+        if (this.CanEditInRequiredOnly) {
+            this.onCanEditInRequiredOnly();
+
+            return;
+        }
+
         this.serviceDialogs.dialogSelectedEmployeeGroup(this.viewContainerRef)
             .subscribe(resultGroup => {
                 if (resultGroup) {
@@ -299,6 +346,11 @@ export class OvertimeEditComponent
 
     // on Employee Require click
     onEmployeeRequireClick(mode: string): void {
+        if (this.CanEditInRequiredOnly) {
+            this.onCanEditInRequiredOnly();
+            return;
+        }
+
         this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef, "single")
             .subscribe(resultEmp => {
                 if (resultEmp) {
@@ -345,6 +397,8 @@ export class OvertimeEditComponent
 
     // on valid data override
     onFormValid(isValid: boolean): void {
+        // console.log("FormValue is :", this.editValueForm.value);
+
         this.editValue = this.editValueForm.value;
         if (isValid) {
             if (this.lastOverTimeMaster) {
@@ -354,6 +408,21 @@ export class OvertimeEditComponent
             }
         }
 
+        if (isValid) {
+            if (this.editValue.OverTimeDetails) {
+                isValid = this.editValue.OverTimeDetails.length > 0;
+            } else {
+                isValid = false;
+            }
+        }
+
         this.communicateService.toParent([this.editValue, isValid]);
+    }
+
+    // on Lock edit
+    onCanEditInRequiredOnly(): void {
+        this.serviceDialogs.error("Error Message",
+            "This Overtime-Require was approved. Only can input actual information.",
+            this.viewContainerRef);
     }
 }

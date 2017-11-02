@@ -18,6 +18,13 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
         return this.http.get(url).map(this.extractData).catch(this.handleError);
     }
 
+    // put with key number
+    putUpdateStatus(uObject: OverTimeMaster, key: number): Observable<OverTimeMaster> {
+        //console.log(uObject);
+        return this.http.put(this.actionUrl+"UpdateStatus/" + key + "/", JSON.stringify(uObject), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
+    }
+
     //===================== OverTime Schedule ===========================\\
     // get OverTime Schedule
     getOverTimeMasterSchedule(option: OptionOverTimeSchedule): Observable<any> {

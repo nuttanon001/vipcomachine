@@ -10,6 +10,7 @@ namespace VipcoMachine.ViewModels
         public string Filter { get; set; }
         public string GroupCode { get; set; }
         public int? ProjectMasterId { get; set; }
+        public string Create { get; set; }
         public DateTime? SDate { get; set; }
         public DateTime? EDate { get; set; }
         public int? Skip { get; set; }

@@ -17,6 +17,7 @@ import { TableColumn } from "@swimlane/ngx-datatable";
 // overtime-view component*/
 export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster> {
     lastOverTimeMaster: OverTimeMaster;
+    @Input("height") height: string = "calc(100vh - 184px)";
     details: Array<OverTimeDetail>;
     columns: Array<TableColumn> = [
         { prop: "EmpCode", name: "Employee Code", flexGrow: 1 },
@@ -33,6 +34,11 @@ export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster> {
 
     // load more data
     onLoadMoreData(value: OverTimeMaster): void {
+        this.lastOverTimeMaster = {
+            OverTimeMasterId: 0,
+            OverTimeDate: new Date()
+        };
+
         if (this.displayValue) {
             if (this.displayValue.InfoActual) {
                 this.displayValue.InfoActual = this.onReplaceMuitLine(this.displayValue.InfoActual);
@@ -46,9 +52,14 @@ export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster> {
         if (value) {
 
             this.service.getByMasterId(value.OverTimeMasterId)
-                .subscribe(dbDetail => this.details = dbDetail.slice());
+                .subscribe(dbDetail => {
+                    this.details = dbDetail.filter((item, index) => {
+                        return item.OverTimeDetailStatus !== 2;
+                    }).slice();
+                });
 
             if (value.LastOverTimeId) {
+
                 this.serviceMaster.getOneKeyNumber(value.LastOverTimeId)
                     .subscribe(dbLastMaster => {
                         this.lastOverTimeMaster = dbLastMaster;

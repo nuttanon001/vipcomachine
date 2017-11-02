@@ -176,6 +176,12 @@ namespace VipcoMachine.Controllers
                     {
                     }
 
+                    // Option Create
+                    if (!string.IsNullOrEmpty(Scehdule.Create))
+                    {
+                        QueryData = QueryData.Where(x => x.Creator == Scehdule.Create);
+                    }
+
                     // Option Status
                     if (Scehdule.Status.HasValue)
                     {
@@ -312,6 +318,12 @@ namespace VipcoMachine.Controllers
                                     .Include(x => x.ProjectCodeMaster)
                                     .Include(x => x.EmployeeGroup)
                                     .AsQueryable();
+                // Where
+                if (!string.IsNullOrEmpty(Scroll.Where))
+                {
+                    QueryData = QueryData.Where(x => x.Creator == Scroll.Where);
+                }
+
                 // Filter
                 var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
                                     : Scroll.Filter.ToLower().Split(null);
@@ -390,10 +402,21 @@ namespace VipcoMachine.Controllers
                 if (nOverTimeMaster.RequireBy != null)
                     nOverTimeMaster.RequireBy = null;
 
+                List<OverTimeDetail> remove = new List<OverTimeDetail>();
                 if (nOverTimeMaster.OverTimeDetails != null)
                 {
                     foreach (var nDetail in nOverTimeMaster.OverTimeDetails)
                     {
+                        Expression<Func<OverTimeDetail, bool>> condition = d =>
+                             d.OverTimeMaster.OverTimeDate.Date == nOverTimeMaster.OverTimeDate.Date &&
+                             d.EmpCode == nDetail.EmpCode && d.OverTimeDetailStatus == OverTimeDetailStatus.Use;
+                        // check if employee on auther overtime continue him
+                        if (await this.repositoryOverTimeDetail.AnyDataAsync(condition))
+                        {
+                            remove.Add(nDetail);
+                            continue;
+                        }
+
                         if (nDetail.OverTimeDetailStatus == null)
                             nDetail.OverTimeDetailStatus = OverTimeDetailStatus.Use;
                         if (nDetail.Employee != null)
@@ -402,6 +425,14 @@ namespace VipcoMachine.Controllers
                         nDetail.CreateDate = nOverTimeMaster.CreateDate;
                         nDetail.Creator = nOverTimeMaster.Creator;
                     }
+                }
+
+                if (remove.Any())
+                {
+                    remove.ForEach(item =>
+                    {
+                        nOverTimeMaster.OverTimeDetails.Remove(item);
+                    });
                 }
 
                 return new JsonResult(await this.repository.AddAsync(nOverTimeMaster), this.DefaultJsonSettings);
@@ -491,6 +522,13 @@ namespace VipcoMachine.Controllers
                             await this.repositoryOverTimeDetail.UpdateAsync(uOvertime, uOvertime.OverTimeDetailId);
                         else
                         {
+                            Expression<Func<OverTimeDetail, bool>> conditionD = d =>
+                                d.OverTimeMaster.OverTimeDate.Date == uOverTimeMaster.OverTimeDate.Date &&
+                                d.EmpCode == uOvertime.EmpCode && d.OverTimeDetailStatus == OverTimeDetailStatus.Use;
+                            // check if employee on auther overtime continue him
+                            if (await this.repositoryOverTimeDetail.AnyDataAsync(conditionD))
+                                continue;
+
                             if (uOvertime.OverTimeMasterId < 1)
                                 uOvertime.OverTimeMasterId = uOverTimeMaster.OverTimeMasterId;
 
@@ -499,6 +537,30 @@ namespace VipcoMachine.Controllers
                     }
                 }
                 return new JsonResult(updateComplate, this.DefaultJsonSettings);
+            }
+            return NotFound(new { Error = "OverTimeMaster not found. " });
+        }
+
+        [HttpPut("UpdateStatus/{key}")]
+        public async Task<IActionResult> UpdateStatusOverTimeMaster(int key, [FromBody]OverTimeMaster uOverTimeMaster)
+        {
+            if (uOverTimeMaster != null)
+            {
+                var dbOverTimeMaster = await this.repository.GetAsync(key);
+
+                if (dbOverTimeMaster != null)
+                {
+
+                    dbOverTimeMaster.OverTimeStatus = uOverTimeMaster.OverTimeStatus;
+                    dbOverTimeMaster.EmpApprove = uOverTimeMaster.EmpApprove;
+
+                    dbOverTimeMaster.ModifyDate = DateTime.Now;
+                    dbOverTimeMaster.Modifyer = uOverTimeMaster.Modifyer ?? "Someone";
+
+                    return new JsonResult(await this.repository.UpdateAsync(dbOverTimeMaster, key), this.DefaultJsonSettings);
+                }
+
+
             }
             return NotFound(new { Error = "OverTimeMaster not found. " });
         }
