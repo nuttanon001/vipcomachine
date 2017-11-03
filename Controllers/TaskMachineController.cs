@@ -712,11 +712,11 @@ namespace VipcoMachine.Controllers
 
                             var PaperModel = new PaperTaskMachine()
                             {
-                                Actual = paper.ActualStartDate == null ? "-" : (paper.ActualStartDate.Value.ToString("dd/MMM/yy") + "  ถึง  " +
-                                         (paper.ActualEndDate == null ? "-" : paper.ActualEndDate.Value.ToString("dd/MMM/yy"))),
+                                Actual = paper.ActualStartDate == null ? "-" : (paper.ActualStartDate.Value.ToString("dd/MM/yy") + "  ถึง  " +
+                                         (paper.ActualEndDate == null ? "-" : paper.ActualEndDate.Value.ToString("dd/MM/yy"))),
                                 CreateBy = jobMaster?.EmployeeWrite.NameThai ?? "-",
-                                DueDate = jobMaster.DueDate == null ? "-" : jobMaster.DueDate.Value.ToString("dd/MMM/yy"),
-                                DateRequired = jobMaster.JobCardDate == null ? "-" : jobMaster.JobCardDate.Value.ToString("dd/MMM/yy"),
+                                DueDate = jobMaster.DueDate == null ? "-" : jobMaster.DueDate.Value.ToString("dd/MM/yy"),
+                                DateRequired = jobMaster.JobCardDate == null ? "-" : jobMaster.JobCardDate.Value.ToString("dd/MM/yy"),
                                 Employee1 = "-",
                                 Employee2 = "-",
                                 Employee3 = "-",
@@ -724,7 +724,7 @@ namespace VipcoMachine.Controllers
                                 Level23 = Level23,
                                 JobNo = JobNo,
                                 Mate1 = paper?.JobCardDetail?.Material ?? "-",
-                                Plan = paper.PlannedStartDate.ToString("dd/MMM/yy") + "  ถึง  " + paper.PlannedEndDate.ToString("dd/MMM/yy"),
+                                Plan = paper.PlannedStartDate.ToString("dd/MM/yy") + "  ถึง  " + paper.PlannedEndDate.ToString("dd/MM/yy"),
                                 Recevied = jobMaster?.EmployeeRequire?.NameThai ?? "-",
                                 Remark = paper?.Description ?? "-",
                                 ShopDrawing = paper?.JobCardDetail?.CuttingPlan?.CuttingPlanNo ?? "-",
@@ -818,7 +818,7 @@ namespace VipcoMachine.Controllers
 
                             overTimes.Add(new PaperTaskMachineOverTime()
                             {
-                                DateOverTime = (item.OverTimeDate.Value.Date + Stime).ToString("dd/MMM/yy HH:mm") + " ถึง " + Etime.ToString(@"hh\:mm"),
+                                DateOverTime = (item.OverTimeDate.Value.Date + Stime).ToString("dd/MM/yy HH:mm") + " ถึง " + Etime.ToString(@"hh\:mm"),
                                 EmpCode = item.EmpCode ?? "-",
                                 EmpName = item?.Employee?.NameThai ?? "-",
                                 Remark = string.IsNullOrEmpty(item.Description) ? "-" : item.Description.Trim(),

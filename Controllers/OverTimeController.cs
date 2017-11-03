@@ -52,7 +52,6 @@ namespace VipcoMachine.Controllers
 
         #endregion
 
-
         #region GET
         // GET: api/OverTime
         [HttpGet]

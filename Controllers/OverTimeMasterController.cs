@@ -1,18 +1,23 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.NodeServices;
+
 using System;
-using System.Collections.Generic;
-using System.Dynamic;
 using System.Linq;
-using System.Linq.Expressions;
+using System.Dynamic;
+using System.Net.Http;
 using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Collections.Generic;
+
 using VipcoMachine.Helpers;
 using VipcoMachine.Models;
-using VipcoMachine.Services.Interfaces;
 using VipcoMachine.ViewModels;
+using VipcoMachine.Services.Interfaces;
+
+using Newtonsoft.Json;
 
 namespace VipcoMachine.Controllers
 {
@@ -573,6 +578,135 @@ namespace VipcoMachine.Controllers
         {
             return new JsonResult(await this.repository.DeleteAsync(id), this.DefaultJsonSettings);
         }
+        #endregion
+
+        #region REPORT
+
+        [HttpGet("GetReportOverTimePdf/{OverTimeMasterId}")]
+        public async Task<IActionResult> Index(int OverTimeMasterId, [FromServices] INodeServices nodeServices)
+        {
+            string Message = "Not found overtime masterid.";
+            try
+            {
+                if (OverTimeMasterId > 0)
+                {
+                    var QueryData = await this.repository.GetAllAsQueryable()
+                                                         .Include(x => x.EmployeeGroup)
+                                                         .Include(x => x.ProjectCodeMaster)
+                                                         .Include(x => x.ApproveBy)
+                                                         .Include(x => x.RequireBy)
+                                                         .Include(x => x.LastOverTimeMaster)
+                                                         .Include(x => x.OverTimeDetails)
+                                                            .ThenInclude(x => x.Employee)
+                                                         .FirstOrDefaultAsync(x => x.OverTimeMasterId == OverTimeMasterId);
+
+                    if (QueryData != null)
+                    {
+                        // Check year Thai
+                        string year = QueryData.OverTimeDate.Year > 2500 ?
+                            QueryData.OverTimeDate.Year.ToString() :
+                            (QueryData.OverTimeDate.Year + 543).ToString();
+                        // Check type of DayOfWeek
+                        var isWeekDay = QueryData.OverTimeDate.DayOfWeek != DayOfWeek.Sunday;
+                        var ThreeTime = false;
+
+                        // Get ReportOverTimeMaster
+                        var ReportOverTimeMaster = new ReportOverTimeMasterViewModel()
+                        {
+                            ApproverBy = QueryData.ApproveBy == null ? "" : $"คุณ{QueryData?.ApproveBy?.NameThai ?? ""}",
+                            DateOverTime = QueryData.OverTimeDate.ToString("dd/MM/") + year,
+                            GroupName = QueryData?.EmployeeGroup?.Description ?? "",
+                            JobNumber = $"{(QueryData?.ProjectCodeMaster?.ProjectCode ?? "")} {(QueryData?.ProjectCodeMaster?.ProjectName ?? "")}",
+                            LastActual = QueryData?.LastOverTimeMaster?.InfoActual ?? "",
+                            LastPlan = QueryData?.LastOverTimeMaster?.InfoPlan ?? "",
+                            NowPlan = QueryData?.InfoPlan ?? "",
+                            RequireBy = QueryData.RequireBy == null ? "" : $"คุณ{QueryData?.RequireBy?.NameThai ?? ""}",
+                            OnePointFiveTime = isWeekDay ? 1 : 0,
+                            OneTime = 0,
+                            ThreeTime = 0,
+                            Total = QueryData?.OverTimeDetails.Count(x => x.OverTimeDetailStatus != OverTimeDetailStatus.Cancel) ?? 0,
+                            TypeWeekDay = isWeekDay ? 1 : 0,
+                            TypeWeekEnd = isWeekDay ? 0 : 1,
+                            TwoTime = isWeekDay ? 0 : 1,
+                            // Detail
+                            Details = new List<ReportOverTimeDetailViewModel>(),
+                        };
+
+                        int running = 1;
+                        // Get ReportOverTimeDetail
+                        foreach (var detail in QueryData.OverTimeDetails)
+                        {
+                            if (!isWeekDay)
+                            {
+                                if (detail.TotalHour > 8)
+                                    ThreeTime = true;
+                            }
+
+                            var Stime = new TimeSpan();
+                            var Etime = new TimeSpan();
+
+                            if (isWeekDay)
+                            {
+                                Stime = new TimeSpan(17, 0, 0);
+                                Etime = new TimeSpan((int)(detail.TotalHour) + 17, 0, 0);
+                            }
+                            else
+                            {
+                                Stime = new TimeSpan(8, 0, 0);
+                                Etime = new TimeSpan((int)(detail.TotalHour) + 9, 0, 0);
+                            }
+
+                            ReportOverTimeMaster.Details.Add(new ReportOverTimeDetailViewModel()
+                            {
+                                EndTime = Etime.ToString(@"hh\:mm"),
+                                HourOverTime = (int)detail.TotalHour,
+                                Name = $"คุณ{detail.Employee.NameThai}",
+                                Remark = detail.Remark,
+                                RowNumber = running,
+                                StartTime = Stime.ToString(@"hh\:mm")
+                            });
+
+                            running++;
+                        }
+
+                        for (int i = running; i < 38; i++)
+                        {
+                            ReportOverTimeMaster.Details.Add(new ReportOverTimeDetailViewModel()
+                            {
+                                EndTime = "",
+                                HourOverTime = 0,
+                                Remark = "",
+                                RowNumber = 0,
+                                StartTime = ""
+                            });
+                        }
+
+                        if (ThreeTime)
+                            ReportOverTimeMaster.ThreeTime = 1;
+
+                        if (ReportOverTimeMaster != null)
+                        {
+                            HttpClient hc = new HttpClient();
+                            var htmlContent = await hc.GetStringAsync($"http://{Request.Host}/reports/overtime-report2.html");
+                            //Class to Json
+                            var Json = JsonConvert.SerializeObject(ReportOverTimeMaster, this.DefaultJsonSettings);
+                            // Result
+                            var result = await nodeServices.InvokeAsync<byte[]>("./JavaScript/exportpdf", htmlContent, Json);
+                            return File(result, "application/pdf", "overtimereport.pdf");
+                        }
+                    }
+                }
+
+            }
+            catch(Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+            return NotFound(new { Error = Message });
+
+            //return new ContentResult();
+        }
+
         #endregion
     }
 }

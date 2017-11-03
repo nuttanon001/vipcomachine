@@ -20,7 +20,7 @@
             <li class="nav-item" *ngIf="GetLevel1">
                 <a #mainMenu="matMenuTrigger" [matMenuTriggerFor]="menu1"
                    (onMenuOpen)="menuOnCloseMenu1()" (mouseover)="menuOnOpenMenu1()"
-                   class="nav-link">
+                   class="nav-link" [routerLink]="['/jobcard']" routerLinkActive="active">
                     <i class="fa fa-flag" aria-hidden="true"></i>
                     Require Machine
                 </a>
@@ -95,7 +95,7 @@
                         <a class="username">
                             Welcome <i>{{authService.userName}}</i>
                         </a>-->
-                    <a class="mx-1" [routerLink]="['/overtime']" routerLinkActive="active" >
+                    <a class="mx-1">
                         Welcome <i>{{userName}}</i>
                     </a>
                     <a (click)="onLogOut()">

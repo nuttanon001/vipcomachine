@@ -5,13 +5,15 @@
     </div>
     <hr class="w-100"/>
     <div class="center-page">
-        <div>
-            <button mat-fab color="primary" (click)="onClickOption('machine')" style="height:200px;width:200px">
+        <div class="mx-1">
+            <button mat-fab color="primary" (click)="onClickOption('machine')"
+                    style="height:200px;width:200px" matTooltip="Open VIPCO Machine System application">
                 <mat-icon svgIcon="machine" style="height:150px;width:150px;margin:auto"></mat-icon>
             </button>
         </div>
-        <div>
-            <button mat-fab color="warn" (click)="onClickOption('overtime')" style="height:200px;width:200px">
+        <div class="mx-1">
+            <button mat-fab color="warn" (click)="onClickOption('overtime')"
+                    style="height:200px;width:200px" matTooltip="Open VIPCO Overtime System application">
                 <mat-icon svgIcon="overtime" style="height:150px;width:150px;margin:auto"></mat-icon>
             </button>
         </div>

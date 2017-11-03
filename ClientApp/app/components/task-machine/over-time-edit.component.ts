@@ -17,7 +17,7 @@ import { SelectItem } from "primeng/primeng";
     templateUrl: "./over-time-edit.component.html",
     styleUrls: ["../../styles/edit.style.scss"],
 })
-/** over-time-edit component*/
+// over-time-edit component*/
 export class OverTimeEditComponent implements OnInit {
     editValueForm: FormGroup;
     operators: Array<SelectItem>;
@@ -28,7 +28,7 @@ export class OverTimeEditComponent implements OnInit {
     @Input("machineId") machineId: number;
     @Input("minDate") minDate: Date;
     @Input("maxDate") maxDate: Date;
-    /** over-time-edit ctor */
+    // over-time-edit ctor */
     constructor(
         private serviceOperator: MachineHasOperatorService,
         private viewContainerRef: ViewContainerRef,
@@ -36,7 +36,7 @@ export class OverTimeEditComponent implements OnInit {
         private fb: FormBuilder
     ) { }
 
-    /** Called by Angular after over-time-edit component initialized */
+    // called by Angular after over-time-edit component initialized */
     ngOnInit(): void {
         this.buildForm();
         if (this.machineId) {
@@ -61,6 +61,7 @@ export class OverTimeEditComponent implements OnInit {
         }
     }
 
+    // build form
     buildForm(): void {
         this.editValueForm = this.fb.group({
             JobCardDetailId: [this.EditValueOverTime.OverTimeId],
@@ -83,7 +84,7 @@ export class OverTimeEditComponent implements OnInit {
             CreateDate: [this.EditValueOverTime.CreateDate],
             Modifyer: [this.EditValueOverTime.Modifyer],
             ModifyDate: [this.EditValueOverTime.ModifyDate],
-            //FK
+            // fK
             TaskMachineId: [this.EditValueOverTime.TaskMachineId],
             EmpCode: [this.EditValueOverTime.EmpCode,
                 [
@@ -93,17 +94,23 @@ export class OverTimeEditComponent implements OnInit {
         });
 
         this.editValueForm.valueChanges.subscribe((data: any) => {
-            if (!this.editValueForm)
+            if (!this.editValueForm) {
                 return;
-
+            }
             const form: FormGroup = this.editValueForm;
             const controlDate: AbstractControl | null = form.get("OverTimeDate");
 
             if (controlDate) {
                 if (controlDate.value) {
-                    let selectedDate: number = Number(controlDate.value.getDate().toString() + controlDate.value.getMonth().toString() + controlDate.value.getFullYear().toString());
-                    let minDate: number = Number(this.minDate.getDate().toString() + this.minDate.getMonth().toString() + this.minDate.getFullYear().toString());
-                    let maxDate: number = Number(this.maxDate.getDate().toString() + this.maxDate.getMonth().toString() + this.maxDate.getFullYear().toString());
+                    let selectedDate: number = Number(controlDate.value.getDate().toString() +
+                                                controlDate.value.getMonth().toString() +
+                                                controlDate.value.getFullYear().toString());
+                    let minDate: number = Number(this.minDate.getDate().toString() +
+                                            this.minDate.getMonth().toString() +
+                                            this.minDate.getFullYear().toString());
+                    let maxDate: number = Number(this.maxDate.getDate().toString() +
+                                            this.maxDate.getMonth().toString() +
+                                            this.maxDate.getFullYear().toString());
 
                     let message: string = `Selected: ${selectedDate} Min: ${minDate} Max: ${maxDate}`;
                     // console.log(message);
@@ -123,7 +130,7 @@ export class OverTimeEditComponent implements OnInit {
     }
 
     // on New/Update
-    onNewOrUpdateClick() {
+    onNewOrUpdateClick():void {
         if (this.editValueForm) {
             let newOrUpdate: TaskMachineHasOverTime = this.editValueForm.value;
             newOrUpdate.NameThai = this.operatorsEmp.filter(item => item.EmpCode === newOrUpdate.EmpCode)[0].EmployeeName || "";
@@ -132,7 +139,7 @@ export class OverTimeEditComponent implements OnInit {
     }
 
     // on Cancel
-    onCancelClick() {
+    onCancelClick():void {
         this.ComplateOrCancel.emit(undefined);
     }
 }

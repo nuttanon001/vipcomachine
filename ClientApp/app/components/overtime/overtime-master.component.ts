@@ -134,10 +134,10 @@ export class OvertimeMasterComponent
     // on detail edit override
     onDetailEdit(value?: OverTimeMaster): void {
         if (value) {
-            //if (value.OverTimeStatus !== 1) {
+            // if (value.OverTimeStatus !== 1) {
             //    this.dialogsService.error("Access Denied", "Status war not waited. you can't edit it.", this.viewContainerRef);
             //    return;
-            //}
+            // }
 
             if (this.serverAuth.getAuth) {
                 if (this.serverAuth.getAuth.LevelUser < 2) {
@@ -212,6 +212,21 @@ export class OvertimeMasterComponent
                 }, error => this.displayValue = undefined);
         } else {
             this.displayValue = undefined;
+        }
+    }
+
+    // reportPdf
+    reporPdf(value?: OverTimeMaster): void {
+        if (value) {
+            this.service.getReportOverTimePdf(value.OverTimeMasterId)
+                .subscribe(data => {
+                    let link:any = document.createElement("a");
+                    link.href = window.URL.createObjectURL(data);
+                    link.download = "overtime.pdf";
+                    link.click();
+                },
+                error => console.log("Error downloading the file."),
+                () => console.log("Completed file download."));
         }
     }
 }

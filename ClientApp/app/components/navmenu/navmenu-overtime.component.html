@@ -20,7 +20,7 @@
             <li class="nav-item" *ngIf="GetLevel1">
                 <a #mainMenu="matMenuTrigger" [matMenuTriggerFor]="menu1"
                    (onMenuOpen)="menuOnCloseMenu1()" (mouseover)="menuOnOpenMenu1()"
-                   class="nav-link">
+                   class="nav-link" [routerLink]="['/overtime']" routerLinkActive="active">
                     <i class="fa fa-flag" aria-hidden="true"></i>
                     Require OverTime
                 </a>
@@ -31,10 +31,10 @@
                     </button>
                 </mat-menu>
             </li>
-            <li class="nav-item" *ngIf="GetLevel2">
+            <li class="nav-item" *ngIf="GetLevel1">
                 <a #subMenu="matMenuTrigger" [matMenuTriggerFor]="menu2"
                    (onMenuOpen)="menuOnCloseMenu2()" (mouseover)="menuOnOpenMenu2()"
-                   class="nav-link">
+                   class="nav-link" [routerLink]="['/overtime/approve-overtime']" routerLinkActive="active">
                     <i class="fa fa-comments-o" aria-hidden="true"></i>
                     Approve OverTime
                 </a>
