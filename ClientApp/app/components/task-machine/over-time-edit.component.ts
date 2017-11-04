@@ -55,9 +55,11 @@ export class OverTimeEditComponent implements OnInit {
         if (!this.minDate) {
             this.minDate = new Date();
         }
-
         if (!this.maxDate) {
             this.maxDate = new Date();
+            if (this.minDate > this.maxDate) {
+                this.maxDate = this.minDate;
+            }
         }
     }
 

@@ -26,7 +26,8 @@
                         <label for="JobCardDate" class="my-label">Date:</label>
                         <div class="col-sm-4">
                             <p-calendar formControlName="JobCardDate" [showIcon]="true" required
-                                        id="JobCardDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
+                                        id="JobCardDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
+                                        appendTo="body">
                             </p-calendar>
                             <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.JobCardDate"></validation-messages>
@@ -36,7 +37,8 @@
                         <div class="col-sm-4">
                             <p-calendar formControlName="DueDate" [showIcon]="true"
                                         id="DueDate" dateFormat="dd/mm/yy" placeholder="  Choose a due date" required
-                                        [minDate]="editValueForm.controls.JobCardDate.value">
+                                        [minDate]="editValueForm.controls.JobCardDate.value"
+                                        appendTo="body">
                             </p-calendar>
                             <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.DueDate"></validation-messages>

@@ -163,6 +163,7 @@
                                    (click)="onSelectedMachine()"
                                    id="MachineString" formControlName="MachineString" required readonly>
                             <validation-messages [control]="editValueForm.controls.MachineString"></validation-messages>
+                            <span class="text-danger" [innerHTML]="messageMachine"></span>
                         </div>
                     </div>
                 </form>

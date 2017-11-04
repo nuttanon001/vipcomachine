@@ -330,7 +330,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
 
         //imitate db connection over a network
 
-        // console.log("Lazy:", event);
+        console.log("Lazy:", event);
 
         this.reportForm.patchValue({
             Skip: event.first,

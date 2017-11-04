@@ -652,8 +652,10 @@ namespace VipcoMachine.Controllers
                             }
                             else
                             {
+                                var AddHour = detail.TotalHour < 5 ? detail.TotalHour + 8 : detail.TotalHour + 9;
+
                                 Stime = new TimeSpan(8, 0, 0);
-                                Etime = new TimeSpan((int)(detail.TotalHour) + 9, 0, 0);
+                                Etime = new TimeSpan((int)AddHour, 0, 0);
                             }
 
                             ReportOverTimeMaster.Details.Add(new ReportOverTimeDetailViewModel()

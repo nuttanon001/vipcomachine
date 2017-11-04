@@ -47,6 +47,7 @@ export class TaskMachineEditComponent
     overTime: TaskMachineHasOverTime | undefined;
     indexOverTime: number;
     attachFiles: Array<AttachFile> = new Array;
+    messageMachine: string;
     // task-machine-edit ctor */
     constructor(
         service: TaskMachineService,
@@ -133,6 +134,12 @@ export class TaskMachineEditComponent
                         JobCardDetailId: value.JobCardDetailId,
                         PlannedStartDate: new Date(),
                     };
+
+                    if (this.serviceAuth.getAuth) {
+                        this.editValue.AssignedBy = this.serviceAuth.getAuth.EmpCode;
+                        this.editValue.AssignedByString = this.serviceAuth.getAuth.NameThai;
+                    }
+
                     this.defineData();
                     // get jobcard-detail
                     if (this.editValue.JobCardDetailId) {
@@ -293,9 +300,9 @@ export class TaskMachineEditComponent
                         // console.log("checkData", checkData);
 
                         if (checkData.AnyData) {
-                            this.serviceDialogs.context("Same Date",
-                                "This machine already has planed in same date. but it 's up to you.",
-                                this.viewContainerRef);
+                            this.messageMachine = "This machine already has planed in same date.<br/>But it 's up to you.";
+                        } else {
+                            this.messageMachine = "";
                         }
                     });
             }
@@ -308,8 +315,10 @@ export class TaskMachineEditComponent
     onNewOrEditOverTime(overTime?: TaskMachineHasOverTime): void {
         const controlMin: AbstractControl | null = this.editValueForm.get("ActualStartDate");
         let break1: boolean = (!controlMin) || (!controlMin.value);
-        if (break1){
-            this.serviceDialogs.error("Actual Date not found.", "Please set actual date befor add overtime to TaskMachine.", this.viewContainerRef);
+        if (break1) {
+            this.serviceDialogs.error("Actual Date not found.",
+                "Please set actual date befor add overtime to TaskMachine.",
+                this.viewContainerRef);
             return;
         }
 

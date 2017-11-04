@@ -1,5 +1,6 @@
 ﻿import { NgModule } from "@angular/core";
 import {
+    MatProgressSpinnerModule,
     MatButtonModule,
     MatCheckboxModule,
     MatProgressBarModule,
@@ -60,6 +61,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         MatDialogModule,
         MatTabsModule,
         MatCardModule,
+        MatProgressSpinnerModule,
         //AngularSplit
         AngularSplitModule,
         //NgxDataTable
@@ -89,6 +91,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         MatDialogModule,
         MatTabsModule,
         MatCardModule,
+        MatProgressSpinnerModule,
         //AngularSplit
         AngularSplitModule,
         //NgxDataTable

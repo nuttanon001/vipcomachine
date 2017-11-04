@@ -1,10 +1,10 @@
-﻿import { Injectable } from '@angular/core';
+﻿import { Injectable } from "@angular/core";
 import { Http } from "@angular/http";
 // model
 import { JobCardMaster, AttachFile } from "../../models/model.index";
 // base-service
 import { BaseRestService, BaseCommunicateService } from "../service.index";
-import { Observable } from 'rxjs/Observable';
+import { Observable } from "rxjs/Observable";
 
 @Injectable()
 export class JobCardMasterService extends BaseRestService<JobCardMaster> {
@@ -12,7 +12,7 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
         super(http, "api/JobCardMaster/");
     }
 
-    //===================== JobCard Waiting ===========================\\
+    // ===================== JobCard Waiting ===========================\\
 
     // get job card master with MultiKey
     postGetMultiKey(listKey: Array<string>): Observable<Array<JobCardMaster>> {
@@ -44,6 +44,8 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
     // get cancel jobcard
     getChangeStatusJobCardMaster(JobCardMasterId: number,status:number): Observable<JobCardMaster> {
         let url: string = `${this.actionUrl}JobCardChangeStatus/${JobCardMasterId}/${status}`;
+
+        console.log("url: " ,url);
         return this.http.get(url)
             .map(this.extractData).catch(this.handleError);
     }
@@ -55,7 +57,7 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
             .map(this.extractData).catch(this.handleError);
     }
 
-    //===================== Upload File ===============================\\
+    // ===================== Upload File ===============================\\
     // get file
     getAttachFile(JobCardMasterId: number): Observable<Array<AttachFile>> {
         let url: string = `${this.actionUrl}GetAttach/${JobCardMasterId}/`;
@@ -66,11 +68,12 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
 
     // upload file
     postAttactFile(JobCardMasterId: number, files: FileList): Observable<any> {
-        let input = new FormData();
+        let input:any = new FormData();
 
-        for (var i = 0; i < files.length; i++) {
-            if (files[i].size <= 5242880)
+        for (let i:number = 0; i < files.length; i++) {
+            if (files[i].size <= 5242880) {
                 input.append("files", files[i]);
+            }
         }
 
         // console.log("Files : ", input);
@@ -86,7 +89,7 @@ export class JobCardMasterService extends BaseRestService<JobCardMaster> {
         return this.http.delete(url).catch(this.handleError);
     }
 
-    //===================== End Upload File ===========================\\
+    // ===================== End Upload File ===========================\\
 }
 
 @Injectable()

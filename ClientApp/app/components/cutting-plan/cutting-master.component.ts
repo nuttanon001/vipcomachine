@@ -49,6 +49,7 @@ export class CuttingMasterComponent
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
+        this.scroll = scroll;
         this.service.getAllWithScroll(scroll)
             .subscribe(scrollData => {
                 if (scrollData) {

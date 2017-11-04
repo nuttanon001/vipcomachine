@@ -26,7 +26,7 @@ namespace VipcoMachine.Helpers
                 .ForMember(x => x.ProjectCodeDetail, o => o.Ignore())
                 // EmployeeWrite
                 .ForMember(x => x.EmployeeWriteString,
-                           o => o.MapFrom(s => s.EmployeeWrite == null ? "-" : $"{s.EmployeeRequire.EmpCode} {s.EmployeeRequire.NameThai}"))
+                           o => o.MapFrom(s => s.EmployeeWrite == null ? "-" : $"{s.EmployeeWrite.EmpCode} {s.EmployeeWrite.NameThai}"))
                 .ForMember(x => x.EmployeeWrite, o => o.Ignore())
                 // EmployeeRequire
                 .ForMember(x => x.EmployeeRequireString,

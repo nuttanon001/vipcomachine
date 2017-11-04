@@ -282,8 +282,13 @@ namespace VipcoMachine.Controllers
                 {
                     if (!string.IsNullOrEmpty(Scehdule.Filter))
                     {
-                        QueryData = QueryData.Where(x => x.JobCardDetail.JobCardMaster.JobCardMasterNo.ToLower().Contains(Scehdule.Filter.ToLower().Trim()) ||
-                                        x.TaskMachineName.ToLower().Contains(Scehdule.Filter.ToLower().Trim()));
+                        var filters = string.IsNullOrEmpty(Scehdule.Filter) ? new string[] { "" }
+                                   : Scehdule.Filter.ToLower().Split(null);
+                        foreach (var keyword in filters)
+                        {
+                            QueryData = QueryData.Where(x => x.JobCardDetail.CuttingPlan.CuttingPlanNo.ToLower().Trim().Contains(keyword.ToLower()) ||
+                                                             x.JobCardDetail.CuttingPlan.MaterialSize.ToLower().Trim().Contains(keyword.ToLower()));
+                        }
                     }
 
                     // Option JobNo
@@ -444,6 +449,12 @@ namespace VipcoMachine.Controllers
                                     .Include(x => x.Employee)
                                     .Include(x => x.JobCardDetail.CuttingPlan)
                                     .AsQueryable();
+
+                if (!string.IsNullOrEmpty(Scroll.Where))
+                {
+                    QueryData = QueryData.Where(x => x.Creator == Scroll.Where);
+                }
+
                 // Filter
                 var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
                                     : Scroll.Filter.ToLower().Split(null);

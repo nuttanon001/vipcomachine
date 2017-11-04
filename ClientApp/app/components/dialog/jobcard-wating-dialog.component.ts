@@ -26,14 +26,14 @@ import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-deta
 export class JobCardWatingDialogComponent implements OnInit {
     onCancel: boolean = false;
     onComplate: boolean = false;
-    showContext: boolean;
+    showContext: boolean = false;
     status: number;
     message: string;
 
     selected: JobCardMaster;
     columns: Array<TableColumn> = [
         { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
-        { prop: "ProjectDetailString", name: "Job Level2/3", flexGrow: 1 },
+        { prop: "ProjectDetailString", name: "Job Level2/3", flexGrow: 2 },
     ];
     // jobCard-wating-dialog ctor */
     constructor(
@@ -49,7 +49,7 @@ export class JobCardWatingDialogComponent implements OnInit {
         }
     }
 
-    onSelectedJobCardMasterSet(value: JobCardMaster) {
+    onSelectedJobCardMasterSet(value: JobCardMaster): void {
         if (value) {
             this.service.getCuttingPlanToJobCardDetail(value.JobCardMasterId)
                 .subscribe(undefined,
@@ -93,6 +93,7 @@ export class JobCardWatingDialogComponent implements OnInit {
     // show comfirm box
     onShowComfirmBox(mode: number): void {
         if (mode) {
+            this.showContext = !this.showContext;
             this.status = mode;
             if (mode === 3) {
                 this.message = "Are you want to cancel this Machine-Required ?";

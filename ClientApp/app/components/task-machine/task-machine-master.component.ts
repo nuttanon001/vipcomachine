@@ -85,6 +85,15 @@ export class TaskMachineMasterComponent
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
+        if (scroll.HasCondition) {
+            if (this.serverAuth.getAuth) {
+                scroll.Where = this.serverAuth.getAuth.UserName || "";
+            }
+        } else {
+            scroll.Where = "";
+        }
+        this.scroll = scroll;
+
         this.service.getAllWithScroll(scroll)
             .subscribe(scrollData => {
                 if (scrollData) {

@@ -38,6 +38,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
     // mode
     status: number | undefined;
     schedule: OptionOverTimeSchedule;
+    onloadReport: boolean = false;
     // array
     proMasters: Array<SelectItem>;
     empGroups: Array<SelectItem>;
@@ -175,7 +176,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
                 this.totalRecords = dbDataSchedule.TotalRow;
                 this.columns = new Array;
 
-                let ColJobNumberWidth = "150px";
+                let ColJobNumberWidth = "290px";
                 let ColDateWidth = "200px";;
                 // column Main
                 this.columns = new Array;
@@ -269,8 +270,17 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
         // update data
         this.service.putUpdateStatus(value, value.OverTimeMasterId).subscribe(
             (complete: any) => {
-                this.serviceDialogs.context("Update Complate", "Update progress was complated.", this.viewContainerRef);
-                this.onGetOverTimeMasterSechduleData(this.schedule);
+                this.serviceDialogs.confirm("Update Complate",
+                    "Update progress was complated. Do your want to print report Overtime-Require?",
+                    this.viewContainerRef)
+                    .subscribe(result => {
+                        if (result) {
+                            this.reporPdf(complete);
+                        } else {
+                            this.onGetOverTimeMasterSechduleData(this.schedule);
+                        }
+                    });
+
             },
             (error: any) => {
                 console.error(error);
@@ -278,5 +288,31 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
                     this.viewContainerRef);
             }
         );
+    }
+
+    // reportPdf
+    reporPdf(value?: OverTimeMaster): void {
+        if (value) {
+            this.onloadReport = !this.onloadReport;
+            this.service.getReportOverTimePdf(value.OverTimeMasterId)
+                .subscribe(data => {
+                    let link: any = document.createElement("a");
+                    link.href = window.URL.createObjectURL(data);
+                    link.download = value.OverTimeDate.toString() + "_overtime.pdf";
+                    link.click();
+                },
+                error => {
+                    this.serviceDialogs.error("Error Message",
+                        "Can't print report !!!",
+                        this.viewContainerRef);
+                    this.onloadReport = !this.onloadReport;
+                    this.onGetOverTimeMasterSechduleData(this.schedule);
+                },
+                () => {
+                    console.log("Completed file download.");
+                    this.onloadReport = !this.onloadReport;
+                    this.onGetOverTimeMasterSechduleData(this.schedule);
+                });
+        }
     }
 }

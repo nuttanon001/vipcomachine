@@ -5,9 +5,13 @@ import { Component } from "@angular/core";
     templateUrl: "./home.component.html"
 })
 export class HomeComponent {
-    onOpenNewLink(link?: string): void {
-        if (link) {
-            window.open(link, "_blank");
+    onOpenNewLink(): void {
+        let local = localStorage.getItem("document");
+        if (local) {
+            let link: string = JSON.parse(local);
+            if (link) {
+                window.open(link, "_blank");
+            }
         }
     }
 }

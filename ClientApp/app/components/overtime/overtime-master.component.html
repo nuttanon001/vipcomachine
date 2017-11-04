@@ -44,7 +44,7 @@
                         <i class="fa fa-2x fa-plus" aria-hidden="true"></i>
                     </button>
                     <button type="button" mat-icon-button color="accent" (click)="onDetailEdit(displayValue)"
-                            [disabled]="ShowEdit || DisplayDataNull || StatusJobCardMaster" matTooltip="Edit" matTooltipPosition="left">
+                            [disabled]="ShowEdit || DisplayDataNull" matTooltip="Edit" matTooltipPosition="left">
                         <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>
                     </button>
                     <hr />
@@ -58,7 +58,7 @@
                     </button>
                     <hr />
                     <button type="button" mat-icon-button color="accent" (click)="reporPdf(displayValue)"
-                            [disabled]="ShowEdit || DisplayDataNull" matTooltip="Report" matTooltipPosition="left">
+                            [disabled]="ShowEdit || DisplayDataNull || loadReport" matTooltip="Report" matTooltipPosition="left">
                         <i class="fa fa-2x fa-file-pdf-o" aria-hidden="true"></i>
                     </button>
                 </div>

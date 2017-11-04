@@ -21,6 +21,14 @@ export class AppComponent implements OnInit {
         if (option) {
             // console.log("Option is:" , option);
             this.option = option;
+            let documentAddress: string;
+            if (this.option === "machine") {
+                documentAddress = "/files/machine_doc.pdf";
+            } else {
+                documentAddress = "/files/overtime_doc.pdf";
+            }
+            // set locatStorage
+            localStorage.setItem("document", JSON.stringify(documentAddress));
         }
     }
 }

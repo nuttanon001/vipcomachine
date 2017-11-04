@@ -24,7 +24,10 @@
         </div>
 
         <div class="my-form">
-           Only between date {{minDate | date:'dd/MM/yyyy'}} - {{maxDate | date:'dd/MM/yyyy'}}
+            <label class="my-label">Only between date :</label>
+            <div class="col-sm-4 text-danger">
+                {{minDate | date:'dd/MM/yyyy'}} - {{maxDate | date:'dd/MM/yyyy'}}
+            </div>
         </div>
 
         <div class="my-form">
@@ -32,8 +35,8 @@
             <div class="col-sm-4">
                 <p-calendar formControlName="OverTimeDate" [showIcon]="true"
                             id="OverTimeDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
-                            [minDate]="minDate"
-                            [maxDate]="maxDate">
+                            [minDate]="minDate" [maxDate]="maxDate"
+                            appendTo="body">
                 </p-calendar>
                 <span class="is-request-date">**</span>
                 <validation-messages [control]="editValueForm.controls.OverTimeDate"></validation-messages>

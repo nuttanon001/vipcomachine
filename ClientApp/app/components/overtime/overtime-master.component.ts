@@ -31,6 +31,7 @@ export class OvertimeMasterComponent
     extends BaseMasterComponent<OverTimeMaster, OverTimeMasterService> {
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
     useTemplate: boolean = false;
+    loadReport: boolean = false;
     templateScroll: Scroll;
 
     columns = [
@@ -159,7 +160,7 @@ export class OvertimeMasterComponent
         // change timezone
         value = this.changeTimezone(value);
         // insert data
-        console.log("Value:", value);
+        // console.log("Value:", value);
         this.service.post(value).subscribe(
             (complete: any) => {
                 this.displayValue = complete;
@@ -218,15 +219,31 @@ export class OvertimeMasterComponent
     // reportPdf
     reporPdf(value?: OverTimeMaster): void {
         if (value) {
-            this.service.getReportOverTimePdf(value.OverTimeMasterId)
-                .subscribe(data => {
-                    let link:any = document.createElement("a");
-                    link.href = window.URL.createObjectURL(data);
-                    link.download = "overtime.pdf";
-                    link.click();
-                },
-                error => console.log("Error downloading the file."),
-                () => console.log("Completed file download."));
+            if (value.OverTimeStatus) {
+                if (value.OverTimeStatus === 2 || value.OverTimeStatus === 3) {
+                    this.loadReport = !this.loadReport;
+                    this.service.getReportOverTimePdf(value.OverTimeMasterId)
+                        .subscribe(data => {
+                            let link: any = document.createElement("a");
+                            link.href = window.URL.createObjectURL(data);
+                            link.download = value.OverTimeDate.toString()  + "_overtime.pdf";
+                            link.click();
+                        },
+                        error => {
+                            console.log("Error downloading the file.");
+                            this.loadReport = !this.loadReport;
+                        },
+                        () => {
+                            console.log("Completed file download.");
+                            this.loadReport = !this.loadReport;
+                        });
+                    return;
+                }
+            }
+
+            this.dialogsService.error("Error Message",
+                "Only overtime has been approverd could print.",
+                this.viewContainerRef);
         }
     }
 }
