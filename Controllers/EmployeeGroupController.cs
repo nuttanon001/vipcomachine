@@ -20,6 +20,7 @@ namespace VipcoMachine.Controllers
         #region PrivateMenbers
 
         private IRepository<EmployeeGroup> repository;
+        private IRepository<Employee> repositoryEmployee;
         private IMapper mapper;
 
         private JsonSerializerSettings DefaultJsonSettings =>
@@ -42,9 +43,13 @@ namespace VipcoMachine.Controllers
 
         #region Constructor
 
-        public EmployeeGroupController(IRepository<EmployeeGroup> repo,IMapper map)
+        public EmployeeGroupController(
+            IRepository<EmployeeGroup> repo,
+            IRepository<Employee> repoEmp,
+            IMapper map)
         {
             this.repository = repo;
+            this.repositoryEmployee = repoEmp;
             this.mapper = map;
         }
 
@@ -56,7 +61,15 @@ namespace VipcoMachine.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            return new JsonResult(await this.repository.GetAllAsync(),this.DefaultJsonSettings);
+            var GroupEmployee = await this.repositoryEmployee.GetAllAsQueryable()
+                                            .GroupBy(x => x.GroupCode)
+                                            .Select(x => x.Key)
+                                            .ToListAsync();
+
+            var QueryData = this.repository.GetAllAsQueryable()
+                                           .Where(x => GroupEmployee.Contains(x.GroupCode));
+
+            return new JsonResult(await QueryData.ToListAsync(), this.DefaultJsonSettings);
         }
 
         // GET: api/EmployeeGroup/5
@@ -74,7 +87,13 @@ namespace VipcoMachine.Controllers
         [HttpPost("GetScroll")]
         public async Task<IActionResult> GetScroll([FromBody] ScrollViewModel Scroll)
         {
+            var GroupEmployee = await this.repositoryEmployee.GetAllAsQueryable()
+                                            .GroupBy(x => x.GroupCode)
+                                            .Select(x => x.Key)
+                                            .ToListAsync();
+
             var QueryData = this.repository.GetAllAsQueryable()
+                                           .Where(x => GroupEmployee.Contains(x.GroupCode))
                                            .AsQueryable();
 
             // Filter

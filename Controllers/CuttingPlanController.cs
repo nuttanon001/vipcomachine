@@ -22,6 +22,7 @@ namespace VipcoMachine.Controllers
         private IRepository<CuttingPlan> repository;
         private IRepository<ProjectCodeMaster> repositoryProMaster;
         private IRepository<ProjectCodeDetail> repositoryProDetail;
+        private IRepository<JobCardMaster> repositoryJobMaster;
         private IMapper mapper;
 
         private JsonSerializerSettings DefaultJsonSettings =>
@@ -48,11 +49,13 @@ namespace VipcoMachine.Controllers
             IRepository<CuttingPlan> repo,
             IRepository<ProjectCodeMaster> repoProMaster,
             IRepository<ProjectCodeDetail> repoProDetail,
+            IRepository<JobCardMaster> repoJobMaster,
             IMapper map)
         {
             this.repository = repo;
             this.repositoryProMaster = repoProMaster;
             this.repositoryProDetail = repoProDetail;
+            this.repositoryJobMaster = repoJobMaster;
             this.mapper = map;
         }
 
@@ -92,6 +95,37 @@ namespace VipcoMachine.Controllers
             return new JsonResult(
                 this.ConverterTableToViewModel<CuttingPlanViewModel, CuttingPlan>(await QueryData.AsNoTracking().ToListAsync()),
                 this.DefaultJsonSettings);
+        }
+
+        [HttpGet("CheckCuttingPlan")]
+        public async Task<IActionResult> CheckCuttingPlan()
+        {
+            var CuttingPlans = await this.repository.GetAllAsQueryable().Where(x => !x.JobCardDetails.Any() &&
+                                                                                     x.TypeCuttingPlan == 1)
+                                                                        .Include(x => x.ProjectCodeDetail.ProjectCodeMaster)
+                                                                        .ToListAsync();
+            var Data = new List<Tuple<string, string>>();
+            if (CuttingPlans != null)
+            {
+                foreach(var CodeDetail in CuttingPlans.GroupBy(x => x.ProjectCodeDetail))
+                {
+                    Expression<Func<JobCardMaster, bool>> condition = m => m.ProjectCodeDetailId == CodeDetail.Key.ProjectCodeDetailId;
+                    var jobMasters = await this.repositoryJobMaster.FindAllAsync(condition);
+                    if (jobMasters.Any())
+                    {
+                        if (jobMasters.Any(x => x.JobCardMasterStatus == JobCardMasterStatus.Wait))
+                            continue;
+                    }
+
+                    Data.Add(new Tuple<string, string>(CodeDetail.Key.ProjectCodeDetailCode,
+                                                        CodeDetail.Key.ProjectCodeMaster.ProjectCode));
+                }
+
+                if (Data.Any())
+                    return new JsonResult(Data, this.DefaultJsonSettings);
+            }
+
+            return NotFound(new { Error = "No CuttingPlan Waiting." });
         }
 
         #endregion GET

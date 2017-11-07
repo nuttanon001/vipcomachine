@@ -5,7 +5,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs/Rx";
 import { Subscription } from "rxjs/Subscription";
 // model
-import { OverTimeMaster, OptionOverTimeSchedule } from "../../models/model.index";
+import { OverTimeMaster, OptionOverTimeSchedule,ProjectCodeMaster } from "../../models/model.index";
 // service
 import { OverTimeMasterService } from "../../services/overtime-master/overtime-master.service";
 import { ProjectCodeMasterService } from "../../services/projectcode-master/projectcode-master.service";
@@ -39,6 +39,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
     status: number | undefined;
     schedule: OptionOverTimeSchedule;
     onloadReport: boolean = false;
+    overTimeMaster: OverTimeMaster;
     // array
     proMasters: Array<SelectItem>;
     empGroups: Array<SelectItem>;
@@ -55,7 +56,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
     ) { }
 
-    // Called by Angular after overtime-schedule component initialized */
+    // called by Angular after overtime-schedule component initialized */
     // angular hook
     ngOnInit(): void {
         if (window.innerWidth >= 1600) {
@@ -68,22 +69,22 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
 
         this.overtimeMasters = new Array;
 
-        this.route.params.subscribe((params: any) => {
-            let key: number = params["condition"];
-            if (key) {
-                if (this.status) {
-                    if (this.status !== key) {
-                        this.status = key;
+        // this.route.params.subscribe((params: any) => {
+        //    let key: number = params["condition"];
+        //    if (key) {
+        //        if (this.status) {
+        //            if (this.status !== key) {
+        //                this.status = key;
 
-                        this.overtimeMasters = new Array;
-                        this.schedule.Status = this.status;
-                        this.onGetOverTimeMasterSechduleData(this.schedule);
-                    }
-                } else {
-                    this.status = key;
-                }
-            }
-        }, error => console.error(error));
+        //                this.overtimeMasters = new Array;
+        //                this.schedule.Status = this.status;
+        //                this.onGetOverTimeMasterSechduleData(this.schedule);
+        //            }
+        //        } else {
+        //            this.status = key;
+        //        }
+        //    }
+        // }, error => console.error(error));
 
         this.buildForm();
         this.getProjectMasterArray();
@@ -137,7 +138,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 this.proMasters = new Array;
                 this.proMasters.push({ label: "Selected job number.", value: undefined });
-                let result2 = result.sort((a, b) => {
+                let result2:Array<ProjectCodeMaster> = result.sort((a, b) => {
                     if (a.ProjectCode && b.ProjectCode) {
                         if (a.ProjectCode > b.ProjectCode) {
                             return -1;
@@ -176,8 +177,8 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
                 this.totalRecords = dbDataSchedule.TotalRow;
                 this.columns = new Array;
 
-                let ColJobNumberWidth = "290px";
-                let ColDateWidth = "200px";;
+                let ColJobNumberWidth:string = "290px";
+                let ColDateWidth:string = "200px";
                 // column Main
                 this.columns = new Array;
                 this.columns.push({
@@ -188,7 +189,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
                 let i: number = 0;
                 for (let name of dbDataSchedule.Columns) {
                     this.columns.push({
-                        header: name, field: name, style: { 'width': ColDateWidth }, isCol: true,
+                        header: name, field: name, style: { "width": ColDateWidth }, isCol: true,
                     });
                 }
 
@@ -242,15 +243,15 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
     }
 
     // load Data Lazy
-    loadDataLazy(event: LazyLoadEvent) {
-        //in a real application, make a remote request to load data using state metadata from event
-        //event.first = First row offset
-        //event.rows = Number of rows per page
-        //event.sortField = Field name to sort with
-        //event.sortOrder = Sort order as number, 1 for asc and -1 for dec
-        //filters: FilterMetadata object having field as key and filter value, filter matchMode as value
+    loadDataLazy(event: LazyLoadEvent):void {
+        // in a real application, make a remote request to load data using state metadata from event
+        // event.first = First row offset
+        // event.rows = Number of rows per page
+        // event.sortField = Field name to sort with
+        // event.sortOrder = Sort order as number, 1 for asc and -1 for dec
+        // filters: FilterMetadata object having field as key and filter value, filter matchMode as value
 
-        //imitate db connection over a network
+        // imitate db connection over a network
 
         // console.log("Lazy:", event);
 
@@ -260,7 +261,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
         });
     }
 
-    // To DataBase
+    // to DataBase
     // on update data
     onUpdateToDataBase(value: OverTimeMaster): void {
         if (this.serverAuth.getAuth) {
@@ -275,7 +276,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
                     this.viewContainerRef)
                     .subscribe(result => {
                         if (result) {
-                            this.reporPdf(complete);
+                            this.onReportPrint(complete);
                         } else {
                             this.onGetOverTimeMasterSechduleData(this.schedule);
                         }
@@ -291,28 +292,15 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
     }
 
     // reportPdf
-    reporPdf(value?: OverTimeMaster): void {
+    onReportPrint(value?: OverTimeMaster): void {
         if (value) {
+            this.overTimeMaster = value;
             this.onloadReport = !this.onloadReport;
-            this.service.getReportOverTimePdf(value.OverTimeMasterId)
-                .subscribe(data => {
-                    let link: any = document.createElement("a");
-                    link.href = window.URL.createObjectURL(data);
-                    link.download = value.OverTimeDate.toString() + "_overtime.pdf";
-                    link.click();
-                },
-                error => {
-                    this.serviceDialogs.error("Error Message",
-                        "Can't print report !!!",
-                        this.viewContainerRef);
-                    this.onloadReport = !this.onloadReport;
-                    this.onGetOverTimeMasterSechduleData(this.schedule);
-                },
-                () => {
-                    console.log("Completed file download.");
-                    this.onloadReport = !this.onloadReport;
-                    this.onGetOverTimeMasterSechduleData(this.schedule);
-                });
         }
+    }
+
+    onBackPrint(): void {
+        this.onloadReport = !this.onloadReport;
+        this.onGetOverTimeMasterSechduleData(this.schedule);
     }
 }

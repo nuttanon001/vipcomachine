@@ -10,6 +10,7 @@ import { OvertimeEditComponent } from "../../components/overtime/overtime-edit.c
 import { OvertimeMasterComponent } from "../../components/overtime/overtime-master.component";
 import { OvertimeViewComponent } from "../../components/overtime/overtime-view.component";
 import { OvertimeScheduleComponent } from "../../components/overtime/overtime-schedule.component";
+import { OverTimeReportComponent } from "../../components/overtime/overtime-report.component";
 // module
 import { OverTimeRouters } from "./overtime.routing";
 import {
@@ -32,6 +33,7 @@ import { ProjectCodeMasterService } from "../../services/projectcode-master/proj
         OvertimeViewComponent,
         OvertimeEditComponent,
         OvertimeScheduleComponent,
+        OverTimeReportComponent,
         //EmployeeDialogComponent,
     ],
     imports: [

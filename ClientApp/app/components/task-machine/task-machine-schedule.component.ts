@@ -71,27 +71,17 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
 
         this.route.params.subscribe((params: any) => {
             let key: number = params["condition"];
+            console.log("key is",key);
             if (key) {
-                if (this.mode) {
-                    if (this.mode !== key) {
-                        this.mode = key;
+                this.mode = key;
+                this.buildForm();
+                this.getProjectMasterArray();
+                this.getTypeMachineArray();
 
-                        this.taskMachines = new Array;
-                        this.schedule.Mode = this.mode;
-                        this.onGetTaskMachineWaitAndProcessData(this.schedule);
-                    }
-                } else {
-                    this.mode = key;
-                }
+                this.proDetails = new Array;
+                this.proDetails.push({ label: "Selected level2/3", value: undefined });
             }
         }, error => console.error(error));
-
-        this.buildForm();
-        this.getProjectMasterArray();
-        this.getTypeMachineArray();
-
-        this.proDetails = new Array;
-        this.proDetails.push({ label: "Selected level2/3", value: undefined });
     }
 
     // destroy
@@ -119,14 +109,12 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
         });
 
         this.reportForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
-        // this.onValueChanged();
+        this.onValueChanged();
     }
 
     // on value change
     onValueChanged(data?: any): void {
         if (!this.reportForm) { return; }
-
-        // console.log("onValueChanged:", data);
 
         this.schedule = this.reportForm.value;
         if (this.schedule.JobNo) {
@@ -291,6 +279,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
                 this.count = (x / this.time) * 100;
                 if (x === this.time) {
                     if (this.reportForm.value) {
+                        console.log("reportForm :", this.reportForm.value);
                         this.onGetTaskMachineWaitAndProcessData(this.reportForm.value);
                     }
                 }
@@ -329,8 +318,6 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
         //filters: FilterMetadata object having field as key and filter value, filter matchMode as value
 
         //imitate db connection over a network
-
-        console.log("Lazy:", event);
 
         this.reportForm.patchValue({
             Skip: event.first,

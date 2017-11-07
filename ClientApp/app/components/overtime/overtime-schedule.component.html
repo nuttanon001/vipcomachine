@@ -58,9 +58,8 @@
             </p-dataTable>
         </div>
     </div>
-    <ng-template #LoadBlock>
-        <div class="m-auto">
-            <mat-spinner color="accent"></mat-spinner>
-        </div>
-    </ng-template>
 </div>
+
+<ng-template #LoadBlock>
+    <overtime-report [OverTimeMasterId]="overTimeMaster.OverTimeMasterId" (Back)="onBackPrint($event)"></overtime-report>
+</ng-template>

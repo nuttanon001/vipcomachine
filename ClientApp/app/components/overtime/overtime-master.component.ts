@@ -222,28 +222,13 @@ export class OvertimeMasterComponent
             if (value.OverTimeStatus) {
                 if (value.OverTimeStatus === 2 || value.OverTimeStatus === 3) {
                     this.loadReport = !this.loadReport;
-                    this.service.getReportOverTimePdf(value.OverTimeMasterId)
-                        .subscribe(data => {
-                            let link: any = document.createElement("a");
-                            link.href = window.URL.createObjectURL(data);
-                            link.download = value.OverTimeDate.toString()  + "_overtime.pdf";
-                            link.click();
-                        },
-                        error => {
-                            console.log("Error downloading the file.");
-                            this.loadReport = !this.loadReport;
-                        },
-                        () => {
-                            console.log("Completed file download.");
-                            this.loadReport = !this.loadReport;
-                        });
                     return;
                 }
             }
-
-            this.dialogsService.error("Error Message",
-                "Only overtime has been approverd could print.",
-                this.viewContainerRef);
         }
+
+        this.dialogsService.error("Error Message",
+            "Only overtime has been approverd could print.",
+            this.viewContainerRef);
     }
 }

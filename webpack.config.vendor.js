@@ -16,7 +16,7 @@ const treeShakableModules = [
     '@angular/cdk',
     'zone.js',
     'hammerjs',
-    'popper.js',
+    'popper.js'
 ];
 const nonTreeShakableModules = [
     'bootstrap',

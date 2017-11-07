@@ -12,6 +12,11 @@ export class CuttingPlanService extends BaseRestService<CuttingPlan> {
         super(http, "api/CuttingPlan/");
     }
 
+    // get Check cutting planing
+    getCheckCuttingPlaning(): Observable<any> {
+        let url: string = `${this.actionUrl}CheckCuttingPlan/`;
+        return this.http.get(url).map(this.extractData).catch(this.handleError);
+    }
     // import Csv file
     postImportCsv(imports: Array<CuttingImport>): Observable<any> {
         let CreateBy: string = "Someone";// this.authService.userName || "Someone";

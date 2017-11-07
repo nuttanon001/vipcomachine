@@ -41,6 +41,11 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
             .map(res => res.blob())
             .catch(this.handleError);
     }
+
+    getReportOverTimePdf2(OverTimeMasterId: number): Observable<any> {
+        let url: string = `${this.actionUrl}GetReportOverTimePdf2/${OverTimeMasterId}/`;
+        return this.http.get(url).map(this.extractData).catch(this.handleError);
+    }
 }
 
 @Injectable()

@@ -1,4 +1,8 @@
 import { Component, ViewEncapsulation, OnInit } from "@angular/core";
+//service
+import { AuthService } from "../../services/service.index";
+
+
 
 @Component({
     selector: "app",
@@ -10,11 +14,15 @@ import { Component, ViewEncapsulation, OnInit } from "@angular/core";
 export class AppComponent implements OnInit {
 
     option: string;
-    constructor() { }
+    constructor(
+        private authService: AuthService
+    ) { }
 
     // called by Angular after main-screen component initialized */
     ngOnInit(): void {
         this.option = "";
+        // reset login status
+        this.authService.logout();
     }
 
     SelectApp(option?: string): void {

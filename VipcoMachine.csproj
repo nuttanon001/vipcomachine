@@ -130,6 +130,7 @@
   <ItemGroup>
     <None Include="ViewModels\TypeStandardTimeViewModel.cs" />
     <None Include="ViewModels\UserViewModel.cs" />
+    <None Include="wwwroot\reports\exportpdf.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -238,6 +239,15 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ReportClasses_2\ClassLibrary1\ReportClasses.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\exportpdf.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\reports\exportpdf.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <Target Name="DebugRunWebpack" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('wwwroot\dist') ">
