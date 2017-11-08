@@ -107,7 +107,7 @@ namespace VipcoMachine.Controllers
             var Data = new List<Tuple<string, string>>();
             if (CuttingPlans != null)
             {
-                foreach(var CodeDetail in CuttingPlans.GroupBy(x => x.ProjectCodeDetail))
+                foreach (var CodeDetail in CuttingPlans.GroupBy(x => x.ProjectCodeDetail))
                 {
                     Expression<Func<JobCardMaster, bool>> condition = m => m.ProjectCodeDetailId == CodeDetail.Key.ProjectCodeDetailId;
                     var jobMasters = await this.repositoryJobMaster.FindAllAsync(condition);
@@ -122,10 +122,32 @@ namespace VipcoMachine.Controllers
                 }
 
                 if (Data.Any())
-                    return new JsonResult(Data, this.DefaultJsonSettings);
+                {
+                    var RuningNumber = 1;
+                    var Message = "";
+                    foreach (var item in Data.OrderBy(x => x.Item2).ThenBy(x => x.Item1))
+                    {
+                        Message += $"{RuningNumber}. {item.Item2}/{item.Item1}<br />";
+                        RuningNumber++;
+                    }
+                    return new JsonResult(new { Message = Message }, this.DefaultJsonSettings);
+                }
             }
 
             return NotFound(new { Error = "No CuttingPlan Waiting." });
+        }
+
+        [HttpGet("CanDelete/{Key}")]
+        public async Task<IActionResult> CanDelete(int Key)
+        {
+            if (Key > 0)
+            {
+                Expression<Func<CuttingPlan, bool>> condition = c => c.CuttingPlanId == Key && c.JobCardDetails.Any();
+
+                var CanDelete = await this.repository.AnyDataAsync(condition);
+                return new JsonResult(new { CanDelete = !CanDelete } , this.DefaultJsonSettings);
+            }
+            return NotFound(new { Error = "CuttingPlanId not found." });
         }
 
         #endregion GET

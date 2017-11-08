@@ -17,21 +17,20 @@ import {
 
 
 @Component({
-    selector: 'project-edit',
-    templateUrl: './project-edit.component.html',
+    selector: "project-edit",
+    templateUrl: "./project-edit.component.html",
     styleUrls: ["../../styles/edit.style.scss"],
 })
-/** project-edit component*/
+// project-edit component*/
 export class ProjectEditComponent
-    extends BaseEditComponent<ProjectCodeMaster, ProjectCodeMasterService>
-{
+    extends BaseEditComponent<ProjectCodeMaster, ProjectCodeMasterService> {
     // paramater
-    //columns = [
+    // columns = [
     //    { prop: "ProjectCodeDetailCode", name: "Code", flexGrow: 1 },
     //    { prop: "Description", name: "Description", flexGrow: 3 },
-    //];
+    // ];
 
-    /** project-edit ctor */
+    // project-edit ctor */
     constructor(
         service: ProjectCodeMasterService,
         serviceCom: ProjectCodeMasterServiceCommunicate,
@@ -52,7 +51,7 @@ export class ProjectEditComponent
             this.service.getOneKeyNumber(value.ProjectCodeMasterId)
                 .subscribe(dbData => {
                     this.editValue = dbData;
-                    // Set Date
+                    // set Date
                     if (this.editValue.StartDate) {
                         this.editValue.StartDate = this.editValue.StartDate != null ?
                             new Date(this.editValue.StartDate) : new Date();
@@ -115,7 +114,7 @@ export class ProjectEditComponent
     }
 
     // new Detail
-    onNewDetail() {
+    onNewDetail():void {
         let detail: ProjectCodeDetail = {
             ProjectCodeDetailId: 0
         };
@@ -146,12 +145,12 @@ export class ProjectEditComponent
     }
 
     // edit Detail
-    onEditDetail(detail: ProjectCodeDetail) {
-        // Debug here
+    onEditDetail(detail: ProjectCodeDetail):void {
+        // debug here
         // console.log("onEditDetail:",detail);
 
         if (detail && this.editValue.ProjectCodeDetails) {
-            let index: number = this.editValue.ProjectCodeDetails.indexOf(detail)
+            let index: number = this.editValue.ProjectCodeDetails.indexOf(detail);
             if (index > -1) {
                 this.serviceDetail.dialogProjectDetail(detail, this.viewContainerRef)
                     .subscribe(resultDetail => {
@@ -170,14 +169,28 @@ export class ProjectEditComponent
     }
 
     // remove Detail
-    onRemoveDetail(detail: ProjectCodeDetail) {
+    onRemoveDetail(detail: ProjectCodeDetail):void {
         if (detail && this.editValue.ProjectCodeDetails) {
             if (detail.ProjectCodeDetailId > 0) {
-                this.serviceDialogs.error("Deny Action", "ข้อมูลมีการอ้างอิงถึงระบบไม่สามารถให้การกระทำนี้มีผลต่อระบบได้.", this.viewContainerRef);
-                return;
+                this.serviceDetail.getCanDeleteProjectDetail(detail.ProjectCodeDetailId)
+                    .subscribe(dbResult => {
+                        if (dbResult.CanDelete) {
+                            this.onRemoveDetailMethod(detail);
+                        } else {
+                            this.serviceDialogs.error("Deny Action",
+                                "ข้อมูลมีการอ้างอิงถึงระบบไม่สามารถให้การกระทำนี้มีผลต่อระบบได้.", this.viewContainerRef);
+                        }
+                    });
+            } else {
+                this.onRemoveDetailMethod(detail);
             }
+        }
+    }
 
-            let index: number = this.editValue.ProjectCodeDetails.indexOf(detail)
+    // remover Detail Method
+    onRemoveDetailMethod(detail: ProjectCodeDetail): void {
+        if (detail && this.editValue.ProjectCodeDetails) {
+            let index: number = this.editValue.ProjectCodeDetails.indexOf(detail);
             if (index > -1) {
                 // remove item
                 this.editValue.ProjectCodeDetails.splice(index, 1);

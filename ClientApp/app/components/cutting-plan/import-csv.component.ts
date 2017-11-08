@@ -1,7 +1,7 @@
 ﻿// angular
 import { Component, OnInit, ViewContainerRef, ViewChild } from "@angular/core";
 // model
-import { CuttingImport } from "../../models/model.index";
+import { CuttingImport,MessageDialog } from "../../models/model.index";
 // services
 import { DialogsService } from "../../services/dialog/dialogs.service";
 import { CuttingPlanService } from "../../services/cutting-plan/cutting-plan.service";
@@ -131,9 +131,7 @@ export class ImportCsvComponent implements OnInit {
         if (this.importDatas.length) {
             this.service.postImportCsv(this.importDatas)
                 .subscribe(result => {
-                    this.serviceDialogs
-                        .context("Import Complate", "System import complate.", this.viewContainerRef);
-                    // Check cutting plan
+                    // check cutting plan
                     this.onCheckCuttingPlan();
                     // clear data
                     this.inputFile.nativeElement.value = "";
@@ -149,7 +147,14 @@ export class ImportCsvComponent implements OnInit {
     onCheckCuttingPlan(): void {
         this.service.getCheckCuttingPlaning()
             .subscribe(result => {
-                console.log(JSON.stringify(result));
+                let message: MessageDialog = {
+                    headerMessage: "Cutting-Plan Did not has Machine/Require.",
+                    bodyMessage: result.Message
+                };
+                this.serviceDialogs.dialogMessage(this.viewContainerRef, message);
+            }, error => {
+                this.serviceDialogs
+                    .context("Import Complate", "System import complate.", this.viewContainerRef);
             });
     }
 }

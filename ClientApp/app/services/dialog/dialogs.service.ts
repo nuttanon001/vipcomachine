@@ -8,8 +8,9 @@ import {
     Machine,Material,ProjectCodeDetail,
     StandardTime,UnitsMeasure,JobCardMaster,
     TaskMachine, ProjectCodeMaster,
-    EmployeeGroup, OverTimeMaster
-} from '../../models/model.index';
+    EmployeeGroup, OverTimeMaster,
+    MessageDialog
+} from "../../models/model.index";
 
 // components
 import {
@@ -21,7 +22,7 @@ import {
     UomDialogComponent, JobcardDialogComponent,
     JobCardWatingDialogComponent, TaskMachineDialogComponent,
     EmployeeGroupDialogComponent, EmployeeByGroupDialogComponent,
-    OvertimeDialogComponent
+    OvertimeDialogComponent,MessageDialogComponent
  } from "../../components/dialog/dialog.index";
 
 @Injectable()
@@ -36,7 +37,7 @@ export class DialogsService {
     public confirm(title: string, message: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
         let dialogRef: MatDialogRef<ConfirmDialog>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig = new MatDialogConfig();
         config.viewContainerRef = viewContainerRef;
 
         dialogRef = this.dialog.open(ConfirmDialog, config);
@@ -50,7 +51,7 @@ export class DialogsService {
     public context(title: string, message: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
         let dialogRef: MatDialogRef<ContextDialog>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig = new MatDialogConfig();
         config.viewContainerRef = viewContainerRef;
 
         dialogRef = this.dialog.open(ContextDialog, config);
@@ -64,7 +65,7 @@ export class DialogsService {
     public error(title: string, message: string, viewContainerRef: ViewContainerRef): Observable<boolean> {
 
         let dialogRef: MatDialogRef<ErrorDialog>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
         config.viewContainerRef = viewContainerRef;
 
         dialogRef = this.dialog.open(ErrorDialog, config);
@@ -77,13 +78,13 @@ export class DialogsService {
 
     public dialogSelectedDetail(viewContainerRef: ViewContainerRef): Observable<ProjectCodeDetail> {
         let dialogRef: MatDialogRef<ProjectDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = 0;
-        //config.height = this.height;
-        //config.width= this.width;
+        // config.height = this.height;
+        // config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -93,13 +94,13 @@ export class DialogsService {
 
     public dialogSelectedMaster(viewContainerRef: ViewContainerRef,mode:number = 1): Observable<ProjectCodeMaster> {
         let dialogRef: MatDialogRef<ProjectDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        //config.height = this.height;
-        //config.width= this.width;
+        // config.height = this.height;
+        // config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -109,7 +110,7 @@ export class DialogsService {
 
     public dialogSelectMaterial(viewContainerRef: ViewContainerRef): Observable<Material> {
         let dialogRef: MatDialogRef<MaterialDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -125,13 +126,13 @@ export class DialogsService {
     public dialogSelectEmployee(viewContainerRef: ViewContainerRef, mode:string = ""): Observable<Array<Employee>> {
 
         let dialogRef: MatDialogRef<EmployeeDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        //config.height = this.height;
-        //config.width= this.width;
+        // config.height = this.height;
+        // config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -142,13 +143,13 @@ export class DialogsService {
     public dialogSelectEmployeeWithGroup(viewContainerRef: ViewContainerRef, groupCode: string = ""): Observable<Array<Employee>> {
 
         let dialogRef: MatDialogRef<EmployeeByGroupDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = groupCode;
-        //config.height = this.height;
-        //config.width= this.width;
+        // config.height = this.height;
+        // config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -158,13 +159,13 @@ export class DialogsService {
 
     public dialogSelectMachine(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<Machine> {
         let dialogRef: MatDialogRef<MachineDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        //config.height = this.height;
-        //config.width = this.width;
+        // config.height = this.height;
+        // config.width = this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -174,13 +175,13 @@ export class DialogsService {
 
     public dialogNewEditStandardTime(viewContainerRef: ViewContainerRef, standard: StandardTime,): Observable<StandardTime> {
         let dialogRef: MatDialogRef<StandardTimeDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = standard;
-        //config.height = this.height;
-        //config.width= this.width;
+        // config.height = this.height;
+        // config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -190,15 +191,15 @@ export class DialogsService {
 
     public dialogSelectCuttingPlan(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<CuttingPlan> {
         let dialogRef: MatDialogRef<CuttingPlanDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         if (mode) {
             config.data = mode;
         }
-        //config.height = this.height;
-        //config.width= this.width;
+        // config.height = this.height;
+        // config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -208,13 +209,13 @@ export class DialogsService {
 
     public dialogSelectStandardTime(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<StandardTime> {
         let dialogRef: MatDialogRef<StdtimeSelectDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        //config.height = this.height;
-        //config.width= this.width;
+        // config.height = this.height;
+        // config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -224,12 +225,12 @@ export class DialogsService {
 
     public dialogSelectUom(viewContainerRef: ViewContainerRef): Observable<UnitsMeasure> {
         let dialogRef: MatDialogRef<UomDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
-        //config.height = this.height;
-        //config.width= this.width;
+        // config.height = this.height;
+        // config.width= this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -237,31 +238,32 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectedJobCardDetail(viewContainerRef: ViewContainerRef,mode:number = 0): Observable<JobCardDetail>{
+    public dialogSelectedJobCardDetail(viewContainerRef: ViewContainerRef,mode:number = 0): Observable<JobCardDetail> {
         let dialogRef: MatDialogRef<JobcardDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = mode;
-        //config.height = this.height;
-        //config.width = this.width;
+        // config.height = this.height;
+        // config.width = this.width;
         config.hasBackdrop = true;
 
-        //open dialog
+        // open dialog
         dialogRef = this.dialog.open(JobcardDialogComponent,config);
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectedJobCardDetailForWait(viewContainerRef: ViewContainerRef, jobCardMasters:Array<JobCardMaster>): Observable<JobCardDetail> {
+    public dialogSelectedJobCardDetailForWait
+        (viewContainerRef: ViewContainerRef, jobCardMasters: Array<JobCardMaster>): Observable<JobCardDetail> {
         let dialogRef: MatDialogRef<JobCardWatingDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
         config.data = jobCardMasters;
-        //config.height = this.height;
-        //config.width = this.width;
+        // config.height = this.height;
+        // config.width = this.width;
         config.hasBackdrop = true;
 
         // open dialog
@@ -271,7 +273,7 @@ export class DialogsService {
 
     public dialogUpdateProgessTaskMachine(viewContainerRef: ViewContainerRef, TaskMachineId: number): Observable<TaskMachine> {
         let dialogRef: MatDialogRef<TaskMachineDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -287,22 +289,22 @@ export class DialogsService {
 
     public dialogSelectedEmployeeGroup(viewContainerRef: ViewContainerRef): Observable<EmployeeGroup> {
         let dialogRef: MatDialogRef<EmployeeGroupDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
-        //config.height = this.height;
-        //config.width = this.width;
+        // config.height = this.height;
+        // config.width = this.width;
         config.hasBackdrop = true;
 
-        //open dialog
+        // open dialog
         dialogRef = this.dialog.open(EmployeeGroupDialogComponent, config);
         return dialogRef.afterClosed();
     }
 
     public dialogSelectedOverTimeWaiting(viewContainerRef: ViewContainerRef, overTimeMasterId: number): Observable<OverTimeMaster> {
         let dialogRef: MatDialogRef<OvertimeDialogComponent>;
-        let config = new MatDialogConfig();
+        let config: MatDialogConfig  = new MatDialogConfig();
 
         // config
         config.viewContainerRef = viewContainerRef;
@@ -311,6 +313,20 @@ export class DialogsService {
 
         // open dialog
         dialogRef = this.dialog.open(OvertimeDialogComponent, config);
+        return dialogRef.afterClosed();
+    }
+
+    public dialogMessage(viewContainerRef: ViewContainerRef, message: MessageDialog): Observable<boolean> {
+        let dialogRef: MatDialogRef<MessageDialogComponent>;
+        let config: MatDialogConfig = new MatDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        config.data = message;
+        config.hasBackdrop = true;
+
+        // open dialog
+        dialogRef = this.dialog.open(MessageDialogComponent, config);
         return dialogRef.afterClosed();
     }
 

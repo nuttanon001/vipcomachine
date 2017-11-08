@@ -30,3 +30,4 @@ export { OverTimeMaster } from "./overtime-master/overtime-master.model";
 export { OptionOverTimeSchedule } from "./overtime-master/option-overtime-schedule.model";
 export { OverTimeDetail } from "./overtime-detail/overtime-detail.model";
 export { EmployeeGroup } from "./employee-group/employee-group.model";
+export { MessageDialog } from "./message/message.model";

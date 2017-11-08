@@ -107,18 +107,18 @@
 :host /deep/ .ngx-datatable.material .datatable-header .datatable-header-cell {
     text-align: left;
     padding: .9rem 1.2rem;
-    color: rgba(0, 0, 0, 0.54);
+    color: rgba(0, 0, 0, 0.54) !important;
     vertical-align: bottom;
-    font-size: 15px;
-    font-weight: bold;
+    font-size: 15px !important;
+    font-weight: bold !important;
 }
 
 :host /deep/ .ngx-datatable.material .datatable-body-row .datatable-body-cell {
     text-align: left;
     padding: .9rem 1.2rem;
-    color: rgba(0, 0, 0, 0.54);
+    color: rgba(0, 0, 0, 0.54) !important;
     vertical-align: central;
-    font-size: 12px;
+    font-size: 12px !important;
     cursor: pointer;
 }
 

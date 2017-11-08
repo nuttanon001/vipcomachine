@@ -54,6 +54,7 @@ namespace VipcoMachine.Services.Interfaces
         Task<int> DeleteAsync(int key);
         Task<int> CountAsync();
         int CountWithMatch(Expression<Func<TEntity, bool>> match);
+        Task<int> CountWithMatchAsync(Expression<Func<TEntity, bool>> match);
         Task<bool> AnyDataAsync(Expression<Func<TEntity, bool>> match);
     }
 }

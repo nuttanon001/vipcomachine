@@ -22,9 +22,8 @@ import { TableColumn } from "@swimlane/ngx-datatable";
         DataTableServiceCommunicate,
     ]
 })
-/** employee-dialog component*/
-export class EmployeeDialogComponent implements OnInit, OnDestroy
-{
+// employee-dialog component*/
+export class EmployeeDialogComponent implements OnInit, OnDestroy {
     selectEmployee: Array<Employee>;
     subscription: Subscription;
     columns: Array<TableColumn> = [
@@ -85,10 +84,10 @@ export class EmployeeDialogComponent implements OnInit, OnDestroy
             }, error => console.error(error));
     }
 
-    // Selected Employee
+    // selected Employee
     onSelectedEmp(employee?: Employee):void {
         if (employee) {
-            //debug here
+            // debug here
             // console.log("Selected employee", this.selectEmployee);
             // console.log("Employee", employee);
             if (!this.mode) {
@@ -98,8 +97,7 @@ export class EmployeeDialogComponent implements OnInit, OnDestroy
 
                 if (this.selectEmployee.length === 0) {
                     this.selectEmployee.push(Object.assign({}, employee));
-                }
-                else {
+                } else {
                     if (!this.selectEmployee.find(item => item.EmpCode === employee.EmpCode)) {
                         // cloning an object
                         this.selectEmployee.push(Object.assign({}, employee));
@@ -114,10 +112,10 @@ export class EmployeeDialogComponent implements OnInit, OnDestroy
         }
     }
 
-    // Remove Employee Select
+    // remove Employee Select
     onRemoveEmp(employee?: Employee):void {
         if (employee) {
-            let index: number = this.selectEmployee.indexOf(employee)
+            let index: number = this.selectEmployee.indexOf(employee);
             if (index > -1) {
                 // remove item
                 this.selectEmployee.splice(index, 1);
@@ -126,12 +124,12 @@ export class EmployeeDialogComponent implements OnInit, OnDestroy
         }
     }
 
-    // No Click
+    // no Click
     onCancelClick(): void {
         this.dialogRef.close();
     }
 
-    // Update Click
+    // update Click
     onSelectedClick(): void {
         this.dialogRef.close(this.selectEmployee);
     }

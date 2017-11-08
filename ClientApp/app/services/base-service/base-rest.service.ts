@@ -109,4 +109,8 @@ export abstract class BaseRestService<Model>{
         return this.http.put(this.actionUrl + key + "/", JSON.stringify(uObject), this.getRequestOption())
             .map(this.extractData).catch(this.handleError);
     }
+    // delete with key number
+    deleteKeyNumber(key: number): Observable<any> {
+        return this.http.delete(this.actionUrl + key).map(this.extractData).catch(this.handleError);
+    }
 }

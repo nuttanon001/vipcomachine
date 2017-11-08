@@ -18,7 +18,7 @@ import {
     UomDialogComponent, JobcardDialogComponent,
     JobCardWatingDialogComponent, TaskMachineDialogComponent,
     EmployeeGroupDialogComponent, EmployeeByGroupDialogComponent,
-    OvertimeDialogComponent,
+    OvertimeDialogComponent,MessageDialogComponent
 } from "../../components/dialog/dialog.index";
 import { JobCardViewWaitingComponent } from "../../components/jobcard/jobcard-view-waiting.component";
 import { OvertimeViewWaitingComponent } from "../../components/overtime/overtime-view-waiting.component";
@@ -57,6 +57,7 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         EmployeeGroupDialogComponent,
         EmployeeByGroupDialogComponent,
         OvertimeDialogComponent,
+        MessageDialogComponent,
     ],
     declarations: [
         ErrorDialog,
@@ -76,6 +77,7 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         EmployeeGroupDialogComponent,
         EmployeeByGroupDialogComponent,
         OvertimeDialogComponent,
+        MessageDialogComponent,
         // view Component
         JobCardViewWaitingComponent,
         OvertimeViewWaitingComponent,
@@ -106,6 +108,7 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         EmployeeGroupDialogComponent,
         EmployeeByGroupDialogComponent,
         OvertimeDialogComponent,
+        MessageDialogComponent,
     ],
 })
 export class DialogsModule { }

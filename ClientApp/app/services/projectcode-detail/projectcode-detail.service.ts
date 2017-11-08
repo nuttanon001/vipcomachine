@@ -19,6 +19,12 @@ export class ProjectCodeDetailService extends BaseRestService<ProjectCodeDetail>
         super(http, "api/ProjectCodeDetail/");
     }
 
+    // get can delete project detail
+    getCanDeleteProjectDetail(ProjectDetailId: number): Observable<any> {
+        let url: string = `${this.actionUrl}CanDelete/${ProjectDetailId}/`;
+        return this.http.get(url).map(this.extractData).catch(this.handleError);
+    }
+
     public dialogProjectDetail(detail: ProjectCodeDetail, viewContainerRef: ViewContainerRef): Observable<ProjectCodeDetail> {
         let dialogRef: MatDialogRef<ProjectDetailEditComponent>;
         let config = new MatDialogConfig();

@@ -19,17 +19,18 @@ import { TableColumn } from "@swimlane/ngx-datatable";
     styleUrls: ["../../styles/master.style.scss"],
     providers: [DataTableServiceCommunicate]
 })
-/** cutting-master component*/
+// cutting-master component*/
 export class CuttingMasterComponent
-    extends BaseMasterComponent<CuttingPlan, CuttingPlanService>
-{
+    extends BaseMasterComponent<CuttingPlan, CuttingPlanService> {
     columns: Array<TableColumn> = [
         { prop: "CuttingPlanNo", name: "No.", flexGrow: 2 },
         { prop: "ProjectCodeString", name: "JobLevel2/3", flexGrow: 1 },
-        //{ prop: "Description", name: "Description", flexGrow: 1 },
+        // { prop: "Description", name: "Description", flexGrow: 1 },
     ];
 
-    /** cutting-master ctor */
+    canDelete: boolean = false;
+
+    // cutting-master ctor */
     constructor(
         service: CuttingPlanService,
         serviceCom: CuttingPlanServiceCommunicate,
@@ -60,7 +61,7 @@ export class CuttingMasterComponent
 
     // on change time zone befor update to webapi
     changeTimezone(value: CuttingPlan): CuttingPlan {
-        var zone = "Asia/Bangkok";
+        var zone:string = "Asia/Bangkok";
         if (value !== null) {
             if (value.CreateDate !== null) {
                 value.CreateDate = moment.tz(value.CreateDate, zone).toDate();
@@ -89,7 +90,8 @@ export class CuttingMasterComponent
                 console.error(error);
                 this.editValue.Creator = undefined;
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !",
+                    "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef);
             }
         );
     }
@@ -110,7 +112,8 @@ export class CuttingMasterComponent
             (error: any) => {
                 console.error(error);
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !",
+                    "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef);
             }
         );
     }
@@ -122,12 +125,38 @@ export class CuttingMasterComponent
         }
 
         if (value) {
+            this.onCanDelete(value);
+
             this.service.getOneKeyNumber(value.CuttingPlanId)
                 .subscribe(dbData => {
                     this.displayValue = dbData;
                 }, error => this.displayValue = undefined);
         } else {
             this.displayValue = undefined;
+        }
+    }
+
+    // on check can delete
+    onCanDelete(value?: CuttingPlan): void {
+        if (value) {
+            this.service.getCanDeleteCuttingPlaning(value.CuttingPlanId)
+                .subscribe(dbResult => {
+                    // console.log(dbResult);
+                    this.canDelete = dbResult.CanDelete;
+                }, error => this.canDelete = false);
+        }
+    }
+
+    onDelete(value?: CuttingPlan): void {
+        if (value) {
+            this.dialogsService.confirm("Message Confirm",
+                "Do you want delete this cutting-plan.", this.viewContainerRef)
+                .subscribe(() => {
+                    this.service.deleteKeyNumber(value.CuttingPlanId)
+                        .subscribe(result => {
+                            this.onSaveComplete();
+                        });
+                });
         }
     }
 }

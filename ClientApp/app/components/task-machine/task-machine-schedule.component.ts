@@ -71,7 +71,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
 
         this.route.params.subscribe((params: any) => {
             let key: number = params["condition"];
-            console.log("key is",key);
+            // console.log("key is",key);
             if (key) {
                 this.mode = key;
                 this.buildForm();

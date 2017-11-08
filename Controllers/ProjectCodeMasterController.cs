@@ -204,8 +204,17 @@ namespace VipcoMachine.Controllers
                     //Remove ProjectCodeDetails if edit remove it
                     foreach (var dbDetail in dbDetails)
                     {
-                        if (!uProjectCodeMaster.ProjectCodeDetails.Any(x => x.ProjectCodeDetailId == dbDetail.ProjectCodeDetailId))
-                            await this.repositoryDetail.DeleteAsync(dbDetail.ProjectCodeDetailId);
+                        var Message = "";
+                        try
+                        {
+                            if (!uProjectCodeMaster.ProjectCodeDetails.Any(x => x.ProjectCodeDetailId == dbDetail.ProjectCodeDetailId))
+                                await this.repositoryDetail.DeleteAsync(dbDetail.ProjectCodeDetailId);
+                        }
+                        catch(Exception ex)
+                        {
+                            Message = ex.ToString();
+                        }
+
                     }
                     //Update ProjectCodeDetails
                     foreach (var uDetail in uProjectCodeMaster.ProjectCodeDetails)

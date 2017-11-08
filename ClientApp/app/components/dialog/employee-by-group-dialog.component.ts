@@ -78,7 +78,7 @@ export class EmployeeByGroupDialogComponent
         this.serviceGroup.getAll()
             .subscribe(dbGroupEmployee => {
                 this.groups = new Array;
-                this.groups.push({ label: "ทุกกลุ่มงาน", value: undefined });
+                this.groups.push({ label: "ทุกกลุ่มงาน", value: "" });
                 for (let item of dbGroupEmployee) {
                     this.groups.push({ label: `${(item.Description || "")}`, value: item.GroupCode });
                 }

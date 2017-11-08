@@ -17,6 +17,13 @@ export class CuttingPlanService extends BaseRestService<CuttingPlan> {
         let url: string = `${this.actionUrl}CheckCuttingPlan/`;
         return this.http.get(url).map(this.extractData).catch(this.handleError);
     }
+
+    // get can delete cutting planing
+    getCanDeleteCuttingPlaning(CuttingPlanId: number): Observable<any> {
+        let url: string = `${this.actionUrl}CanDelete/${CuttingPlanId}`;
+        return this.http.get(url).map(this.extractData).catch(this.handleError);
+    }
+
     // import Csv file
     postImportCsv(imports: Array<CuttingImport>): Observable<any> {
         let CreateBy: string = "Someone";// this.authService.userName || "Someone";

@@ -68,6 +68,7 @@
     <None Remove="ClientApp\app\models\jobcard-master\jobcard-master.model.ts" />
     <None Remove="ClientApp\app\models\machine\machine.model.ts" />
     <None Remove="ClientApp\app\models\material\material.model.ts" />
+    <None Remove="ClientApp\app\models\message\message.model.ts" />
     <None Remove="ClientApp\app\models\over-time\over-time.model.ts" />
     <None Remove="ClientApp\app\models\overtime-detail\overtime-detail.model.ts" />
     <None Remove="ClientApp\app\models\overtime-master\option-overtime-schedule.model.ts" />
@@ -170,6 +171,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\machine-has-operator\machine-has-operator.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\machine\machine.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\material\material.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\message\message.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\model.index.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\over-time\over-time.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-detail\overtime-detail.model.ts" />

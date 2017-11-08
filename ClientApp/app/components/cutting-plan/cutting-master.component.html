@@ -46,6 +46,10 @@
                             [disabled]="ShowEdit || DisplayDataNull" matTooltip="Edit" matTooltipPosition="left">
                         <i class="fa fa-2x fa-pencil" aria-hidden="true"></i>
                     </button>
+                    <button type="button" mat-icon-button color="warn" (click)="onDelete(displayValue)"
+                            [disabled]="ShowEdit || DisplayDataNull || !canDelete" matTooltip="Delete" matTooltipPosition="left">
+                        <i class="fa fa-2x fa-times" aria-hidden="true"></i>
+                    </button>
                     <hr />
                     <button type="button" mat-icon-button color="warn" (click)="onCancelEdit()"
                             [disabled]="!ShowEdit" matTooltip="Cancel" matTooltipPosition="left">

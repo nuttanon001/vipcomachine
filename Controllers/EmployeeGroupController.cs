@@ -87,13 +87,13 @@ namespace VipcoMachine.Controllers
         [HttpPost("GetScroll")]
         public async Task<IActionResult> GetScroll([FromBody] ScrollViewModel Scroll)
         {
-            var GroupEmployee = await this.repositoryEmployee.GetAllAsQueryable()
-                                            .GroupBy(x => x.GroupCode)
-                                            .Select(x => x.Key)
-                                            .ToListAsync();
+            //var GroupEmployee = await this.repositoryEmployee.GetAllAsQueryable()
+            //                                .GroupBy(x => x.GroupCode)
+            //                                .Select(x => x.Key)
+            //                                .ToListAsync();
 
             var QueryData = this.repository.GetAllAsQueryable()
-                                           .Where(x => GroupEmployee.Contains(x.GroupCode))
+                                           // .Where(x => GroupEmployee.Contains(x.GroupCode))
                                            .AsQueryable();
 
             // Filter

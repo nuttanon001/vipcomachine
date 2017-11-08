@@ -87,6 +87,24 @@ namespace VipcoMachine.Controllers
                 this.ConverterTableToViewModel<ProjectCodeDetailViewModel, ProjectCodeDetail>(await QueryData.AsNoTracking().ToListAsync()),
                 this.DefaultJsonSettings);
         }
+
+        // GET: api/ProjectCodeDetail/CanDelete/5
+        [HttpGet("CanDelete/{Key}")]
+        public async Task<IActionResult> CanDeleteProjectDetail(int Key)
+        {
+            if (Key > 0)
+            {
+                Expression<Func<ProjectCodeDetail, bool>> condition = d => d.ProjectCodeDetailId == Key &&
+                                                                            (d.JobCardMasters.Any() ||
+                                                                             d.CuttingPlans.Any());
+
+                var CanDelete = await this.repository.AnyDataAsync(condition);
+                return new JsonResult(new { CanDelete = !CanDelete }, this.DefaultJsonSettings);
+            }
+
+            return NotFound(new { Error = "Not found key." });
+        }
+
         #endregion
 
         #region POST

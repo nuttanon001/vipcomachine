@@ -30,6 +30,7 @@ namespace VipcoMachine.Controllers
         private IRepository<OverTimeDetail> repositoryOverTimeDetail;
         private IRepository<ProjectCodeMaster> repositoryProjectMaster;
         private IRepository<EmployeeGroup> repositoryEmpGroup;
+        private IRepository<Employee> repositoryEmployee;
         private IMapper mapper;
         private IHostingEnvironment hostingEnvironment;
         private HelpersClass<OverTimeMaster> helpers;
@@ -62,6 +63,7 @@ namespace VipcoMachine.Controllers
                 IRepository<OverTimeDetail> repoOverTimeDetail,
                 IRepository<ProjectCodeMaster> repoProjectMaster,
                 IRepository<EmployeeGroup> repoEmpGroup,
+                IRepository<Employee> repoEmp,
                 IHostingEnvironment hosting,
                 IMapper map)
         {
@@ -69,6 +71,7 @@ namespace VipcoMachine.Controllers
             this.repositoryOverTimeDetail = repoOverTimeDetail;
             this.repositoryProjectMaster = repoProjectMaster;
             this.repositoryEmpGroup = repoEmpGroup;
+            this.repositoryEmployee = repoEmp;
             this.hostingEnvironment = hosting;
             this.mapper = map;
             this.helpers = new HelpersClass<OverTimeMaster>();
@@ -831,6 +834,44 @@ namespace VipcoMachine.Controllers
             //return new ContentResult();
         }
 
+        [HttpPost("GetReportSummary")]
+        public async Task<IActionResult> GetReportSummary(OptionOverTimeSchedule option)
+        {
+            if (option != null)
+            {
+                var QueryData = this.repository.GetAllAsQueryable()
+                                                .Include(x => x.OverTimeDetails)
+                                                    .ThenInclude(x => x.Employee)
+                                                .Include(x => x.ProjectCodeMaster)
+                                                .Include(x => x.EmployeeGroup)
+                                                .AsQueryable();
+                if (option.SDate.HasValue)
+                    QueryData = QueryData.Where(x => x.OverTimeDate.Date == option.SDate.Value.Date);
+
+                var Datas = await QueryData.ToListAsync();
+
+                var ReportSummary = new List<ReportOverTimeSummary>();
+                var Runing = 1;
+
+                foreach(var item in Datas.GroupBy(x => x.EmployeeGroup))
+                {
+                    Expression<Func<Employee, bool>> condition = e => e.GroupCode == item.Key.GroupCode;
+                    var ToltalGroup = await this.repositoryEmployee.CountWithMatchAsync(condition);
+
+                    var newReport = new ReportOverTimeSummary()
+                    {
+                        GroupName = item?.Key?.Description ?? "-",
+                        ProjectNumber = string.Join(",",item?.Select(x => x.ProjectCodeMaster.ProjectCode ?? "-")),
+                        Remark = "",
+                        Runing = Runing,
+                        TotalOfGroup = ToltalGroup,
+                        TotalOfOverTime = item?.Where(x => x.OverTimeDetails.Any(z => z.OverTimeDetailStatus == OverTimeDetailStatus.Use)).Count() ?? 0,
+                    };
+                    Runing++;
+                }
+            }
+            return NotFound(new { NotFound = "Not Found Data." });
+        }
         #endregion
     }
 }
