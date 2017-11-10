@@ -92,9 +92,9 @@
       }
     },
     "@swimlane/ngx-datatable": {
-      "version": "10.2.0",
-      "from": "@swimlane/ngx-datatable@latest",
-      "resolved": "https://registry.npmjs.org/@swimlane/ngx-datatable/-/ngx-datatable-10.2.0.tgz"
+      "version": "10.4.0",
+      "from": "@swimlane/ngx-datatable@10.4.0",
+      "resolved": "https://registry.npmjs.org/@swimlane/ngx-datatable/-/ngx-datatable-10.4.0.tgz"
     },
     "@types/chai": {
       "version": "4.0.1",

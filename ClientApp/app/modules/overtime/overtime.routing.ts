@@ -4,6 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { OverTimeCenterComponent } from "../../components/overtime/overtime-center.component";
 import { OvertimeMasterComponent } from "../../components/overtime/overtime-master.component";
 import { OvertimeScheduleComponent } from "../../components/overtime/overtime-schedule.component";
+import { OvertimeReportSummaryComponent } from "../../components/overtime/overtime-report-summary.component";
 // service
 import { AuthGuard } from "../../services/auth/auth-guard.service";
 
@@ -11,8 +12,11 @@ const overTimeRoutes: Routes = [
     {
         path: "overtime",
         component: OverTimeCenterComponent,
-        canActivate: [AuthGuard],
         children: [
+            {
+                path: "summary-overtime",
+                component: OvertimeReportSummaryComponent,
+            },
             {
                 path: "approve-overtime",
                 component: OvertimeScheduleComponent,
@@ -21,6 +25,7 @@ const overTimeRoutes: Routes = [
             {
                 path: "",
                 component: OvertimeMasterComponent,
+                canActivate: [AuthGuard],
             }
         ],
     }

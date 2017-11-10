@@ -802,7 +802,7 @@ namespace VipcoMachine.Controllers
                             running++;
                         }
 
-                        for (int i = running; i < 26; i++)
+                        for (int i = running; i < 24; i++)
                         {
                             ReportOverTimeMaster.Details.Add(new ReportOverTimeDetailViewModel()
                             {
@@ -835,39 +835,60 @@ namespace VipcoMachine.Controllers
         }
 
         [HttpPost("GetReportSummary")]
-        public async Task<IActionResult> GetReportSummary(OptionOverTimeSchedule option)
+        public async Task<IActionResult> GetReportSummary([FromBody]OptionOverTimeSchedule option)
         {
             if (option != null)
             {
                 var QueryData = this.repository.GetAllAsQueryable()
+                                                .Where(x =>
+                                                    x.OverTimeStatus == OverTimeStatus.WaitActual ||
+                                                    x.OverTimeStatus == OverTimeStatus.Complate)
                                                 .Include(x => x.OverTimeDetails)
                                                     .ThenInclude(x => x.Employee)
                                                 .Include(x => x.ProjectCodeMaster)
                                                 .Include(x => x.EmployeeGroup)
                                                 .AsQueryable();
                 if (option.SDate.HasValue)
+                {
+                    option.SDate = option.SDate.Value.AddHours(7);
                     QueryData = QueryData.Where(x => x.OverTimeDate.Date == option.SDate.Value.Date);
+
+                }
 
                 var Datas = await QueryData.ToListAsync();
 
                 var ReportSummary = new List<ReportOverTimeSummary>();
                 var Runing = 1;
 
-                foreach(var item in Datas.GroupBy(x => x.EmployeeGroup))
+                foreach(var item in Datas.OrderBy(x => x.EmployeeGroup.Description).GroupBy(x => x.EmployeeGroup))
                 {
                     Expression<Func<Employee, bool>> condition = e => e.GroupCode == item.Key.GroupCode;
                     var ToltalGroup = await this.repositoryEmployee.CountWithMatchAsync(condition);
+                    var TotalOvertime = 0;
+                    foreach(var item2 in item.Select(x => x.OverTimeDetails))
+                        TotalOvertime += item2.Where(x => x.OverTimeDetailStatus == OverTimeDetailStatus.Use).Count();
 
                     var newReport = new ReportOverTimeSummary()
                     {
                         GroupName = item?.Key?.Description ?? "-",
-                        ProjectNumber = string.Join(",",item?.Select(x => x.ProjectCodeMaster.ProjectCode ?? "-")),
+                        ProjectNumber = string.Join(",", item?.Select(x => x.ProjectCodeMaster.ProjectCode ?? "-")),
                         Remark = "",
                         Runing = Runing,
                         TotalOfGroup = ToltalGroup,
-                        TotalOfOverTime = item?.Where(x => x.OverTimeDetails.Any(z => z.OverTimeDetailStatus == OverTimeDetailStatus.Use)).Count() ?? 0,
+                        TotalOfOverTime = TotalOvertime,
                     };
                     Runing++;
+                    ReportSummary.Add(newReport);
+                }
+
+                if (ReportSummary.Any())
+                {
+                    return new JsonResult(new
+                    {
+                        TotalGroup = ReportSummary.Sum(x => x.TotalOfGroup),
+                        TotalOverTime = ReportSummary.Sum(x => x.TotalOfOverTime),
+                        Details = ReportSummary
+                    },this.DefaultJsonSettings);
                 }
             }
             return NotFound(new { NotFound = "Not Found Data." });

@@ -37,7 +37,7 @@ export class OverTimeReportComponent implements OnInit {
     }
 
     // on Back
-    onBackToMaster() {
+    onBackToMaster(): void {
         this.Back.emit(true);
     }
 }

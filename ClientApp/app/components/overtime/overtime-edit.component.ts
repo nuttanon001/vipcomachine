@@ -26,6 +26,7 @@ export class OvertimeEditComponent
     indexOverTimeDetail: number;
     lockSave: boolean = false;
     defaultHour: number;
+    canNotSave: string = "";
     // propertity
     get CanEditInRequiredOnly(): boolean {
         if (this.editValue) {
@@ -66,22 +67,19 @@ export class OvertimeEditComponent
                         this.editValue.OverTimeDate = this.editValue.OverTimeDate != null ?
                             new Date(this.editValue.OverTimeDate) : new Date();
                     }
-
                     if (this.editValue.OverTimeMasterId) {
                         this.serviceDetail.getByMasterId(this.editValue.OverTimeMasterId)
                             .subscribe(dbDetail => {
-                                this.editValue.OverTimeDetails = dbDetail.slice();
+                                this.editValue.OverTimeDetails = [...dbDetail];
                                 this.editValueForm.patchValue({
                                     OverTimeDetails: this.editValue.OverTimeDetails.slice(),
                                 });
                             });
                     }
-
                     if (this.editValue.LastOverTimeId) {
                         this.service.getOneKeyNumber(this.editValue.LastOverTimeId)
                             .subscribe(dbLastMaster => this.lastOverTimeMaster);
                     }
-
                 }, error => console.error(error), () => this.defineData());
         } else {
             this.editValue = {
@@ -181,6 +179,9 @@ export class OvertimeEditComponent
                     getData = true;
                 }
 
+                if (this.editValue.OverTimeStatus === 3) {
+                    getData = false;
+                }
 
                 if (getData) {
                     this.service.getLastOverTimeMaster(controlMaster.value, controlGroup.value, this.editValue.OverTimeMasterId)
@@ -191,8 +192,9 @@ export class OvertimeEditComponent
                                 this.editValueForm.patchValue({
                                     LastOverTimeId: lastMaster.OverTimeMasterId,
                                 });
-
+                                this.canNotSave = "";
                                 if (lastMaster.OverTimeStatus !== 3) {
+                                    this.canNotSave = "Last OverTime was Incompleted. This overtime can't save.";
                                     this.serviceDialogs.error("Error Message",
                                         "Last OverTime was Incompleted. This overtime can't save.",
                                         this.viewContainerRef);
@@ -223,7 +225,6 @@ export class OvertimeEditComponent
     onChooseEmployeeToOverTime(): void {
         if (this.CanEditInRequiredOnly) {
             this.onCanEditInRequiredOnly();
-
             return;
         }
 
@@ -270,7 +271,7 @@ export class OvertimeEditComponent
     }
 
     // remove Detail
-    onRemoveOverTimeDetailOrCancelOverTimeDetail(detail?: OverTimeDetail): void {
+    onRemoveOverTimeDetailOrCancelOverTimeDetail(detail?: OverTimeDetail,cencel:number = 0): void {
         if (this.CanEditInRequiredOnly) {
             this.onCanEditInRequiredOnly();
             return;
@@ -291,8 +292,13 @@ export class OvertimeEditComponent
                         .find((value, index) => value.OverTimeDetailId === detail.OverTimeDetailId);
 
                     if (editJobDetail) {
-                        editJobDetail.OverTimeDetailStatus = 2;
-                        editJobDetail.StatusString = "Cancel";
+                        if (cencel === 1) {
+                            editJobDetail.OverTimeDetailStatus = 1;
+                            editJobDetail.StatusString = "Use";
+                        } else {
+                            editJobDetail.OverTimeDetailStatus = 2;
+                            editJobDetail.StatusString = "Cancel";
+                        }
                     }
                 }
 

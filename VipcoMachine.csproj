@@ -72,6 +72,7 @@
     <None Remove="ClientApp\app\models\over-time\over-time.model.ts" />
     <None Remove="ClientApp\app\models\overtime-detail\overtime-detail.model.ts" />
     <None Remove="ClientApp\app\models\overtime-master\option-overtime-schedule.model.ts" />
+    <None Remove="ClientApp\app\models\overtime-master\overtime-master-report.model.ts" />
     <None Remove="ClientApp\app\models\overtime-master\overtime-master.model.ts" />
     <None Remove="ClientApp\app\models\page\page-data.model.ts" />
     <None Remove="ClientApp\app\models\page\page.model.ts" />
@@ -176,6 +177,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\over-time\over-time.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-detail\overtime-detail.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-master\option-overtime-schedule.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\overtime-master\overtime-master-report.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-master\overtime-master.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\page\page-data.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\page\page.model.ts" />

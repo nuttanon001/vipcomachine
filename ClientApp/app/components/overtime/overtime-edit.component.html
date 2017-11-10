@@ -42,6 +42,7 @@
                                    (click)="onProjectMasterClick()" style="cursor:pointer;"
                                    id="ProjectMasterString" formControlName="ProjectMasterString" required readonly>
                             <validation-messages [control]="editValueForm.controls.ProjectMasterString"></validation-messages>
+                            <i class="text-danger">{{canNotSave}}</i>
                         </div>
                     </div>
 
@@ -142,6 +143,7 @@
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
                             <button mat-button (click)="onRemoveOverTimeDetailOrCancelOverTimeDetail(row)" color="warn">Remove</button>
+                            <button mat-button (click)="onRemoveOverTimeDetailOrCancelOverTimeDetail(row,1)" color="accent">Cancel</button>
                         </ng-template>
                     </ngx-datatable-column>
                 </ngx-datatable>

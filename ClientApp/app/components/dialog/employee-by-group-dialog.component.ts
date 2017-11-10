@@ -38,7 +38,6 @@ export class EmployeeByGroupDialogComponent
     template: Scroll;
 
     get CanSelected(): boolean {
-
         if (this.employees) {
             if (this.employees.length > 0) {
                 return true;
@@ -87,16 +86,14 @@ export class EmployeeByGroupDialogComponent
 
     // on get data with lazy load
     loadDataScroll(scroll: Scroll): void {
-        if (this.groupCode) {
-            scroll.Where = this.groupCode.toString();
-        }
-
-        // console.log("Scroll Data:", scroll);
+        scroll.Where = this.groupCode.toString();
+        // console.log("Scroll Data:", JSON.stringify(scroll));
         this.service.getAllWithScroll(scroll)
             .subscribe(scrollData => {
                 if (scrollData) {
                     if (scrollData.Scroll) {
                         this.template = scrollData.Scroll;
+                        // console.log("After:",JSON.stringify(scrollData.Scroll));
                     }
                     this.serviceDataTable.toChild(scrollData);
                 }
@@ -133,13 +130,15 @@ export class EmployeeByGroupDialogComponent
     // on dropdown selected change
     onDropDownSelectedChange(event?: any): void {
         if (event) {
-            // debug here
-            // console.log("event :", event);
+
             this.template.Reload = true;
             this.template.Skip = 0;
             this.template.Take = 8;
             this.template.Where = event.value;
             this.groupCode = event.value;
+
+            // debug here
+            // console.log("event :", JSON.stringify(this.template));
             this.loadDataScroll(this.template);
 
             // this.typeMachine = selected.selected[0];

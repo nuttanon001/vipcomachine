@@ -1,7 +1,10 @@
 ﻿import { Injectable } from "@angular/core";
 import { Http, ResponseContentType } from "@angular/http";
 // model
-import { OverTimeMaster,OptionOverTimeSchedule } from "../../models/model.index";
+import {
+    OverTimeMaster, OptionOverTimeSchedule,
+    ReportOverTimeSummary
+} from "../../models/model.index";
 // base-service
 import { BaseRestService, BaseCommunicateService } from "../service.index";
 import { Observable } from "rxjs/Observable";
@@ -34,17 +37,28 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
     }
 
     // ===================== OverTime Report ===========================\\
+
+    // get report over-time to pdf #1
     getReportOverTimePdf(OverTimeMasterId: number): Observable<any> {
         let url: string = `${this.actionUrl}GetReportOverTimePdf/${OverTimeMasterId}/`;
-
         return this.http.get(url, { responseType: ResponseContentType.Blob })
-            .map(res => res.blob())
-            .catch(this.handleError);
+                .map(res => res.blob())
+                .catch(this.handleError);
     }
 
+    // get report over-time to pdf #2
     getReportOverTimePdf2(OverTimeMasterId: number): Observable<any> {
         let url: string = `${this.actionUrl}GetReportOverTimePdf2/${OverTimeMasterId}/`;
         return this.http.get(url).map(this.extractData).catch(this.handleError);
+    }
+
+    // get report over-time summary
+    getReportOverTimeSummary(option: OptionOverTimeSchedule): Observable<any> {
+        console.log(option);
+
+        let url: string = `${this.actionUrl}GetReportSummary/`;
+        return this.http.post(url, JSON.stringify(option), this.getRequestOption())
+                .map(this.extractData).catch(this.handleError);
     }
 }
 

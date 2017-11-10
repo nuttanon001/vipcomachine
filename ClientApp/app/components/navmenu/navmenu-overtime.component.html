@@ -11,12 +11,12 @@
 
     <div class="collapse navbar-collapse pl-4" id="Mynavbars" style="z-index:1500;">
         <ul class="navbar-nav mr-auto">
-            <!--<li class="nav-item">
-                <a class="nav-link" [routerLink]="['/task-machine/task-machine-schedule','1']" routerLinkActive="active">
+            <li class="nav-item">
+                <a class="nav-link" [routerLink]="['/overtime/summary-overtime']" routerLinkActive="active">
                     <i class="fa fa-calendar-o" aria-hidden="true"></i>
-                    <span>Machine Schedule</span>
+                    <span>Date/Summary</span>
                 </a>
-            </li>-->
+            </li>
             <li class="nav-item" *ngIf="GetLevel1">
                 <a #mainMenu="matMenuTrigger" [matMenuTriggerFor]="menu1"
                    (onMenuOpen)="menuOnCloseMenu1()" (mouseover)="menuOnOpenMenu1()"

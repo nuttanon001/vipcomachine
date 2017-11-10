@@ -1,6 +1,6 @@
 ﻿import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 // 3rd party
 import "rxjs/Rx";
 import "hammerjs";
@@ -11,6 +11,7 @@ import { OvertimeMasterComponent } from "../../components/overtime/overtime-mast
 import { OvertimeViewComponent } from "../../components/overtime/overtime-view.component";
 import { OvertimeScheduleComponent } from "../../components/overtime/overtime-schedule.component";
 import { OverTimeReportComponent } from "../../components/overtime/overtime-report.component";
+import { OvertimeReportSummaryComponent } from "../../components/overtime/overtime-report-summary.component";
 // module
 import { OverTimeRouters } from "./overtime.routing";
 import {
@@ -34,20 +35,19 @@ import { ProjectCodeMasterService } from "../../services/projectcode-master/proj
         OvertimeEditComponent,
         OvertimeScheduleComponent,
         OverTimeReportComponent,
-        //EmployeeDialogComponent,
+        OvertimeReportSummaryComponent
     ],
     imports: [
-        //Angular
+        // angular
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        //Custom
+        // custom
         CustomMaterialModule,
         ValidationModule,
         OverTimeRouters,
     ],
     exports: [
-        //EmployeeDialogComponent
     ],
     providers: [
         OverTimeMasterService,
@@ -56,11 +56,8 @@ import { ProjectCodeMasterService } from "../../services/projectcode-master/proj
         ProjectCodeMasterService,
         ProjectCodeMasterService,
         EmployeeGroupService,
-        // DataTableServiceCommunicate,
+        // dataTableServiceCommunicate,
     ],
-    //entryComponents: [
-    //    EmployeeDialogComponent
-    //]
 })
 
 export class OverTimeModule { }

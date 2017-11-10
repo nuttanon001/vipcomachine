@@ -26,6 +26,7 @@
                         <label for="StartDate" class="my-label">OpenDate:</label>
                         <div class="col-sm-4">
                             <p-calendar formControlName="StartDate" [showIcon]="true"
+                                        appendTo="body"
                                         id="StartDate" dateFormat="dd/mm/yy" placeholder="  Choose a open date">
                             </p-calendar>
                             <validation-messages [control]="editValueForm.controls.StartDate"></validation-messages>
@@ -34,6 +35,7 @@
                         <label for="EndDate" class="my-label">CloseDate:</label>
                         <div class="col-sm-4">
                             <p-calendar formControlName="EndDate" [showIcon]="true"
+                                        appendTo="body"
                                         id="EndDate" dateFormat="dd/mm/yy" placeholder="  Choose a close date"
                                         [minDate]="editValueForm.controls.StartDate.value">
                             </p-calendar>

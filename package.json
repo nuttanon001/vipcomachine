@@ -20,7 +20,7 @@
     "@angular/platform-server": "^4.4.4",
     "@angular/router": "^4.4.4",
     "@ngtools/webpack": "1.5.0",
-    "@swimlane/ngx-datatable": "^10.2.0",
+    "@swimlane/ngx-datatable": "^10.4.0",
     "@types/webpack-env": "1.13.0",
     "angular-split": "^0.2.2",
     "angular2-template-loader": "0.6.2",
