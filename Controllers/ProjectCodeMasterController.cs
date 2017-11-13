@@ -86,10 +86,11 @@ namespace VipcoMachine.Controllers
         [HttpPost("GetScroll")]
         public async Task<IActionResult> GetScroll([FromBody] ScrollViewModel Scroll)
         {
-            var QueryData = this.repository.GetAllAsQueryable();
+            var QueryData = this.repository.GetAllAsQueryable().AsQueryable();
             // Filter
             var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
                                 : Scroll.Filter.ToLower().Split(null);
+
             foreach (var keyword in filters)
             {
                 QueryData = QueryData.Where(x => x.ProjectCode.ToLower().Contains(keyword) ||
@@ -124,7 +125,7 @@ namespace VipcoMachine.Controllers
                     break;
 
                 default:
-                    QueryData = QueryData.OrderByDescending(e => e.StartDate);
+                    QueryData = QueryData.OrderByDescending(e => e.ProjectCode);
                     break;
             }
 

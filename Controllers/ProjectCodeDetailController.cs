@@ -24,6 +24,7 @@ namespace VipcoMachine.Controllers
     {
         #region PrivateMenbers
         private IRepository<ProjectCodeDetail> repository;
+        private IRepository<TemplateProjectDetail> repositoryTempCode;
         private IMapper mapper;
 
         private JsonSerializerSettings DefaultJsonSettings =>
@@ -44,9 +45,13 @@ namespace VipcoMachine.Controllers
 
         #region Constructor
 
-        public ProjectCodeDetailController(IRepository<ProjectCodeDetail> repo, IMapper map)
+        public ProjectCodeDetailController(
+            IRepository<ProjectCodeDetail> repo,
+            IRepository<TemplateProjectDetail> repoTemp,
+            IMapper map)
         {
             this.repository = repo;
+            this.repositoryTempCode = repoTemp;
             this.mapper = map;
         }
 
@@ -105,6 +110,45 @@ namespace VipcoMachine.Controllers
             return NotFound(new { Error = "Not found key." });
         }
 
+        [HttpGet("GetAutoComplate")]
+        public async Task<IActionResult> GetAutoComplate()
+        {
+            var Message = "";
+            try
+            {
+                var autoComplate = new List<string>();
+                var projectCodeDetail = await this.repository.GetAllAsync();
+                if (projectCodeDetail != null)
+                {
+                    foreach (var item in projectCodeDetail.Where(x => !string.IsNullOrEmpty(x.ProjectCodeDetailCode))
+                        .Select(x => x.ProjectCodeDetailCode)
+                        .Distinct())
+                    {
+                        autoComplate.Add(item);
+                    }
+                }
+
+                var tempCodeDetail = await this.repositoryTempCode.GetAllAsync();
+                if (tempCodeDetail != null)
+                {
+                    foreach (var item in tempCodeDetail.Select(x => x.TemplateName).Distinct())
+                    {
+                        if (!autoComplate.Any(x => x == item))
+                        {
+                            autoComplate.Add(item);
+                        }
+                    }
+                }
+
+                if (autoComplate.Any())
+                    return new JsonResult(autoComplate, this.DefaultJsonSettings);
+            }
+            catch (Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+            return NotFound(new { Error = Message });
+        }
         #endregion
 
         #region POST

@@ -3,7 +3,8 @@
         <split-area [size]="35" [visible]="hideleft" [order]="1">
             <div class="child-left-container">
                 <!--<mat-checkbox [(ngModel)]="OnlyMe"> Filter Only User </mat-checkbox>-->
-                <data-table (selected)="onDetailView($event)" [isDisabled]="false" [columns]="columns">
+                <data-table (selected)="onDetailView($event)" [columns]="columns"
+                            [isDisabled]="false" [(onlyUser)]="onlyUser">
                 </data-table>
             </div>
         </split-area>

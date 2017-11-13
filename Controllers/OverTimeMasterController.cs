@@ -765,7 +765,7 @@ namespace VipcoMachine.Controllers
 
                         int running = 1;
                         // Get ReportOverTimeDetail
-                        foreach (var detail in QueryData.OverTimeDetails)
+                        foreach (var detail in QueryData.OverTimeDetails.Where(x => x.OverTimeDetailStatus != OverTimeDetailStatus.Cancel))
                         {
                             if (!isWeekDay)
                             {
@@ -802,7 +802,26 @@ namespace VipcoMachine.Controllers
                             running++;
                         }
 
-                        for (int i = running; i < 24; i++)
+                        int removeLine = 0;
+                        if (!string.IsNullOrEmpty(ReportOverTimeMaster.LastActual))
+                        {
+                            if (ReportOverTimeMaster.LastActual.Length / 320 >= 1)
+                                removeLine += (int)Math.Ceiling(((double)ReportOverTimeMaster.LastActual.Length / (double)320));
+                        }
+
+                        if (!string.IsNullOrEmpty(ReportOverTimeMaster.LastPlan))
+                        {
+                            if (ReportOverTimeMaster.LastPlan.Length / 320 >= 1)
+                                removeLine += (int)Math.Ceiling(((double)ReportOverTimeMaster.LastPlan.Length / (double)320));
+                        }
+
+                        if (!string.IsNullOrEmpty(ReportOverTimeMaster.NowPlan))
+                        {
+                            if (ReportOverTimeMaster.NowPlan.Length / 320 >= 1)
+                                removeLine += (int)Math.Ceiling(((double)ReportOverTimeMaster.NowPlan.Length / (double)320));
+                        }
+
+                        for (int i = running; i < (24 - removeLine); i++)
                         {
                             ReportOverTimeMaster.Details.Add(new ReportOverTimeDetailViewModel()
                             {

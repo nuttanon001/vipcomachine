@@ -5,9 +5,16 @@
         <div class="my-form">
             <label for="ProjectCodeDetailCode" class="my-label-col-3">Level Name:</label>
             <div class="col-sm-9">
-                <p-dropdown class="my-input-combobox" [options]="templateCode" filter="filter" [style]="{'width':'100%'}"
+                <!--
+                    <p-dropdown class="my-input-combobox" [options]="templateCode" filter="filter" [style]="{'width':'100%'}"
                             id="ProjectCodeDetailCode" formControlName="ProjectCodeDetailCode" required>
-                </p-dropdown>
+                    </p-dropdown>
+                -->
+                <p-autoComplete class="my-input-combobox" placeholder="Insert level2/3 here"
+                                (completeMethod)="onSearchAutoComplate($event)" required
+                                [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [size]="30"
+                                id="ProjectCodeDetailCode" formControlName="ProjectCodeDetailCode" [suggestions]="projectDetails">
+                </p-autoComplete>
                 <validation-messages [control]="detailForm.controls.ProjectCodeDetailCode"></validation-messages>
             </div>
         </div>

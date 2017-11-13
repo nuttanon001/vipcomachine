@@ -77,7 +77,7 @@ export abstract class BaseMasterComponent<Model, Service> implements OnInit, OnD
     // on detail edit
     onDetailEdit(editValue?: Model): void {
         // debug here
-        //console.log("onDetailEdit on Base Master Component");
+        // console.log("onDetailEdit on Base Master Component");
 
         this.displayValue = editValue;
         this.ShowEdit = true;
@@ -120,21 +120,11 @@ export abstract class BaseMasterComponent<Model, Service> implements OnInit, OnD
                 this.editValue = undefined;
                 this.onDetailView(undefined);
                 setTimeout(() => {
-                    // console.log("Scroll", this.scroll);
-                    if (this.scroll) {
-                        let tempScroll: Scroll = this.scroll;
-                        tempScroll.Skip = 0;
-                        tempScroll.Take = 13;
-                        tempScroll.Reload = true;
-
-                        this.loadPagedData(tempScroll);
-                    } else {
-                        this.loadPagedData({
-                            Skip: 0,
-                            Take: 13,
-                            Reload: true
-                        })
-                    }
+                    this.loadPagedData({
+                        Skip: 0,
+                        Take: 10,
+                        Reload: true
+                    });
                 }, 150);
             });
     }

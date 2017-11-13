@@ -26,10 +26,9 @@ import { ProjectCodeDetailService } from "../../services/projectcode-detail/proj
     styleUrls: ["../../styles/master.style.scss"],
     providers: [DataTableServiceCommunicate, ProjectCodeDetailService]
 })
-/** project-master component*/
+// project-master component*/
 export class ProjectMasterComponent
-    extends BaseMasterComponent<ProjectCodeMaster, ProjectCodeMasterService>
-{
+    extends BaseMasterComponent<ProjectCodeMaster, ProjectCodeMasterService> {
     // parameter
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
     columns = [
@@ -38,7 +37,7 @@ export class ProjectMasterComponent
         { prop: "StartDate", name: "Date", pipe: this.datePipe, flexGrow: 1 },
     ];
 
-    /** project-master ctor */
+    // project-master ctor */
     constructor(
         service: ProjectCodeMasterService,
         serviceCom: ProjectCodeMasterServiceCommunicate,
@@ -58,6 +57,13 @@ export class ProjectMasterComponent
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
+
+        if (this.scroll) {
+            if (this.scroll.Filter && scroll.Reload) {
+                scroll.Filter = this.scroll.Filter;
+            }
+        }
+        // console.log("Scroll:", JSON.stringify(scroll));
         this.scroll = scroll;
         this.service.getAllWithScroll(scroll)
             .subscribe(scrollData => {
@@ -69,7 +75,7 @@ export class ProjectMasterComponent
 
     // on change time zone befor update to webapi
     changeTimezone(value: ProjectCodeMaster): ProjectCodeMaster {
-        var zone = "Asia/Bangkok";
+        var zone:string = "Asia/Bangkok";
         if (value !== null) {
             if (value.CreateDate !== null) {
                 value.CreateDate = moment.tz(value.CreateDate, zone).toDate();
@@ -93,8 +99,9 @@ export class ProjectMasterComponent
                         detail.ModifyDate = moment.tz(detail.ModifyDate, zone).toDate();
                     }
 
-                    if (value.ProjectCodeDetails)
+                    if (value.ProjectCodeDetails) {
                         value.ProjectCodeDetails[index] = detail;
+                    }
                 });
             }
         }
@@ -118,7 +125,8 @@ export class ProjectMasterComponent
                 console.error(error);
                 this.editValue.Creator = undefined;
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !",
+                    "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef);
             }
         );
     }
@@ -139,7 +147,8 @@ export class ProjectMasterComponent
             (error: any) => {
                 console.error(error);
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !",
+                    "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef);
             }
         );
     }

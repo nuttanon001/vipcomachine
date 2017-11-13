@@ -29,6 +29,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 // task-machine-master component*/
 export class TaskMachineMasterComponent
     extends BaseMasterComponent<TaskMachine, TaskMachineService> {
+    onlyUser: boolean;
     // parameter
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
     hasOverTime: boolean = false;
@@ -62,9 +63,7 @@ export class TaskMachineMasterComponent
 
     // on inti override
     ngOnInit(): void {
-        // debug here
-        // console.log("Task-Machine ngOnInit");
-
+        this.onlyUser = true;
         // override class
         super.ngOnInit();
 
@@ -85,15 +84,24 @@ export class TaskMachineMasterComponent
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
-        if (scroll.HasCondition) {
+        if (this.onlyUser) {
             if (this.serverAuth.getAuth) {
                 scroll.Where = this.serverAuth.getAuth.UserName || "";
             }
         } else {
             scroll.Where = "";
         }
-        this.scroll = scroll;
 
+        if (this.scroll) {
+            if (this.scroll.Filter && scroll.Reload) {
+                scroll.Filter = this.scroll.Filter;
+            }
+        }
+
+        // debug here
+        console.log("Scroll is", JSON.stringify(scroll));
+
+        this.scroll = scroll;
         this.service.getAllWithScroll(scroll)
             .subscribe(scrollData => {
                 if (scrollData) {
@@ -148,7 +156,7 @@ export class TaskMachineMasterComponent
 
     // on insert data
     onInsertToDataBase(value: TaskMachine): void {
-        // Check value task machine
+        // check value task machine
         value = this.onCheckValueTaskMachine(value);
 
         if (this.serverAuth.getAuth) {
@@ -181,7 +189,7 @@ export class TaskMachineMasterComponent
 
     // on update data
     onUpdateToDataBase(value: TaskMachine): void {
-        // Check value task machine
+        // check value task machine
         value = this.onCheckValueTaskMachine(value);
 
         if (this.serverAuth.getAuth) {
@@ -260,7 +268,7 @@ export class TaskMachineMasterComponent
         if (value) {
             this.service.getTaskMachinePaper(value.TaskMachineId)
                 .subscribe(data => {
-                    let link = document.createElement('a');
+                    let link:any = document.createElement("a");
                     link.href = window.URL.createObjectURL(data);
                     link.download = "report_" + value.TaskMachineName + ".xlsx";
                     link.click();
@@ -268,7 +276,7 @@ export class TaskMachineMasterComponent
                     // this.onGetPaperTaskMachineOverTime(value);
                 },
                 error => this.dialogsService.error("Error Message", "ไม่พบข้อมููลที่ต้องการ", this.viewContainerRef),
-                () => console.log('Completed file download.'));
+                () => console.log("Completed file download."));
         }
     }
 
@@ -277,7 +285,7 @@ export class TaskMachineMasterComponent
         if (value) {
             this.service.GetTaskMachinePaperOverTime(value.TaskMachineId)
                 .subscribe(data => {
-                    let link = document.createElement('a');
+                    let link:any = document.createElement("a");
                     link.href = window.URL.createObjectURL(data);
                     link.download = "overtime_" + value.TaskMachineName + ".xlsx";
                     link.click();

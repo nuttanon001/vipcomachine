@@ -20,6 +20,7 @@ namespace VipcoMachine.Models
         [StringLength(100)]
 
         public string GroupCode { get; set; }
+
         [StringLength(100)]
 
         public string GroupName { get; set; }
@@ -32,13 +33,20 @@ namespace VipcoMachine.Models
         public ICollection<TaskMachine> TaskMachines { get; set; }
         public ICollection<TaskMachineHasOverTime> TaskMachineHasOverTimes { get; set; }
         public ICollection<OverTimeDetail> OverTimeDetails { get; set; }
+
+        // GroupMIS
+
+        [StringLength(100)]
+        public string GroupMIS { get; set; }
+        public EmployeeGroupMIS EmployeeGroupMIS { get; set; }
     }
     public enum TypeEmployee
     {
         พนักงานตามโครงการ = 1,
         พนักงานประจำรายชั่วโมง = 2,
         พนักงานประจำรายเดือน = 3,
-        พนักงานทดลองงาน = 4
+        พนักงานทดลองงาน = 4,
+        พนักงานพม่า = 5
     }
 
     public enum TitleEmployee

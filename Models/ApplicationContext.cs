@@ -20,6 +20,7 @@ namespace VipcoMachine.Models
             modelBuilder.Entity<Employee>().ToTable("Employee");
             modelBuilder.Entity<GradeMaterial>().ToTable("GradeMaterial");
             modelBuilder.Entity<EmployeeGroup>().ToTable("EmployeeGroup");
+            modelBuilder.Entity<EmployeeGroupMIS>().ToTable("EmployeeGroupMIS");
             modelBuilder.Entity<JobCardDetail>().ToTable("JobCardDetail");
             modelBuilder.Entity<JobCardMaster>().ToTable("JobCardMaster");
             modelBuilder.Entity<JobCardMasterHasAttach>().ToTable("JobCardMasterHasAttach");
@@ -54,6 +55,7 @@ namespace VipcoMachine.Models
         public DbSet<Employee> Employees { get; set; }
         public DbSet<GradeMaterial> GradeMaterials { get; set; }
         public DbSet<EmployeeGroup> EmpoyeeGroups { get; set; }
+        public DbSet<EmployeeGroupMIS> EmployeeGroupMISs { get; set; }
         public DbSet<JobCardDetail> JobCardDetails { get; set; }
         public DbSet<JobCardMaster> JobCardMasters { get; set; }
         public DbSet<JobCardMasterHasAttach> JobCardMasterHasAttachs { get; set; }

@@ -19,6 +19,12 @@ export class ProjectCodeDetailService extends BaseRestService<ProjectCodeDetail>
         super(http, "api/ProjectCodeDetail/");
     }
 
+    // get auto complate project detail
+    getAutoComplateProjectDetailCode(): Observable<Array<string>> {
+        let url: string = `${this.actionUrl}GetAutoComplate/`;
+        return this.http.get(url).map(this.extractData).catch(this.handleError);
+    }
+
     // get can delete project detail
     getCanDeleteProjectDetail(ProjectDetailId: number): Observable<any> {
         let url: string = `${this.actionUrl}CanDelete/${ProjectDetailId}/`;

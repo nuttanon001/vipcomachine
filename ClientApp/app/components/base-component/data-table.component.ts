@@ -43,12 +43,23 @@ import { MatCheckbox } from "@angular/material";
 
 export class DataTableComponent implements OnInit,OnDestroy {
     rows: Array<any> = new Array<any>();
+    _onlyUser: boolean = true;
     // view chlid
     @ViewChild("checkBox") checkBox: MatCheckbox;
     // input and output
     @Output("selected") selected = new EventEmitter<any>();
     @Input("height") height: string = "calc(100vh - 165px)";
     @Input("isDisabled") isDisabled: boolean = true;
+
+    @Output() onlyUserChange = new EventEmitter<boolean>();
+    @Input()
+    get onlyUser() {
+        return this._onlyUser;
+    }
+    set onlyUser(value:boolean) {
+        this._onlyUser = value;
+        this.onlyUserChange.emit(this._onlyUser);
+    }
 
     // columns get set
     private _columns: any;
@@ -92,6 +103,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
         private dataTableService: DataTableServiceCommunicate<any>,
         private el: ElementRef
     ) { }
+
     // angular hook init
     ngOnInit(): void {
         // this.onScroll(0);
@@ -100,7 +112,6 @@ export class DataTableComponent implements OnInit,OnDestroy {
             .subscribe((scrollData: ScrollData<any>) => {
                 // debug here
                 // console.log("Row", this.rows);
-
                 if (scrollData && scrollData.Data && scrollData.Data.length > 0) {
                     if (scrollData.Scroll) {
                         if (scrollData.Scroll.Reload) {
@@ -132,12 +143,13 @@ export class DataTableComponent implements OnInit,OnDestroy {
             this.subscription.unsubscribe();
         }
     }
-
     // emit row selected to output
     onSelect(selected: any):void {
-        if (selected) {
-            this.selected.emit(selected.selected[0]);
-        }
+        //if (selected) {
+        //    this.selected.emit(selected.selected[0]);
+        //}
+
+        this.selected.emit(selected.selected[0]);
     }
     // on Scroll bar
     onScroll(offsetY: number):void {
@@ -216,6 +228,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
             this.scroll.Skip = 0;
             this.scroll.Take = 13;
             this.scroll.HasCondition = event.checked;
+            this.onlyUser = event.checked;
             // loadData
             // debug here
             // console.log("Scroll here :", this.scroll);

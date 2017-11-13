@@ -30,9 +30,8 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 export class OvertimeMasterComponent
     extends BaseMasterComponent<OverTimeMaster, OverTimeMasterService> {
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
-    useTemplate: boolean = false;
+    onlyUser: boolean;
     loadReport: boolean = false;
-    templateScroll: Scroll;
 
     columns = [
         { prop: "RequireString", name: "Require", flexGrow: 1 },
@@ -65,9 +64,7 @@ export class OvertimeMasterComponent
 
     // on inti override
     ngOnInit(): void {
-        // debug here
-        // console.log("Task-Machine ngOnInit");
-
+        this.onlyUser = true;
         // override class
         super.ngOnInit();
         // this.route.paramMap.switchMap((params: ParamMap) => this.routeToEdit(0));
@@ -90,27 +87,26 @@ export class OvertimeMasterComponent
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
-        if (this.useTemplate) {
-            scroll = this.templateScroll;
-            scroll.Reload = true;
-        } else {
-            if (scroll.HasCondition) {
-                if (this.serverAuth.getAuth) {
-                    scroll.Where = this.serverAuth.getAuth.UserName || "";
-                }
-            } else {
-                scroll.Where = "";
+        if (this.onlyUser) {
+            if (this.serverAuth.getAuth) {
+                scroll.Where = this.serverAuth.getAuth.UserName || "";
             }
-
-            this.templateScroll = scroll;
+        } else {
+            scroll.Where = "";
         }
 
+        if (this.scroll) {
+            if (this.scroll.Filter && scroll.Reload) {
+                scroll.Filter = this.scroll.Filter;
+            }
+        }
 
+        this.scroll = scroll;
         this.service.getAllWithScroll(scroll)
             .subscribe((scrollData: ScrollData<OverTimeMaster>) => {
                 if (scrollData) {
                     this.dataTableServiceCom.toChild(scrollData);
-                    this.useTemplate = false;
+                    // this.useTemplate = false;
                 }
             }, error => console.error(error));
     }
@@ -164,7 +160,7 @@ export class OvertimeMasterComponent
         this.service.post(value).subscribe(
             (complete: any) => {
                 this.displayValue = complete;
-                this.useTemplate = true;
+                // this.useTemplate = true;
                 this.onSaveComplete();
             },
             (error: any) => {
@@ -188,7 +184,7 @@ export class OvertimeMasterComponent
         this.service.putKeyNumber(value, value.OverTimeMasterId).subscribe(
             (complete: any) => {
                 this.displayValue = complete;
-                this.useTemplate = true;
+                // this.useTemplate = true;
                 this.onSaveComplete();
             },
             (error: any) => {

@@ -48,6 +48,12 @@ export class StandardTimeMasterComponent
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
+        if (this.scroll) {
+            if (this.scroll.Filter && scroll.Reload) {
+                scroll.Filter = this.scroll.Filter;
+            }
+        }
+        this.scroll = scroll;
         this.service.getAllWithScroll(scroll)
             .subscribe(scrollData => {
                 if (scrollData) {

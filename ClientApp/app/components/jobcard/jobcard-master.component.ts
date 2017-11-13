@@ -27,8 +27,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 export class JobCardMasterComponent
     extends BaseMasterComponent<JobCardMaster, JobCardMasterService> {
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
-    useTemplate: boolean = false;
-    templateScroll: Scroll;
+    onlyUser: boolean;
     // parameter
     columns = [
         { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
@@ -68,6 +67,7 @@ export class JobCardMasterComponent
 
     // on inti override
     ngOnInit(): void {
+        this.onlyUser = true;
         // debug here
         // console.log("Task-Machine ngOnInit");
 
@@ -90,44 +90,29 @@ export class JobCardMasterComponent
                         }, error => this.displayValue = undefined);
                 }
             }, error => console.error(error));
-
-        // this.route.params.subscribe((params: any) => {
-        //        let key: number = params["condition"];
-        //        if (key) {
-        //            this.service.getOneKeyNumber(key)
-        //                .subscribe(dbData => {
-        //                    setTimeout(() => {
-        //                        dbData.MachineUser = true;
-        //                        this.onDetailEdit(dbData);
-        //                    }, 500);
-        //                }, error => this.displayValue = undefined);
-        //        }
-        // }, error => console.error(error));
     }
 
     // on get data with lazy load
     loadPagedData(scroll: Scroll): void {
-        if (this.useTemplate) {
-            scroll = this.templateScroll;
-            scroll.Reload = true;
-        } else {
-            if (scroll.HasCondition) {
-                if (this.serverAuth.getAuth) {
-                    scroll.Where = this.serverAuth.getAuth.UserName || "";
-                }
-            } else {
-                scroll.Where = "";
+        if (this.onlyUser) {
+            if (this.serverAuth.getAuth) {
+                scroll.Where = this.serverAuth.getAuth.UserName || "";
             }
-
-            this.templateScroll = scroll;
+        } else {
+            scroll.Where = "";
         }
 
+        if (this.scroll) {
+            if (this.scroll.Filter && scroll.Reload) {
+                scroll.Filter = this.scroll.Filter;
+            }
+        }
+        this.scroll = scroll;
 
         this.service.getAllWithScroll(scroll)
             .subscribe((scrollData: ScrollData<JobCardMaster>) => {
                 if (scrollData) {
                     this.dataTableServiceCom.toChild(scrollData);
-                    this.useTemplate = false;
                 }
             }, error => console.error(error));
     }
@@ -187,7 +172,6 @@ export class JobCardMasterComponent
                     this.onAttactFileToDataBase(complete.JobCardMasterId, attachs);
                 }
                 this.displayValue = complete;
-                this.useTemplate = true;
                 this.onSaveComplete();
             },
             (error: any) => {
@@ -207,13 +191,8 @@ export class JobCardMasterComponent
         }
         let attachs: FileList | undefined = value.AttachFile;
 
-        // console.log("ATT: ", attachs);
-        // console.log("JobCardMaster: ", value);
-
         // remove attach
         if (value.RemoveAttach) {
-            // debug here
-            // console.log("Remove: ",value.RemoveAttach);
 
             this.onRemoveFileFromDataBase(value.RemoveAttach);
         }
@@ -226,7 +205,6 @@ export class JobCardMasterComponent
                     this.onAttactFileToDataBase(complete.JobCardMasterId, attachs);
                 }
                 this.displayValue = complete;
-                this.useTemplate = true;
                 this.onSaveComplete();
             },
             (error: any) => {
