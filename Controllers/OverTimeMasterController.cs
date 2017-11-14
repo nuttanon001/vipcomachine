@@ -765,7 +765,8 @@ namespace VipcoMachine.Controllers
 
                         int running = 1;
                         // Get ReportOverTimeDetail
-                        foreach (var detail in QueryData.OverTimeDetails.Where(x => x.OverTimeDetailStatus != OverTimeDetailStatus.Cancel))
+                        foreach (var detail in QueryData.OverTimeDetails.Where(x => x.OverTimeDetailStatus != OverTimeDetailStatus.Cancel)
+                                                        .OrderBy(x => x.Employee.TypeEmployee))
                         {
                             if (!isWeekDay)
                             {

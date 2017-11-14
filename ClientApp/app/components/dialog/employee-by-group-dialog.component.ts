@@ -166,4 +166,16 @@ export class EmployeeByGroupDialogComponent
             }
         }
     }
+
+    // remove Employee Select
+    onRemoveEmp(employee?: Employee): void {
+        if (employee) {
+            let index: number = this.employees.indexOf(employee);
+            if (index > -1) {
+                // remove item
+                this.employees.splice(index, 1);
+                this.employees = [...this.employees];
+            }
+        }
+    }
 }
