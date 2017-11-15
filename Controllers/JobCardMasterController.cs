@@ -491,6 +491,12 @@ namespace VipcoMachine.Controllers
                         {
                             nDetail.CuttingPlan.CreateDate = nJobCardMaster.CreateDate;
                             nDetail.CuttingPlan.Creator = nJobCardMaster.Creator;
+
+                            if (string.IsNullOrEmpty(nDetail?.CuttingPlan.MaterialSize))
+                                nDetail.CuttingPlan.MaterialSize = nDetail.Material;
+
+                            if (nDetail?.CuttingPlan?.Quantity == null || nDetail?.CuttingPlan?.Quantity < 1)
+                                nDetail.CuttingPlan.Quantity = nDetail.Quality;
                         }
                         else
                             nDetail.CuttingPlan = null;
@@ -511,96 +517,111 @@ namespace VipcoMachine.Controllers
         [HttpPut("{key}")]
         public async Task<IActionResult> PutByNumber(int key, [FromBody]JobCardMaster uJobCardMaster)
         {
-            if (uJobCardMaster != null)
+            var Message = "ProjectMaster not found. ";
+            try
             {
-                // add hour to DateTime to set Asia/Bangkok
-                uJobCardMaster = helpers.AddHourMethod(uJobCardMaster);
-
-                uJobCardMaster.ModifyDate = DateTime.Now;
-                uJobCardMaster.Modifyer = uJobCardMaster.Modifyer ?? "Someone";
-
-                if (uJobCardMaster.JobCardDetails != null)
+                if (uJobCardMaster != null)
                 {
-                    foreach (var uDetail in uJobCardMaster.JobCardDetails)
+                    // add hour to DateTime to set Asia/Bangkok
+                    uJobCardMaster = helpers.AddHourMethod(uJobCardMaster);
+
+                    uJobCardMaster.ModifyDate = DateTime.Now;
+                    uJobCardMaster.Modifyer = uJobCardMaster.Modifyer ?? "Someone";
+
+                    if (uJobCardMaster.JobCardDetails != null)
                     {
-                        if (uDetail.JobCardDetailId > 0)
+                        foreach (var uDetail in uJobCardMaster.JobCardDetails)
                         {
-                            uDetail.ModifyDate = uJobCardMaster.ModifyDate;
-                            uDetail.Modifyer = uJobCardMaster.Modifyer;
-                        }
-                        else
-                        {
-                            uDetail.CreateDate = uJobCardMaster.ModifyDate;
-                            uDetail.Creator = uJobCardMaster.Modifyer;
-                            uDetail.JobCardDetailStatus = JobCardDetailStatus.Wait;
-                        }
-
-                        // Insert UnitMeasure
-                        if (uDetail.UnitMeasureId < 1 && uDetail.UnitsMeasure != null)
-                        {
-                            var nUnitMeasure = VipcoMachine.Helpers.CloneObject.Clone<UnitsMeasure>(uDetail.UnitsMeasure);
-                            if (nUnitMeasure != null)
+                            if (uDetail.JobCardDetailId > 0)
                             {
-                                nUnitMeasure.CreateDate = uJobCardMaster.ModifyDate;
-                                nUnitMeasure.Creator = uJobCardMaster.Modifyer;
+                                uDetail.ModifyDate = uJobCardMaster.ModifyDate;
+                                uDetail.Modifyer = uJobCardMaster.Modifyer;
+                            }
+                            else
+                            {
+                                uDetail.CreateDate = uJobCardMaster.ModifyDate;
+                                uDetail.Creator = uJobCardMaster.Modifyer;
+                                uDetail.JobCardDetailStatus = JobCardDetailStatus.Wait;
+                            }
 
-                                nUnitMeasure = await this.repositoryUom.AddAsync(nUnitMeasure);
-                                uDetail.UnitMeasureId = nUnitMeasure.UnitMeasureId;
+                            // Insert UnitMeasure
+                            if (uDetail.UnitMeasureId < 1 && uDetail.UnitsMeasure != null)
+                            {
+                                var nUnitMeasure = VipcoMachine.Helpers.CloneObject.Clone<UnitsMeasure>(uDetail.UnitsMeasure);
+                                if (nUnitMeasure != null)
+                                {
+                                    nUnitMeasure.CreateDate = uJobCardMaster.ModifyDate;
+                                    nUnitMeasure.Creator = uJobCardMaster.Modifyer;
+
+                                    nUnitMeasure = await this.repositoryUom.AddAsync(nUnitMeasure);
+                                    uDetail.UnitMeasureId = nUnitMeasure.UnitMeasureId;
+                                }
+                            }
+
+                            if (uDetail.CuttingPlanId < 1 && uDetail.CuttingPlan != null)
+                            {
+                                var nCuttingPlan = VipcoMachine.Helpers.CloneObject.Clone<CuttingPlan>(uDetail.CuttingPlan);
+                                if (nCuttingPlan != null)
+                                {
+                                    nCuttingPlan.CreateDate = uJobCardMaster.ModifyDate;
+                                    nCuttingPlan.Creator = uJobCardMaster.Modifyer;
+
+                                    if (string.IsNullOrEmpty(nCuttingPlan.MaterialSize))
+                                        nCuttingPlan.MaterialSize = uDetail.Material;
+
+                                    if (nCuttingPlan?.Quantity == null || nCuttingPlan?.Quantity < 1)
+                                        nCuttingPlan.Quantity = uDetail.Quality;
+
+                                    nCuttingPlan = await this.repositoryCut.AddAsync(nCuttingPlan);
+                                    uDetail.CuttingPlanId = nCuttingPlan.CuttingPlanId;
+                                }
+                            }
+
+                            uDetail.CuttingPlan = null;
+                            uDetail.UnitsMeasure = null;
+                        }
+                    }
+
+                    // update Master not update Detail it need to update Detail directly
+                    var updateComplate = await this.repository.UpdateAsync(uJobCardMaster, key);
+
+                    if (updateComplate != null)
+                    {
+                        // filter
+                        Expression<Func<JobCardDetail, bool>> condition = m => m.JobCardMasterId == key;
+                        var dbDetails = this.repositoryDetail.FindAll(condition);
+
+                        //Remove Jo if edit remove it
+                        foreach (var dbDetail in dbDetails)
+                        {
+                            if (!uJobCardMaster.JobCardDetails.Any(x => x.JobCardDetailId == dbDetail.JobCardDetailId))
+                                await this.repositoryDetail.DeleteAsync(dbDetail.JobCardDetailId);
+                        }
+                        //Update JobCardDetail or New JobCardDetail
+                        foreach (var uDetail in uJobCardMaster.JobCardDetails)
+                        {
+                            if (uDetail.JobCardDetailId > 0)
+                                await this.repositoryDetail.UpdateAsync(uDetail, uDetail.JobCardDetailId);
+                            else
+                            {
+                                if (uDetail.JobCardDetailId < 1)
+                                    uDetail.JobCardMasterId = uJobCardMaster.JobCardMasterId;
+
+                                await this.repositoryDetail.AddAsync(uDetail);
                             }
                         }
-
-                        if (uDetail.CuttingPlanId < 1 && uDetail.CuttingPlan != null)
-                        {
-                            var nCuttingPlan = VipcoMachine.Helpers.CloneObject.Clone<CuttingPlan>(uDetail.CuttingPlan);
-                            if (nCuttingPlan != null)
-                            {
-                                nCuttingPlan.CreateDate = uJobCardMaster.ModifyDate;
-                                nCuttingPlan.Creator = uJobCardMaster.Modifyer;
-
-                                nCuttingPlan = await this.repositoryCut.AddAsync(nCuttingPlan);
-                                uDetail.CuttingPlanId = nCuttingPlan.CuttingPlanId;
-                            }
-                        }
-
-                        uDetail.CuttingPlan = null;
-                        uDetail.UnitsMeasure = null;
                     }
+                    return new JsonResult(updateComplate, this.DefaultJsonSettings);
+
+                    //return new JsonResult(await this.repository.UpdateAsync(uJobCardMaster, key), this.DefaultJsonSettings);
                 }
 
-                // update Master not update Detail it need to update Detail directly
-                var updateComplate = await this.repository.UpdateAsync(uJobCardMaster, key);
-
-                if (updateComplate != null)
-                {
-                    // filter
-                    Expression<Func<JobCardDetail, bool>> condition = m => m.JobCardMasterId == key;
-                    var dbDetails = this.repositoryDetail.FindAll(condition);
-
-                    //Remove Jo if edit remove it
-                    foreach (var dbDetail in dbDetails)
-                    {
-                        if (!uJobCardMaster.JobCardDetails.Any(x => x.JobCardDetailId == dbDetail.JobCardDetailId))
-                            await this.repositoryDetail.DeleteAsync(dbDetail.JobCardDetailId);
-                    }
-                    //Update JobCardDetail or New JobCardDetail
-                    foreach (var uDetail in uJobCardMaster.JobCardDetails)
-                    {
-                        if (uDetail.JobCardDetailId > 0)
-                            await this.repositoryDetail.UpdateAsync(uDetail, uDetail.JobCardDetailId);
-                        else
-                        {
-                            if (uDetail.JobCardDetailId < 1)
-                                uDetail.JobCardMasterId = uJobCardMaster.JobCardMasterId;
-
-                            await this.repositoryDetail.AddAsync(uDetail);
-                        }
-                    }
-                }
-                return new JsonResult(updateComplate, this.DefaultJsonSettings);
-
-                //return new JsonResult(await this.repository.UpdateAsync(uJobCardMaster, key), this.DefaultJsonSettings);
             }
-            return NotFound(new { Error = "ProjectMaster not found. " });
+            catch(Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+            return NotFound(new { Error = Message });
         }
 
         #endregion PUT

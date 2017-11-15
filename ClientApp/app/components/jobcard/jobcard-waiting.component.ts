@@ -86,17 +86,17 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
                     if (name.indexOf("Employee") >= 0) {
                         this.columns.push({
                             field: name, header: name,
-                            style: { "width": "100px", "text-align": "center" }, styleclass: "time-col"
+                            style: { "width": "150px", "text-align": "center" }, styleclass: "time-col"
                         });
                     } else if (name.indexOf("GroupMachine") >= 0) {
                         this.columns.push({
                             field: name, header: name,
-                            style: { "width": "100px", "text-align": "center" }, styleclass: "type-col"
+                            style: { "width": "150px", "text-align": "center" }, styleclass: "type-col"
                         });
                     } else {
                         this.columns.push({
                             field: name, header: name,
-                            style: { "width": "250px" }, styleclass: "singleLine", isButton: true
+                            style: { "width": "270px" }, styleclass: "singleLine", isButton: true
                         });
                     }
                 }

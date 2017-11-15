@@ -11,6 +11,7 @@ import { TaskMachineMasterComponent } from "../../components/task-machine/task-m
 import { TaskMachineViewComponent } from "../../components/task-machine/task-machine-view.component";
 import { TaskMachineScheduleComponent } from "../../components/task-machine/task-machine-schedule.component";
 import { TaskMachineProgressComponent } from "../../components/task-machine/task-machine-progress.component";
+import { TaskMachineChartComponent } from "../../components/task-machine/task-machine-chart.component";
 // module
 import { TaskMachineRouters } from "./task-machine.routing";
 import {
@@ -31,7 +32,8 @@ import {
         TaskMachineMasterComponent,
         TaskMachineViewComponent,
         TaskMachineScheduleComponent,
-        TaskMachineProgressComponent
+        TaskMachineProgressComponent,
+        TaskMachineChartComponent
     ],
     imports: [
         // angular

@@ -75,7 +75,8 @@ export class ProjectEditComponent
                 }, error => console.error(error), () => this.defineData());
         } else {
             this.editValue = {
-                ProjectCodeMasterId: 0
+                ProjectCodeMasterId: 0,
+                StartDate : new Date
             };
             this.defineData();
         }

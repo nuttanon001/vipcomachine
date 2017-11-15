@@ -140,8 +140,9 @@ export class JobcardDetailEditComponent implements OnInit {
                         CuttingPlanId: resultCutting.CuttingPlanId,
                         CuttingPlanString: resultCutting.CuttingPlanNo,
                         // don't use CuttingPlan: Object.assign({}, resultCutting),
-                        Material: (resultCutting.MaterialSize || "") + " " + (resultCutting.MaterialGrade || ""),
-                        Quality: resultCutting.Quantity || 0
+                        CuttingPlan: Object.assign({}, resultCutting),
+                        Material: resultCutting.MaterialSize ? (resultCutting.MaterialSize || "") + " " + (resultCutting.MaterialGrade || "") : "",
+                        Quality: resultCutting.Quantity || 1,
                     });
                 }
             });
@@ -169,6 +170,7 @@ export class JobcardDetailEditComponent implements OnInit {
                     this.editValueForm.patchValue({
                         UnitMeasureId: resultUom.UnitMeasureId,
                         UnitsMeasureString: resultUom.UnitMeasureName,
+                        UnitsMeasure: Object.assign({}, resultUom),
                         // don't use UnitsMeasure: Object.assign({}, resultUom),
                     });
                 }
@@ -180,7 +182,8 @@ export class JobcardDetailEditComponent implements OnInit {
         this.materials = new Array;
 
         for (let i:number = 0; i < this.tempMaterials.length; i++) {
-            let material:string = this.tempMaterials[i];
+            let material: string = this.tempMaterials[i];
+            console.log(event.query.toLowerCase(), material, material.toLowerCase().indexOf(event.query.trim().toLowerCase()));
             if (material.toLowerCase().indexOf(event.query.toLowerCase()) === 0) {
                 this.materials.push(material);
             }

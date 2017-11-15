@@ -4,6 +4,7 @@ import { Routes, RouterModule } from "@angular/router";
 import { TaskMachineCenterComponent } from "../../components/task-machine/task-machine-center.component";
 import { TaskMachineMasterComponent } from "../../components/task-machine/task-machine-master.component";
 import { TaskMachineScheduleComponent } from "../../components/task-machine/task-machine-schedule.component";
+import { TaskMachineChartComponent } from "../../components/task-machine/task-machine-chart.component";
 // service
 import { AuthGuard } from "../../services/auth/auth-guard.service";
 
@@ -24,6 +25,10 @@ const taskMachineRoutes: Routes = [
             {
                 path: "task-machine-schedule",
                 component: TaskMachineScheduleComponent,
+            },
+            {
+                path: "task-machine-chart",
+                component: TaskMachineChartComponent,
             },
             {
                 path: "",

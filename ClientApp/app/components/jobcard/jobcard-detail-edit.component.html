@@ -30,6 +30,7 @@
                        id="Material" formControlName="Material" >-->
                 <p-autoComplete  class="my-input-combobox" placeholder="Insert material here"
                                  (completeMethod)="onSearchAutoComplate($event)"
+                                 appendTo="body"
                                  [style]="{'width':'100%'}" [inputStyle]="{'width':'100%'}" [size]="30"
                                  id="Material" formControlName="Material" [suggestions]="materials">
                 </p-autoComplete>
@@ -65,13 +66,15 @@
             <label for="UnitNo" class="my-label">UnitNo:</label>
             <div class="col-sm-4">
                 <p-dropdown class="my-input-combobox" [options]="unitNos" filter="filter" [style]="{'width':'100%'}"
+                            appendTo="body"
                             id="UnitNo" formControlName="UnitNo">
                 </p-dropdown>
                 <validation-messages [control]="editValueForm.controls.UnitNo"></validation-messages>
             </div>
         </div>
     </form>
-    <div mat-dialog-actions style="border-top:1px solid #32a8cc;">
+
+    <div style="border-top:1px solid #32a8cc;">
         <button mat-raised-button (click)="onNewOrUpdateClick()" [disabled]="!editValueForm.valid" color="primary" class="my-1">New/Update</button>
         <button mat-raised-button (click)="onCancelClick()" color="warn" class="my-1">Cancel</button>
     </div>

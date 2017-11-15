@@ -219,7 +219,7 @@
                 </ngx-datatable>
             </div>
             <ng-template #editDetail >
-                <div class="m-2" style="border:1px solid #e16958" [@flyInOut]="'in'">
+                <div class="m-3" [@flyInOut]="'in'">
                     <jobcard-detail-edit (ComplateOrCancel)="onComplateOrCancel($event)" [EditValueDetail]="jobDetail"
                                          [MachineTypeId]="editValueForm.controls.TypeMachineId.value"
                                          [ProjectDetailId]="editValueForm.controls.ProjectCodeDetailId.value"></jobcard-detail-edit>

@@ -17,6 +17,7 @@ export { StandardTime } from "./standard-time/standard-time.model";
 export { TaskMachine } from "./task-machine/task-machine.model";
 export { PlanViewModel } from "./task-machine/plan.model";
 export { OptionSchedule } from "./task-machine/option-schedule.model";
+export { OptionChart } from "./task-machine/option-chart.model";
 export { TemplateProjectDetail } from "./template-project-detail/template-project-detail.model";
 export { TypeMachine } from "./type-machine/type-machine.model";
 export { TypeStandardTime } from "./type-standard-time/type-standard-time.model";

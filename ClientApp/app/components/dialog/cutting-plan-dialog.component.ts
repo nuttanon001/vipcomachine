@@ -109,17 +109,29 @@ export class CuttingPlanDialogComponent
         }
         // ProjectDetail ComboBox
         if (!this.projectDetails) {
-            this.serviceProDetail.getAll()
-                .subscribe(dbDetail => {
-                    this.editValueForm.patchValue({
-                        ProjectCodeDetailId: dbDetail[0].ProjectCodeDetailId,
-                    });
+            if (this.mode) {
+                this.serviceProDetail.getOneKeyNumber(this.mode)
+                    .subscribe(dbDetail => {
+                        this.editValueForm.patchValue({
+                            ProjectCodeDetailId: dbDetail.ProjectCodeDetailId,
+                        });
 
-                    this.projectDetails = new Array;
-                    for (let item of dbDetail) {
-                        this.projectDetails.push({ label: item.FullProjectLevelString || "", value: item.ProjectCodeDetailId });
-                    }
-                });
+                        this.projectDetails = new Array;
+                        this.projectDetails.push({ label: dbDetail.FullProjectLevelString || "", value: dbDetail.ProjectCodeDetailId });
+                    });
+            } else {
+                this.serviceProDetail.getAll()
+                    .subscribe(dbDetail => {
+                        this.editValueForm.patchValue({
+                            ProjectCodeDetailId: dbDetail[0].ProjectCodeDetailId,
+                        });
+
+                        this.projectDetails = new Array;
+                        for (let item of dbDetail) {
+                            this.projectDetails.push({ label: item.FullProjectLevelString || "", value: item.ProjectCodeDetailId });
+                        }
+                    });
+            }
         }
     }
 

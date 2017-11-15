@@ -29,6 +29,8 @@ import {
     AutoCompleteModule,
 } from "primeng/primeng";
 
+import { ChartsModule } from "ng2-charts/ng2-charts";
+
 import { AngularSplitModule } from "angular-split";
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 // component
@@ -77,6 +79,8 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         TreeTableModule,
         AccordionModule,
         AutoCompleteModule,
+        // Chart
+        ChartsModule
     ],
     exports: [
         //Material
@@ -113,7 +117,9 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         AttactFileComponent,
         ReuseTableComponent,
         //Pipe
-        DateOnlyPipe
+        DateOnlyPipe,
+        // Chart
+        ChartsModule
     ],
     entryComponents: [
         SearchBoxComponent,
