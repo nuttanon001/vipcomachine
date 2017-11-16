@@ -6,4 +6,8 @@
     TypeEmployee?: number;
     GroupCode?: string;
     GroupName?: string;
+    GroupMIS?: string;
+    // ViewModel
+    TypeEmployeeString?: string;
+    InsertOrUpdate?: string;
 }

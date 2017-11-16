@@ -26,6 +26,7 @@
                         <label for="InstalledDate" class="my-label">Installed:</label>
                         <div class="col-sm-4">
                             <p-calendar formControlName="InstalledDate" [showIcon]="true"
+                                        appendTo="body"
                                         id="InstalledDate" dateFormat="dd/mm/yy" placeholder="  Choose a installed date">
                             </p-calendar>
                             <validation-messages [control]="editValueForm.controls.InstalledDate"></validation-messages>
@@ -59,6 +60,7 @@
                         <label for="TypeMachineId" class="my-label">Type Machine:</label>
                         <div class="col-sm-4">
                             <p-dropdown class="my-input-combobox" [options]="machineTypes" filter="filter" [style]="{'width':'100%'}"
+                                        appendTo="body"
                                         id="TypeMachineId" formControlName="TypeMachineId" required>
                             </p-dropdown>
                             <validation-messages [control]="editValueForm.controls.TypeMachineId"></validation-messages>

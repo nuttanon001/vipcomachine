@@ -58,6 +58,11 @@ export class TaskMachineChartComponent implements OnInit {
 
     // build form
     buildForm(): void {
+        this.chart = {
+            EndDate: new Date,
+            StartDate: new Date,
+        };
+
         this.reportForm = this.fb.group({
             TypeMachineId: [this.chart.TypeMachineId],
             StartDate: [this.chart.StartDate],

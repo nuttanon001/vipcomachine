@@ -90,6 +90,7 @@
     <None Remove="ClientApp\app\modules\cutting-plan\cutting-plan.module.ts" />
     <None Remove="ClientApp\app\modules\cutting-plan\cutting-plan.routing.ts" />
     <None Remove="ClientApp\app\modules\developer\developer.routing.ts" />
+    <None Remove="ClientApp\app\modules\employee\employee.routing.ts" />
     <None Remove="ClientApp\app\modules\jobcard\jobcard.module.ts" />
     <None Remove="ClientApp\app\modules\jobcard\jobcard.routing.ts" />
     <None Remove="ClientApp\app\modules\machine\machine.module.ts" />
@@ -177,6 +178,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\model.index.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\over-time\over-time.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-detail\overtime-detail.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\overtime-master\option-overtime-chart.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-master\option-overtime-schedule.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-master\overtime-master-report.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\overtime-master\overtime-master.model.ts" />
@@ -197,6 +199,7 @@
     <TypeScriptCompile Include="ClientApp\app\modules\cutting-plan\cutting-plan.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\cutting-plan\cutting-plan.routing.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\developer\developer.routing.ts" />
+    <TypeScriptCompile Include="ClientApp\app\modules\employee\employee.routing.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\jobcard\jobcard.module.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\jobcard\jobcard.routing.ts" />
     <TypeScriptCompile Include="ClientApp\app\modules\machine\machine.module.ts" />

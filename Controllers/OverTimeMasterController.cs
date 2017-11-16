@@ -548,7 +548,7 @@ namespace VipcoMachine.Controllers
             }
             return NotFound(new { Error = "OverTimeMaster not found. " });
         }
-
+        // PUT: api/OverTimeMaster/UpdateStatus/5
         [HttpPut("UpdateStatus/{key}")]
         public async Task<IActionResult> UpdateStatusOverTimeMaster(int key, [FromBody]OverTimeMaster uOverTimeMaster)
         {
@@ -584,6 +584,7 @@ namespace VipcoMachine.Controllers
         #endregion
 
         #region REPORT
+        // GET: api/GetReportOverTimePdf/5
 
         [HttpGet("GetReportOverTimePdf/{OverTimeMasterId}")]
         public async Task<IActionResult> GetReportOverTimePdf(int OverTimeMasterId, [FromServices] INodeServices nodeServices)
@@ -712,6 +713,7 @@ namespace VipcoMachine.Controllers
             //return new ContentResult();
         }
 
+        // GET: api/GetReportOverTimePdf2/5
 
         [HttpGet("GetReportOverTimePdf2/{OverTimeMasterId}")]
         public async Task<IActionResult> GetReportOverTimePdf2(int OverTimeMasterId)
@@ -854,6 +856,8 @@ namespace VipcoMachine.Controllers
             //return new ContentResult();
         }
 
+        // POST: api/GetReportSummary/5
+
         [HttpPost("GetReportSummary")]
         public async Task<IActionResult> GetReportSummary([FromBody]OptionOverTimeSchedule option)
         {
@@ -913,6 +917,83 @@ namespace VipcoMachine.Controllers
             }
             return NotFound(new { NotFound = "Not Found Data." });
         }
+        #endregion
+
+        #region CHART
+
+        // POST: api/PostOverTimeChart/
+        [HttpPost("PostOverTimeChart")]
+        public async Task<IActionResult> PostOverTimeChart([FromBody]OptionChartOTViewModel option)
+        {
+            var Message = "Not found OverTimeMaster data.";
+            try
+            {
+                if (option != null)
+                {
+                    var QueryData = this.repository.GetAllAsQueryable()
+                                                   .Include(x => x.OverTimeDetails)
+                                                   .Include(x => x.ProjectCodeMaster)
+                                                   .Include(x => x.EmployeeGroup)
+                                                   .AsQueryable();
+
+                    if (!string.IsNullOrEmpty(option.GroupCode))
+                        QueryData = QueryData.Where(x => x.GroupCode == option.GroupCode);
+
+                    if (option.ProjectMaster.HasValue)
+                        QueryData = QueryData.Where(x => x.ProjectCodeMasterId == option.ProjectMaster);
+
+                    if (option.SelectedDate.HasValue)
+                    {
+                        var selectedDate = option.SelectedDate.Value.AddHours(7);
+                        QueryData = QueryData.Where(x => x.OverTimeDate.Date == selectedDate.Date);
+                    }
+
+                    List<string> Labels = new List<string>();
+                    List<double> ChartDatas = new List<double>();
+
+                    if (option.TypeChart.HasValue)
+                    {
+                        // All Group Code
+                        if (option.TypeChart.Value == 1)
+                        {
+                            // GroupBy GroupCode
+                            foreach (var item in await QueryData.GroupBy(x => x.EmployeeGroup).ToListAsync())
+                            {
+                                Labels.Add(item.Key.Description);
+                                var TotalOvertime = 0;
+                                foreach (var item2 in item.Select(x => x.OverTimeDetails))
+                                    TotalOvertime += item2.Where(x => x.OverTimeDetailStatus == OverTimeDetailStatus.Use).Count();
+                                ChartDatas.Add(TotalOvertime);
+                            }
+                        }
+                        // Chart GroupCode down ProjectMaster
+                        else if (option.TypeChart.Value == 2)
+                        {
+                            // GroupBy GroupCode
+                            foreach (var item in await QueryData.GroupBy(x => x.ProjectCodeMaster).ToListAsync())
+                            {
+                                Labels.Add(item.Key.ProjectCode);
+                                var TotalOvertime = 0;
+                                foreach (var item2 in item.Select(x => x.OverTimeDetails))
+                                    TotalOvertime += item2.Where(x => x.OverTimeDetailStatus == OverTimeDetailStatus.Use).Count();
+                                ChartDatas.Add(TotalOvertime);
+                            }
+                        }
+
+                        if (Labels.Any() && ChartDatas.Any())
+                        {
+                            return new JsonResult(new { Labels = Labels, Datas = ChartDatas }, this.DefaultJsonSettings);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+            return NotFound(new { Error = Message });
+        }
+
         #endregion
     }
 }

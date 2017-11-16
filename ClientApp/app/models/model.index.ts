@@ -28,6 +28,7 @@ export { Page,Scroll } from "./page/page.model";
 export { PageData, ScrollData } from "./page/page-data.model";
 export { TaskMachineHasOverTime } from "./over-time/over-time.model";
 export { OverTimeMaster } from "./overtime-master/overtime-master.model";
+export { OptionOverTimeChart } from "./overtime-master/option-overtime-chart.model";
 export { ReportOverTimeSummary } from "./overtime-master/overtime-master-report.model";
 export { OptionOverTimeSchedule } from "./overtime-master/option-overtime-schedule.model";
 export { OverTimeDetail } from "./overtime-detail/overtime-detail.model";

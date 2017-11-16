@@ -8,6 +8,21 @@ namespace VipcoMachine.Helpers
     {
         public MappingProfile()
         {
+            #region Employee
+
+            // Employee
+            CreateMap<Employee, EmployeeViewModel>()
+                // TypeMachine
+                .ForMember(x => x.TypeEmployeeString,
+                           o => o.MapFrom(s => s.TypeEmployee == null ? "ไม่ระบุ" :
+                           (s.TypeEmployee.Value == TypeEmployee.พนักงานตามโครงการ ? "พนักงานตามโครงการ" :
+                           (s.TypeEmployee.Value == TypeEmployee.พนักงานทดลองงาน ? "พนักงานทดลองงาน" :
+                           (s.TypeEmployee.Value == TypeEmployee.พนักงานประจำรายชั่วโมง ? "พนักงานประจำรายชั่วโมง" :
+                           (s.TypeEmployee.Value == TypeEmployee.พนักงานประจำรายเดือน ? "พนักงานประจำรายเดือน" : "พนักงานพม่า"))))));
+            CreateMap<EmployeeViewModel, Employee>();
+
+            #endregion
+
             #region JobCardMaster
 
             // JobCardMaster

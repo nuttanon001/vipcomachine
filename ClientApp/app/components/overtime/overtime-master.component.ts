@@ -152,6 +152,9 @@ export class OvertimeMasterComponent
     onInsertToDataBase(value: OverTimeMaster): void {
         if (this.serverAuth.getAuth) {
             value.Creator = this.serverAuth.getAuth.UserName || "";
+        } else {
+            this.dialogsService.error("Error Message", "บัญชีผู้ใช้งาน ขาดการติดต่อกับระบบ โปรดล็อคอินใหม่ !!!", this.viewContainerRef);
+            return;
         }
         // change timezone
         value = this.changeTimezone(value);

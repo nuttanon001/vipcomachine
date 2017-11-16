@@ -12,6 +12,7 @@ import { OvertimeViewComponent } from "../../components/overtime/overtime-view.c
 import { OvertimeScheduleComponent } from "../../components/overtime/overtime-schedule.component";
 import { OverTimeReportComponent } from "../../components/overtime/overtime-report.component";
 import { OvertimeReportSummaryComponent } from "../../components/overtime/overtime-report-summary.component";
+import { OverTimeChartComponent } from "../../components/overtime/overtime-chart.component";
 // module
 import { OverTimeRouters } from "./overtime.routing";
 import {
@@ -35,7 +36,8 @@ import { ProjectCodeMasterService } from "../../services/projectcode-master/proj
         OvertimeEditComponent,
         OvertimeScheduleComponent,
         OverTimeReportComponent,
-        OvertimeReportSummaryComponent
+        OvertimeReportSummaryComponent,
+        OverTimeChartComponent
     ],
     imports: [
         // angular

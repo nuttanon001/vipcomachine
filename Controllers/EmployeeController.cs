@@ -65,7 +65,19 @@ namespace VipcoMachine.Controllers
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(string key)
         {
-            return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
+            return new JsonResult(
+                this.mapper.Map<Employee,EmployeeViewModel>(await this.repository.GetAsync(key)),
+                this.DefaultJsonSettings);
+        }
+
+        [HttpGet("SubContractor")]
+        public async Task<IActionResult> GetSubContractor()
+        {
+            var QueryData = this.repository.GetAllAsQueryable()
+                                           .Where(x => x.TypeEmployee == TypeEmployee.พนักงานพม่า);
+
+            return new JsonResult(this.ConverterTableToViewModel<EmployeeViewModel, Employee>
+                (await QueryData.ToListAsync()), this.DefaultJsonSettings);
         }
 
         // GET: api/Employee/GetByMaster/5
@@ -90,7 +102,10 @@ namespace VipcoMachine.Controllers
             // Where
             if (!string.IsNullOrEmpty(Scroll.Where))
             {
-                QueryData = QueryData.Where(x => x.GroupCode == Scroll.Where);
+                if (Scroll.Where.IndexOf("SubContractor") != -1)
+                    QueryData = QueryData.Where(x => x.TypeEmployee == TypeEmployee.พนักงานพม่า);
+                else
+                    QueryData = QueryData.Where(x => x.GroupCode == Scroll.Where);
             }
             // Filter
             var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
@@ -138,14 +153,20 @@ namespace VipcoMachine.Controllers
             QueryData = QueryData.Skip(Scroll.Skip ?? 0).Take(Scroll.Take ?? 50);
 
             return new JsonResult(new ScrollDataViewModel<Employee>
-                (Scroll, await QueryData.AsNoTracking().ToListAsync()), this.DefaultJsonSettings);
+                (Scroll,
+                 this.ConverterTableToViewModel<EmployeeViewModel,Employee>(await QueryData.AsNoTracking().ToListAsync())),
+                 this.DefaultJsonSettings);
         }
 
         // POST: api/Employee
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Employee nEmployee)
         {
-            return new JsonResult(await this.repository.AddAsync(nEmployee), this.DefaultJsonSettings);
+            if (nEmployee != null)
+            {
+                return new JsonResult(await this.repository.AddAsync(nEmployee), this.DefaultJsonSettings);
+            }
+            return NotFound(new { Error = "Not found employee." });
         }
 
         #endregion
@@ -153,10 +174,15 @@ namespace VipcoMachine.Controllers
         #region PUT
         // PUT: api/Employee/5
         [HttpPut("{key}")]
-        public async Task<IActionResult> PutByNumber(string key, [FromBody]Employee uEmployee)
+        public async Task<IActionResult> PutByString(string key, [FromBody]Employee uEmployee)
         {
-            return new JsonResult(await this.repository.UpdateAsync(uEmployee, key), this.DefaultJsonSettings);
+            if (uEmployee != null)
+            {
+                return new JsonResult(await this.repository.UpdateAsync(uEmployee, key), this.DefaultJsonSettings);
+            }
+            return NotFound(new { Error = "Not found employee." });
         }
+
         #endregion
 
         #region DELETE
