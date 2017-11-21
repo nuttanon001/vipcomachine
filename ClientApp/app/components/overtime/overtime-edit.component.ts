@@ -2,7 +2,11 @@
 import { Component, ViewContainerRef, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl } from "@angular/forms";
 // models
-import { OverTimeMaster, OverTimeDetail, Employee, ProjectCodeMaster } from "../../models/model.index";
+import {
+    OverTimeMaster, OverTimeDetail,
+    Employee, ProjectCodeMaster,
+    OptionOverTimeLast
+} from "../../models/model.index";
 // components
 import { BaseEditComponent } from "../base-component/base-edit.component";
 // services
@@ -23,6 +27,7 @@ export class OvertimeEditComponent
     extends BaseEditComponent<OverTimeMaster, OverTimeMasterService> {
     lastOverTimeMaster?: OverTimeMaster;
     overtimeDetail?: OverTimeDetail;
+    optionLastOver?: OptionOverTimeLast;
     indexOverTimeDetail: number;
     lockSave: boolean = false;
     defaultHour: number;
@@ -165,59 +170,100 @@ export class OvertimeEditComponent
         const form: FormGroup = this.editValueForm;
         const controlMaster: AbstractControl | null = form.get("ProjectCodeMasterId");
         const controlGroup: AbstractControl | null = form.get("GroupCode");
+        const controlDate: AbstractControl | null = form.get("OverTimeDate");
 
-        if (controlMaster && controlGroup) {
-            if (controlMaster.value && controlGroup.value) {
-                // check if alrady have last overtime master check if don't same get new last over time master
-                let getData: boolean = false;
-                if (this.lastOverTimeMaster) {
-                    if (controlMaster.value !== this.lastOverTimeMaster.ProjectCodeMasterId ||
-                        controlGroup.value !== this.lastOverTimeMaster.GroupCode) {
-                        getData = true;
+        if (this.editValue.OverTimeStatus === 1) {
+            if (controlMaster && controlGroup) {
+                if (controlMaster.value && controlGroup.value) {
+                    // check if alrady have last overtime master check if don't same get new last over time master
+                    let byPass: boolean = false;
+                    if (!this.optionLastOver) {
+                        this.optionLastOver = {
+                            CurrentOverTimeId: this.editValue.OverTimeMasterId,
+                            GroupCode: controlGroup.value,
+                            ProjectCodeId: controlMaster.value
+                        };
+                        if (controlDate) {
+                            this.optionLastOver.BeForDate = controlDate.value;
+                        }
+                        byPass = true;
                     }
-                } else {
-                    getData = true;
-                }
 
-                if (this.editValue.OverTimeStatus === 3) {
-                    getData = false;
-                }
+                    if (this.optionLastOver) {
+                        if (!byPass) {
+                            let strGroup:any = controlGroup.value;
+                            let strPro:any = controlMaster.value;
 
-                if (getData) {
-                    this.service.getLastOverTimeMaster(controlMaster.value, controlGroup.value, this.editValue.OverTimeMasterId)
-                        .subscribe(lastMaster => {
-                            // console.log("LastMaster", lastMaster);
-                            if (lastMaster) {
-                                this.lastOverTimeMaster = lastMaster;
-                                this.editValueForm.patchValue({
-                                    LastOverTimeId: lastMaster.OverTimeMasterId,
-                                });
-                                this.canNotSave = "";
-                                if (lastMaster.OverTimeStatus !== 3) {
-                                    this.canNotSave = "Last OverTime was Incompleted. This overtime can't save.";
-                                    this.serviceDialogs.error("Error Message",
-                                        "Last OverTime was Incompleted. This overtime can't save.",
-                                        this.viewContainerRef);
+                            if (controlDate) {
+                                // console.log("By OptionLastOver:", this.optionLastOver);
+                                // console.log("By Control:", strGroup, strPro, controlDate.value);
+
+                                if (this.optionLastOver.GroupCode === strGroup &&
+                                    this.optionLastOver.ProjectCodeId === strPro &&
+                                    this.optionLastOver.BeForDate === controlDate.value) {
+                                    byPass = false;
+                                } else {
+                                    byPass = true;
                                 }
                             } else {
-                                this.lastOverTimeMaster = {
-                                    OverTimeMasterId: 0,
-                                    OverTimeDate: new Date(),
-                                    ProjectCodeMasterId: controlMaster.value,
-                                    GroupCode: controlGroup.value
+                                if (this.optionLastOver.GroupCode === strGroup &&
+                                    this.optionLastOver.ProjectCodeId === strPro) {
+                                    byPass = false;
+                                } else {
+                                    byPass = true;
                                 }
                             }
-                        }, error => {
-                            this.lastOverTimeMaster = {
-                                OverTimeMasterId: 0,
-                                OverTimeDate: new Date(),
-                                ProjectCodeMasterId: controlMaster.value,
-                                GroupCode: controlGroup.value
+                        }
+                        // console.log("By Pass:", byPass);
+
+                        if (byPass) {
+
+                            this.optionLastOver = {
+                                CurrentOverTimeId: this.editValue.OverTimeMasterId,
+                                GroupCode: controlGroup.value,
+                                ProjectCodeId: controlMaster.value
+                            };
+                            if (controlDate) {
+                                this.optionLastOver.BeForDate = controlDate.value;
                             }
-                        });
+
+                            this.service.getlastOverTimeMasterV2(this.optionLastOver)
+                                .subscribe(lastMaster => {
+                                    // console.log("LastMaster", lastMaster);
+                                    if (lastMaster) {
+                                        this.lastOverTimeMaster = lastMaster;
+                                        this.editValueForm.patchValue({
+                                            LastOverTimeId: lastMaster.OverTimeMasterId,
+                                        });
+                                        this.canNotSave = "";
+                                        if (lastMaster.OverTimeStatus !== 3) {
+                                            this.canNotSave = "Last OverTime was Incompleted. This overtime can't save.";
+                                            this.serviceDialogs.error("Error Message",
+                                                "Last OverTime was Incompleted. This overtime can't save.",
+                                                this.viewContainerRef);
+                                        }
+                                    } else {
+                                        this.lastOverTimeMaster = {
+                                            OverTimeMasterId: 0,
+                                            OverTimeDate: new Date(),
+                                            ProjectCodeMasterId: controlMaster.value,
+                                            GroupCode: controlGroup.value
+                                        };
+                                    }
+                                }, error => {
+                                    this.lastOverTimeMaster = {
+                                        OverTimeMasterId: 0,
+                                        OverTimeDate: new Date(),
+                                        ProjectCodeMasterId: controlMaster.value,
+                                        GroupCode: controlGroup.value
+                                    };
+                                });
+                        }
+                    }
                 }
             }
         }
+
         super.onValueChanged();
     }
 

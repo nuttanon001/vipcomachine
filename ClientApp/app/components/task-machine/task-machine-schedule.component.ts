@@ -1,11 +1,11 @@
 ﻿import { Component, OnInit, OnDestroy, ViewContainerRef, ViewEncapsulation } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 // rxjs
 import { Observable } from "rxjs/Rx";
 import { Subscription } from "rxjs/Subscription";
 // model
-import { TaskMachine,OptionSchedule } from "../../models/model.index";
+import { TaskMachine, OptionSchedule, ProjectCodeMaster } from "../../models/model.index";
 // service
 import { TaskMachineService } from "../../services/task-machine/task-machine.service";
 import { ProjectCodeMasterService } from "../../services/projectcode-master/projectcode-master.service";
@@ -20,7 +20,7 @@ import { Column, SelectItem, LazyLoadEvent } from "primeng/primeng";
     templateUrl: "./task-machine-schedule.component.html",
     styleUrls: ["../../styles/schedule.style.scss"],
 })
-/** task-machine-schedule component*/
+// task-machine-schedule component*/
 export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
     // form
     reportForm: FormGroup;
@@ -69,9 +69,9 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
 
         this.taskMachines = new Array;
 
-        this.route.params.subscribe((params: any) => {
-            let key: number = params["condition"];
-            // console.log("key is",key);
+        this.route.paramMap.subscribe((param: ParamMap) => {
+            let key: number = Number(param.get("condition") || 0);
+
             if (key) {
                 this.mode = key;
                 this.buildForm();
@@ -82,6 +82,19 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
                 this.proDetails.push({ label: "Selected level2/3", value: undefined });
             }
         }, error => console.error(error));
+
+        // this.route.params.subscribe((params: any) => {
+        //    let key: number = params["condition"];
+        //    // console.log("key is",key);
+        //    if (key) {
+        //        this.mode = key;
+        //        this.buildForm();
+        //        this.getProjectMasterArray();
+        //        this.getTypeMachineArray();
+        //        this.proDetails = new Array;
+        //        this.proDetails.push({ label: "Selected level2/3", value: undefined });
+        //    }
+        // }, error => console.error(error));
     }
 
     // destroy
@@ -130,7 +143,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
             .subscribe(result => {
                 this.proMasters = new Array;
                 this.proMasters.push({ label: "Selected job number.", value: undefined });
-                let result2 = result.sort((a, b) => {
+                let result2:Array<ProjectCodeMaster> = result.sort((a, b) => {
                     if (a.ProjectCode && b.ProjectCode) {
                         if (a.ProjectCode > b.ProjectCode) {
                             return -1;
@@ -182,10 +195,10 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
                 this.columns = new Array;
                 this.columnsUpper = new Array;
 
-                let McNoWidth = "100px";
-                let JbNoWidth = "170px";
-                let CtNoWidth = "350px";
-                let NumWidth = "55px";
+                let McNoWidth:string = "100px";
+                let JbNoWidth: string = "170px";
+                let CtNoWidth: string = "350px";
+                let NumWidth: string = "55px";
 
                 // column Row1
                 this.columnsUpper.push({ header: "MachineNo", rowspan: 2, style: { "width": McNoWidth, }});
@@ -232,8 +245,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
                             header: "CT/SD", field: "CT/SD",
                             style: { "width": CtNoWidth, }, isLink: true
                         });
-                    }
-                    else {
+                    } else {
                         // debug here
                         // console.log("Mode is 3:", this.mode);
                         this.columns.push({ header: "CT/SD", field: "CT/SD", style: { "width": CtNoWidth, } });
@@ -251,7 +263,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
                 for (let name of dbDataSchedule.ColumnsAll) {
                     if (name.indexOf("Col") >= -1) {
                         this.columns.push({
-                            header: this.columnsLower[i] ,field: name, style: { 'width': '35px' }, isCol: true ,
+                            header: this.columnsLower[i] ,field: name, style: { "width": "35px" }, isCol: true ,
                         });
                         i++;
                     }
@@ -309,15 +321,15 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
     }
 
     // load Data Lazy
-    loadDataLazy(event: LazyLoadEvent) {
-        //in a real application, make a remote request to load data using state metadata from event
-        //event.first = First row offset
-        //event.rows = Number of rows per page
-        //event.sortField = Field name to sort with
-        //event.sortOrder = Sort order as number, 1 for asc and -1 for dec
-        //filters: FilterMetadata object having field as key and filter value, filter matchMode as value
+    loadDataLazy(event: LazyLoadEvent):void {
+        // in a real application, make a remote request to load data using state metadata from event
+        // event.first = First row offset
+        // event.rows = Number of rows per page
+        // event.sortField = Field name to sort with
+        // event.sortOrder = Sort order as number, 1 for asc and -1 for dec
+        // filters: FilterMetadata object having field as key and filter value, filter matchMode as value
 
-        //imitate db connection over a network
+        // imitate db connection over a network
 
         this.reportForm.patchValue({
             Skip: event.first,

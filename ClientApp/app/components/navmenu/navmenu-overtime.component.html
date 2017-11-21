@@ -11,13 +11,7 @@
 
     <div class="collapse navbar-collapse pl-4" id="Mynavbars" style="z-index:1500;">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
-                <a class="nav-link" [routerLink]="['/overtime/summary-overtime']" routerLinkActive="active">
-                    <i class="fa fa-calendar-o" aria-hidden="true"></i>
-                    <span>Date/Summary</span>
-                </a>
-            </li>
-            <li class="nav-item" *ngIf="GetLevel1">
+           <li class="nav-item" *ngIf="GetLevel1">
                 <a #mainMenu="matMenuTrigger" [matMenuTriggerFor]="menu1"
                    (onMenuOpen)="menuOnCloseMenu1()" (mouseover)="menuOnOpenMenu1()"
                    class="nav-link" [routerLink]="['/overtime']" routerLinkActive="active">
@@ -48,6 +42,15 @@
                         <button mat-menu-item [routerLink]="['/employee']" routerLinkActive="active">
                             <i class="fa fa-user-secret" aria-hidden="true"></i>
                             <span>Subcontractor</span>
+                        </button>
+                        <hr/>
+                        <button mat-menu-item [routerLink]="['/overtime/chart-overtime']" routerLinkActive="active">
+                            <i class="fa fa-pie-chart" aria-hidden="true"></i>
+                            <span>ChartReport</span>
+                        </button>
+                        <button mat-menu-item [routerLink]="['/overtime/summary-overtime']" routerLinkActive="active">
+                            <i class="fa fa-times-circle-o" aria-hidden="true"></i>
+                            <span>SummaryByDate</span>
                         </button>
                     </div>
                 </mat-menu>

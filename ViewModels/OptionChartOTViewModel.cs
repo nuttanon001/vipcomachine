@@ -11,5 +11,7 @@ namespace VipcoMachine.ViewModels
         public DateTime? SelectedDate { get; set; }
         public string GroupCode { get; set; }
         public int? TypeChart { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const merge = require('webpack-merge');
-const AotPlugin = require('@ngtools/webpack').AotPlugin;
+// const AotPlugin = require('@ngtools/webpack').AotPlugin;
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
 module.exports = (env) => {
@@ -17,7 +17,7 @@ module.exports = (env) => {
         },
         module: {
             rules: [
-                { test: /\.ts$/, use: isDevBuild ? ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] : '@ngtools/webpack' },
+                { test: /\.ts$/, use: ['awesome-typescript-loader?silent=true', 'angular2-template-loader'] },
                 { test: /\.html$/, use: 'html-loader?minimize=false' },
                 { test: /\.css$/, use: ['to-string-loader', isDevBuild ? 'css-loader' : 'css-loader?minimize'] },
                 { test: /\.scss$/, exclude: /node_modules/, include: /ClientApp/, loaders: ['raw-loader', 'sass-loader'] },// sass-loader not scss-loader
@@ -45,12 +45,7 @@ module.exports = (env) => {
             })
         ] : [
             // Plugins that apply in production builds only
-            new webpack.optimize.UglifyJsPlugin(),
-            new AotPlugin({
-                tsConfigPath: './tsconfig.json',
-                entryModule: path.join(__dirname, 'ClientApp/app/app.module.browser#AppModule'),
-                exclude: ['./**/*.server.ts']
-            })
+            new webpack.optimize.UglifyJsPlugin()
         ])
     });
 
@@ -65,14 +60,7 @@ module.exports = (env) => {
                 sourceType: 'commonjs2',
                 name: './vendor'
             })
-        ].concat(isDevBuild ? [] : [
-            // Plugins that apply in production builds only
-            new AotPlugin({
-                tsConfigPath: './tsconfig.json',
-                entryModule: path.join(__dirname, 'ClientApp/app/app.module.server#AppModule'),
-                exclude: ['./**/*.browser.ts']
-            })
-        ]),
+        ],
         output: {
             libraryTarget: 'commonjs',
             path: path.join(__dirname, './ClientApp/dist')

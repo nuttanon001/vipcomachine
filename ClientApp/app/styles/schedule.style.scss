@@ -119,7 +119,7 @@ h4 {
     color: transparent;
 }
 
-.chart {
+:host /deep/ .chart {
     display: block;
     height: 420px;
 }

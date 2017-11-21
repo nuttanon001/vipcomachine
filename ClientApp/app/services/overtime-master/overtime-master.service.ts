@@ -3,7 +3,8 @@ import { Http, ResponseContentType } from "@angular/http";
 // model
 import {
     OverTimeMaster, OptionOverTimeSchedule,
-    ReportOverTimeSummary
+    ReportOverTimeSummary, OptionOverTimeLast,
+    OptionOverTimeChart
 } from "../../models/model.index";
 // base-service
 import { BaseRestService, BaseCommunicateService } from "../service.index";
@@ -20,6 +21,12 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
         let url: string = `${this.actionUrl}GetLastOverTime/${LastOverTimeMasterId}/${GroupCode}/${CurrentId}`;
         return this.http.get(url).map(this.extractData).catch(this.handleError);
     }
+    // get last OverTimeMaster V2
+    getlastOverTimeMasterV2(Option: OptionOverTimeLast): Observable<OverTimeMaster> {
+        let url: string = `${this.actionUrl}GetLastOverTimeV2/`;
+        return this.http.post(url, JSON.stringify(Option), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
+    }
 
     // put with key number
     putUpdateStatus(uObject: OverTimeMaster, key: number): Observable<OverTimeMaster> {
@@ -27,7 +34,12 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
         return this.http.put(this.actionUrl+"UpdateStatus/" + key + "/", JSON.stringify(uObject), this.getRequestOption())
             .map(this.extractData).catch(this.handleError);
     }
-
+    // ===================== OverTime Chart ==============================\\
+    // get overtime chart data
+    postOverTimeChartData(option: OptionOverTimeChart): Observable<any> {
+        return this.http.post(`${this.actionUrl}PostOverTimeChartData`, JSON.stringify(option), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
+    }
     // ===================== OverTime Schedule ===========================\\
     // get OverTime Schedule
     getOverTimeMasterSchedule(option: OptionOverTimeSchedule): Observable<any> {
@@ -36,7 +48,7 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
             .map(this.extractData).catch(this.handleError);
     }
 
-    // ===================== OverTime Report ===========================\\
+    // ===================== OverTime Report =============================\\
 
     // get report over-time to pdf #1
     getReportOverTimePdf(OverTimeMasterId: number): Observable<any> {

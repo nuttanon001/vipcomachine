@@ -19,8 +19,8 @@ export class TaskMachineChartComponent implements OnInit {
     // form
     reportForm: FormGroup;
     // chart
-    chartLabels: Array<string>;
-    chartData: Array<number>;
+    public chartLabels: Array<string>;
+    public chartData: Array<number>;
     chartType: string;
     chartOption: any;
     // array
@@ -43,7 +43,7 @@ export class TaskMachineChartComponent implements OnInit {
         if (!this.chartData) {
             this.chartData = new Array;
         }
-        this.chartData = [35, 45, 10,15];
+        this.chartData = [35, 45, 10, 15, 35, 45, 10, 15,35, 45, 10,15];
         this.chartType = "doughnut";
 
         this.chartOption = {
