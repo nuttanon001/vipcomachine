@@ -116,7 +116,7 @@ namespace VipcoMachine.Controllers
         public async Task<IActionResult> Get()
         {
             //return new JsonResult(await this.repository.GetAllAsync(), this.DefaultJsonSettings);
-            var Includes = new List<string> { "EmployeeRequire", "EmployeeWrite", "TypeMachine", "ProjectCodeDetail.ProjectCodeMaster" };
+            var Includes = new List<string> { "EmployeeRequire","EmployeeGroup", "EmployeeWrite", "TypeMachine", "ProjectCodeDetail.ProjectCodeMaster" };
             return new JsonResult(
                   this.ConverterTableToViewModel<JobCardMasterViewModel, JobCardMaster>(await this.repository.GetAllWithInclude2Async(Includes)),
                   this.DefaultJsonSettings);
@@ -127,7 +127,7 @@ namespace VipcoMachine.Controllers
         public async Task<IActionResult> Get(int key)
         {
             //return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
-            var Includes = new List<string> { "EmployeeRequire", "EmployeeWrite", "TypeMachine", "ProjectCodeDetail.ProjectCodeMaster" };
+            var Includes = new List<string> { "EmployeeRequire","EmployeeGroup", "EmployeeWrite", "TypeMachine", "ProjectCodeDetail.ProjectCodeMaster" };
             return new JsonResult(
                this.mapper.Map<JobCardMaster, JobCardMasterViewModel>(await this.repository.GetAsynvWithIncludes(key, "JobCardMasterId", Includes)),
                this.DefaultJsonSettings);
@@ -183,6 +183,7 @@ namespace VipcoMachine.Controllers
                                                .Include(x => x.EmployeeRequire)
                                                .Include(x => x.EmployeeWrite)
                                                .Include(x => x.TypeMachine)
+                                               .Include(x => x.EmployeeGroup)
                                                .Include(x => x.ProjectCodeDetail.ProjectCodeMaster)
                                                .AsQueryable();
 
@@ -378,6 +379,7 @@ namespace VipcoMachine.Controllers
             {
                 var QueryData = this.repository.GetAllAsQueryable()
                                     .Include(x => x.EmployeeRequire)
+                                    .Include(x => x.EmployeeGroup)
                                     .Include(x => x.EmployeeWrite)
                                     .Include(x => x.TypeMachine)
                                     .Include(x => x.ProjectCodeDetail.ProjectCodeMaster)
@@ -397,7 +399,7 @@ namespace VipcoMachine.Controllers
                 {
                     QueryData = QueryData.Where(x => x.Description.ToLower().Contains(keyword) ||
                                                      x.JobCardMasterNo.ToLower().Contains(keyword) ||
-                                                     x.EmployeeRequire.NameThai.ToLower().Contains(keyword) ||
+                                                     x.EmployeeGroup.Description.ToLower().Contains(keyword) ||
                                                      x.EmpRequire.ToLower().Contains(keyword) ||
                                                      x.EmployeeWrite.NameThai.ToLower().Contains(keyword) ||
                                                      x.EmpWrite.ToLower().Contains(keyword) ||
@@ -425,9 +427,9 @@ namespace VipcoMachine.Controllers
 
                     case "EmployeeRequireString":
                         if (Scroll.SortOrder == -1)
-                            QueryData = QueryData.OrderByDescending(e => e.EmployeeRequire.NameThai);
+                            QueryData = QueryData.OrderByDescending(e => e.EmployeeGroup.Description);
                         else
-                            QueryData = QueryData.OrderBy(e => e.EmployeeRequire.NameThai);
+                            QueryData = QueryData.OrderBy(e => e.EmployeeGroup.Description);
                         break;
 
                     case "JobCardDate":
@@ -637,7 +639,7 @@ namespace VipcoMachine.Controllers
 
         #endregion DELETE
 
-        #region Attach
+        #region ATTACH
 
         // GET: api/JobCardMaster/GetAttach/5
         [HttpGet("GetAttach/{JobCardMasterId}")]

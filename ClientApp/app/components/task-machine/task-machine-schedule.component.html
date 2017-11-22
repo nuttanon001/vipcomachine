@@ -2,7 +2,14 @@
     <div class="child-col-container">
         <h4>Machine Schedule </h4>
 
+        <div class="child-row-container my-1">
+            <div class="plan-col" style="border-bottom:none; margin-right:5px;">|||||</div> Plan
+            <div class="ml-1 actual-col" style="margin-right:5px;">|||||</div> Actual
+
+        </div>
+
         <form [formGroup]="reportForm" class="form-content">
+
             <div>
                 <i class="fa fa-search" aria-hidden="true"></i>
                 <input type="text" formControlName="Filter" placeholder="Insert require machine code to filter"
@@ -30,28 +37,37 @@
                 </p-dropdown>
             </div>
 
-            <div >
+            <div>
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                <input type="text" formControlName="CreatorName" placeholder="Select employee creator."
+                       (click)="onShowDialog('e')" readonly
+                       style="width:250px;cursor:pointer;" matTooltip="Select employee creator">
+            </div>
+
+            <div>
+                <i class="fa fa-group" aria-hidden="true"></i>
+                <input type="text" formControlName="RequireName" placeholder="Select group employee require."
+                       (click)="onShowDialog('r')" readonly
+                       style="width:250px;cursor:pointer;" matTooltip="Select group employee require">
+            </div>
+
+            <div style="margin:0 0 10px 0;">
                 <button type="button" mat-mini-fab color="warn" (click)="resetFilter()"
                         matTooltip="Reset all filter" style="margin:4px;">
                     <i class="fa fa-2x fa-minus" aria-hidden="true" style="margin:0px;"></i>
                 </button>
             </div>
+
         </form>
 
-        <div class="child-row-container my-1">
-            <div class="plan-col" style="border-bottom:none; margin-right:5px;">|||||</div> Plan
-            <div class="ml-1 actual-col" style="margin-right:5px;">|||||</div> Actual
-
-        </div>
-
-        Reload data in {{message}} sec.
+        <!--Reload data in {{message}} sec.
         <div style="width:98%;">
             <mat-progress-bar color="primary" [value]="count" mode="determinate">
             </mat-progress-bar>
-        </div>
+        </div>-->
     </div>
     <div class="bottom-container my-2">
-        <p-dataTable [value]="taskMachines" sortField="MachineNo" rowGroupMode="rowspan"
+        <p-dataTable [value]="taskMachines" rowGroupMode="rowspan"
                      [lazy]="true" [rows]="5" [paginator]="true" [rowsPerPageOptions]="[5,10,20]"
                      [totalRecords]="totalRecords" (onLazyLoad)="loadDataLazy($event)"
                      scrollable="true" scrollWidth="94vw">

@@ -45,7 +45,8 @@ namespace VipcoMachine.Helpers
                 .ForMember(x => x.EmployeeWrite, o => o.Ignore())
                 // EmployeeRequire
                 .ForMember(x => x.EmployeeRequireString,
-                           o => o.MapFrom(s => s.EmployeeRequire == null ? "-" : $"{s.EmployeeRequire.EmpCode} {s.EmployeeRequire.NameThai}"))
+                           o => o.MapFrom(s => s.EmployeeGroup == null ? "-" : $"{s.EmployeeGroup.Description}"))
+                .ForMember(x => x.EmployeeGroup, o => o.Ignore())
                 .ForMember(x => x.EmployeeRequire, o => o.Ignore());
             CreateMap<JobCardMasterViewModel, JobCardMaster>();
 

@@ -23,9 +23,6 @@ export class OverTimeChartComponent implements OnInit {
     // chart data
     public chartLabels: Array<string>;
     public chartData: Array<number>;
-    public chartColors: Array<any>;
-    public chartType: string;
-    public chartOption: any;
     // array
     groupEmployees: Array<SelectItem>;
     projectMasters: Array<SelectItem>;
@@ -39,32 +36,12 @@ export class OverTimeChartComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        // chart.js data and option
-        if (!this.chartLabels) {
-            this.chartLabels = new Array;
-            this.chartLabels = ["NoData", "NoData", "NoData"];
-        }
         if (!this.chartData) {
             this.chartData = new Array;
-            this.chartData = [1, 1, 1];
-
         }
-        this.chartType = "doughnut";
 
-        this.chartOption = {
-            scaleShowVerticalLines: false,
-            responsive: true,
-            maintainAspectRatio: false,
-            legend: { position: 'left' }
-        };
-
-        if (!this.chartColors) {
-            this.chartColors = new Array;
-            this.chartColors = [{
-                backgroundColor: [
-                    "#b8436d", "#00d9f9", "#a4c73c", "#a4add3", "#F4D03F",
-                    "#5DADE2", "#B03A2E", "#979A9A", "#8E44AD","#52BE80"]
-            }]
+        if (!this.chartLabels) {
+            this.chartLabels = new Array;
         }
 
         if (!this.modeChartType) {
@@ -72,8 +49,9 @@ export class OverTimeChartComponent implements OnInit {
             this.modeChartType.push({ label: "แสดงชื่อกลุ่มงาน", value: 1 });
             this.modeChartType.push({ label: "แสดงชื่อโครงการ", value: 2 });
         }
-
+        // build form
         this.buildForm();
+        //
         this.getEmployeeGroup();
         this.getProjectMaster();
     }
@@ -110,19 +88,8 @@ export class OverTimeChartComponent implements OnInit {
         let option: OptionOverTimeChart = this.chartForm.value;
         this.service.postOverTimeChartData(option)
             .subscribe(ChartData => {
-                let removeLabel:number = this.chartLabels.length;
-
-                for (let label of ChartData.Labels) {
-                    this.chartLabels.push(label);
-                    //if (count < remove) {
-                    //    count++;
-                    //    this.chartLabels.splice(0, 1); // remove first data point
-                    //}
-                }
-                this.chartLabels.splice(0, removeLabel)
-                // this.chartLabels = ChartData.Labels.slice();
+                this.chartLabels = ChartData.Labels.slice();
                 this.chartData = ChartData.Datas.slice();
-
             }, error => {
                 this.setChartData();
             });
@@ -160,14 +127,8 @@ export class OverTimeChartComponent implements OnInit {
 
     // set chart data
     setChartData(): void {
-        let removeLable: number = this.chartLabels.length;
-        // add template label
-        this.chartLabels.push("NoData");
-        this.chartLabels.push("NoData");
-        this.chartLabels.push("NoData");
         // remove old label
-        this.chartLabels.splice(0, removeLable);
-
+        this.chartLabels = new Array;
         this.chartData = [1, 1, 1];
     }
 }

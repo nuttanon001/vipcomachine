@@ -53,7 +53,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
 
     @Output() onlyUserChange = new EventEmitter<boolean>();
     @Input()
-    get onlyUser() {
+    get onlyUser():boolean {
         return this._onlyUser;
     }
     set onlyUser(value:boolean) {
@@ -145,9 +145,9 @@ export class DataTableComponent implements OnInit,OnDestroy {
     }
     // emit row selected to output
     onSelect(selected: any):void {
-        //if (selected) {
+        // if (selected) {
         //    this.selected.emit(selected.selected[0]);
-        //}
+        // }
 
         this.selected.emit(selected.selected[0]);
     }

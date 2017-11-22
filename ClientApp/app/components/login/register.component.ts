@@ -1,12 +1,13 @@
 ﻿// angular
 import { Component, OnInit, ViewContainerRef } from "@angular/core";
 import { FormBuilder, FormGroup, FormControl, Validators, AbstractControl, } from "@angular/forms";
-import { Router, ActivatedRoute } from "@angular/router";
+import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 // model
 import { User } from "../../models/model.index";
 // service
 import { DialogsService, UserService } from "../../services/service.index";
 import { EmployeeService } from "../../services/employee/employee.service";
+import { AuthService } from "../../services/auth/auth.service";
 // timezone
 import * as moment from "moment-timezone";
 
@@ -22,14 +23,23 @@ export class RegisterComponent implements OnInit {
     userForm: FormGroup;
     empCode: string = "";
     userName: string = "";
+
+    get UpdateProfile(): boolean {
+        if (this.user) {
+            return this.user.UserId > 0;
+        }
+        return false;
+    }
     // register ctor */
     constructor(
         private service: UserService,
         private serviceEmployee: EmployeeService,
         private serviceDialogs: DialogsService,
+        private serviceAuth: AuthService,
         private viewContainerRef: ViewContainerRef,
         private fb: FormBuilder,
         private router: Router,
+        private route: ActivatedRoute,
 
     ) { }
 
@@ -41,6 +51,20 @@ export class RegisterComponent implements OnInit {
         };
 
         this.buildForm();
+
+        this.route.paramMap.subscribe((param: ParamMap) => {
+            let key: number = Number(param.get("condition") || 0);
+
+            if (key) {
+                if (this.serviceAuth.getAuth) {
+                    this.user = this.serviceAuth.getAuth;
+                    this.buildForm();
+
+                } else {
+                    this.onGoBack();
+                }
+            }
+        }, error => console.error(error));
     }
 
     // build form
@@ -94,7 +118,7 @@ export class RegisterComponent implements OnInit {
     onUpdateEmployee(): void {
         if (!this.userForm || !this.user) { return; }
 
-        const form = this.userForm;
+        const form:FormGroup = this.userForm;
         const control: AbstractControl | null = form.get("EmpCode");
         // if have planned start date
         if (control) {
@@ -115,7 +139,7 @@ export class RegisterComponent implements OnInit {
                                 NameThai: employee.NameThai,
                             });
                         }, error => {
-                            let message = error.replace("404 - Not Found", "");
+                            let message:any = error.replace("404 - Not Found", "");
                             this.serviceDialogs.error("Reguester Error", (message || ""), this.viewContainerRef);
                             this.userForm.patchValue({
                                 NameThai: "",
@@ -149,10 +173,15 @@ export class RegisterComponent implements OnInit {
 
             this.service.post(this.user)
                 .subscribe(dBUser => {
-                    this.serviceDialogs.context("Regiester Complate", "บัญชีผู้ใช้งานนี้สามารถเข้าใช้งานได้แล้ว", this.viewContainerRef)
-                        .subscribe(() => this.onGoBack());
+                    if (this.UpdateProfile) {
+                        this.serviceDialogs.context("Update Complate", "บัญชีผู้ใช้งานปรับปรุงเรียบร้อย", this.viewContainerRef)
+                            .subscribe(() => this.onGoBack());
+                    } else {
+                        this.serviceDialogs.context("Regiester Complate", "บัญชีผู้ใช้งานนี้สามารถเข้าใช้งานได้แล้ว", this.viewContainerRef)
+                            .subscribe(() => this.onGoBack());
+                    }
                 }, (error: string) => {
-                    let message = error.replace("404 - Not Found", "");
+                    let message:any = error.replace("404 - Not Found", "");
 
                     this.serviceDialogs.error("Reguester Error", (message || ""), this.viewContainerRef);
                 });
@@ -161,6 +190,10 @@ export class RegisterComponent implements OnInit {
 
     // on go back
     onGoBack(): void {
-        this.router.navigate(["login"]);
+        if (this.UpdateProfile) {
+            this.router.navigate(["home"]);
+        } else {
+            this.router.navigate(["login"]);
+        }
     }
 }

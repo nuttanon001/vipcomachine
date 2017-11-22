@@ -18,5 +18,7 @@ namespace VipcoMachine.Models
         //FK
         //OverTimeMaster
         public ICollection<OverTimeMaster> OverTimeMasters { get; set; }
+        //JobCardMaster
+        public ICollection<JobCardMaster> JobCardMasters { get; set; }
     }
 }

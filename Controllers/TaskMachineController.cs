@@ -291,6 +291,20 @@ namespace VipcoMachine.Controllers
                         }
                     }
 
+                    // Option Create
+                    if (!string.IsNullOrEmpty(Scehdule.Creator))
+                    {
+                        QueryData = QueryData.Where(x =>
+                            x.JobCardDetail.JobCardMaster.EmpRequire == Scehdule.Creator);
+                    }
+
+                    // Option Require
+                    if (!string.IsNullOrEmpty(Scehdule.Require))
+                    {
+                        QueryData = QueryData.Where(x =>
+                            x.JobCardDetail.JobCardMaster.GroupCode == Scehdule.Require);
+                    }
+
                     // Option JobNo
                     if (Scehdule.JobNo.HasValue)
                     {
@@ -334,9 +348,19 @@ namespace VipcoMachine.Controllers
                     IDictionary<string, int> ColumnGroupTop = new Dictionary<string, int>();
                     IDictionary<DateTime, string> ColumnGroupBtm = new Dictionary<DateTime, string>();
                     List<string> ColumnsAll = new List<string>();
-
-                    var MinDate = GetData.Min(x => x.PlannedStartDate);
-                    var MaxDate = GetData.Max(x => x.PlannedEndDate);
+                    DateTime MinDate; DateTime MaxDate;
+                    // Min
+                    if (GetData.Any(x => x.ActualStartDate != null))
+                        MinDate = GetData.Min(x => x.PlannedStartDate.Date) < GetData.Where(x => x.ActualStartDate != null).Min(x => x?.ActualStartDate?.Date ?? x.PlannedStartDate.Date) ?
+                                    GetData.Min(x => x.PlannedStartDate.Date) : GetData.Where(x => x.ActualStartDate != null).Min(x => x?.ActualStartDate?.Date ?? x.PlannedStartDate.Date);
+                    else
+                        MinDate = GetData.Min(x => x.PlannedStartDate);
+                    // Max
+                    if (GetData.Any(x => x.ActualEndDate != null))
+                        MaxDate = GetData.Max(x => x.PlannedEndDate.Date) > GetData.Where(x => x.ActualEndDate != null).Max(x => x?.ActualEndDate?.Date ?? x.PlannedEndDate.Date) ?
+                                    GetData.Max(x => x.PlannedEndDate.Date) : GetData.Max(x => x?.ActualEndDate?.Date ?? x.PlannedEndDate.Date);
+                    else
+                        MaxDate = GetData.Max(x => x.PlannedEndDate);
 
                     if (MinDate == null && MaxDate == null)
                     {
@@ -359,8 +383,8 @@ namespace VipcoMachine.Controllers
                     }
 
                     var DataTable = new List<IDictionary<String, Object>>();
-
-                    foreach (var Data in GetData.OrderBy(x => x.Machine.TypeMachineId).ThenBy(x => x.Machine.MachineCode))
+                    // OrderBy(x => x.Machine.TypeMachineId).ThenBy(x => x.Machine.MachineCode)
+                    foreach (var Data in GetData.OrderBy(x => x.PlannedStartDate).ThenBy(x => x.PlannedEndDate))
                     {
                         IDictionary<String, Object> rowData = new ExpandoObject();
                         var Pro = Data.CurrentQuantity ?? 0;

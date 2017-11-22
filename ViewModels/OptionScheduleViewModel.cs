@@ -18,5 +18,7 @@ namespace VipcoMachine.ViewModels
         /// null or 2 : Wait and Process
         /// </summary>
         public int? Mode { get; set; }
+        public string Creator { get; set; }
+        public string Require { get; set; }
     }
 }

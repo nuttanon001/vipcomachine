@@ -74,8 +74,8 @@
 
                         <label for="EmployeeRequireString" class="my-label">Require:</label>
                         <div class="col-sm-4">
-                            <input type="text" class="my-input" placeholder="Choose employee require machine"
-                                   (click)="onEmployeeWriteClick('R')" style="cursor:pointer;"
+                            <input type="text" class="my-input" placeholder="Choose group of employee require machine"
+                                   (click)="onEmployeeGroupClick()" style="cursor:pointer;"
                                    id="EmployeeRequireString" formControlName="EmployeeRequireString" required readonly>
                             <validation-messages [control]="editValueForm.controls.EmployeeRequireString"></validation-messages>
                         </div>

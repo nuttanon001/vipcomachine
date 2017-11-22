@@ -34,6 +34,9 @@ namespace VipcoMachine.Models
         public string EmpRequire { get; set; }
         [ForeignKey("EmpRequire")]
         public Employee EmployeeRequire { get; set; }
+        // GroupCode
+        public string GroupCode { get; set; }
+        public EmployeeGroup EmployeeGroup { get; set; }
         // ProjectCodeDetail
         public int? ProjectCodeDetailId { get; set; }
         public ProjectCodeDetail ProjectCodeDetail { get; set; }

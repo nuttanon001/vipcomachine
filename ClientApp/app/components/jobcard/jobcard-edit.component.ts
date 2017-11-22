@@ -187,6 +187,7 @@ export class JobCardEditComponent
             // fK
             EmpWrite: [this.editValue.EmpWrite],
             EmpRequire: [this.editValue.EmpRequire],
+            GroupCode: [this.editValue.GroupCode],
             ProjectCodeDetailId: [this.editValue.ProjectCodeDetailId,
                 [
                     Validators.required
@@ -348,6 +349,18 @@ export class JobCardEditComponent
             });
     }
 
+    // on GroupEmployee click
+    onEmployeeGroupClick(): void {
+        this.serviceDialogs.dialogSelectedEmployeeGroup(this.viewContainerRef)
+            .subscribe(group => {
+                if (group) {
+                    this.editValueForm.patchValue({
+                        GroupCode: group.GroupCode,
+                        EmployeeRequireString: group.Description,
+                    });
+                }
+            });
+    }
     // get attact file
     getAttach(): void {
         if (this.editValue && this.editValue.JobCardMasterId > 0) {

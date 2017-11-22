@@ -43,15 +43,7 @@
         </form>
     </div>
     <div class="bottom-container my-2">
-        <div class="chart" *ngIf="chartData">
-            <canvas baseChart
-                    [data]="chartData"
-                    [labels]="chartLabels"
-                    [colors]="chartColors"
-                    [options]="chartOption"
-                    [chartType]="chartType">
-            </canvas>
-        </div>
+        <base-chart [chartLabels]="chartLabels" [chartData]="chartData"></base-chart>
     </div>
 </div>
 

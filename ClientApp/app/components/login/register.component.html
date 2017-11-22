@@ -1,8 +1,13 @@
 ﻿<div class="edit-container">
     <div class="mb-3 mx-5">
-        <h4>
+        <h4 *ngIf="!UpdateProfile;else HeaderElse">
             Register new user.
         </h4>
+        <ng-template #HeaderElse>
+            <h4>
+                Update user profile.
+            </h4>
+        </ng-template>
         <p>
             Please fill out this form completely and save it.
         </p>
@@ -14,14 +19,14 @@
             <label for="UserName" class="my-label">Username:</label>
             <div class="col-sm-4">
                 <input type="text" class="my-input" placeholder="Insert username here"
-                       id="UserName" formControlName="UserName" required>
+                       id="UserName" formControlName="UserName" required [readonly]="UpdateProfile">
                 <validation-messages [control]="userForm.controls.UserName"></validation-messages>
             </div>
 
             <label for="PassWord" class="my-label">Password:</label>
             <div class="col-sm-4">
                 <input type="password" class="my-input" placeholder="Insert password here"
-                       id="PassWord" formControlName="PassWord" required>
+                       id="PassWord" formControlName="PassWord" required [readonly]="UpdateProfile">
                 <validation-messages [control]="userForm.controls.PassWord"></validation-messages>
             </div>
         </div>
@@ -39,7 +44,7 @@
             <label for="EmpCode" class="my-label">Employee Number:</label>
             <div class="col-sm-4">
                 <input type="text" class="my-input" placeholder="Insert employee number here"
-                       id="EmpCode" formControlName="EmpCode" required>
+                       id="EmpCode" formControlName="EmpCode" required [readonly]="UpdateProfile">
                 <validation-messages [control]="userForm.controls.EmpCode"></validation-messages>
             </div>
 
@@ -55,7 +60,12 @@
     <div class="chlid-edit-container-center m-5">
         <button type="button" mat-raised-button color="primary" [disabled]="!userForm.valid" (click)="onSubmit()">
             <i class="fa fa-registered" aria-hidden="true" ></i>
-            Register User
+            <p *ngIf="!UpdateProfile;else CmdElse">
+                Register User
+            </p>
+            <ng-template #CmdElse>
+                Update Profile
+            </ng-template>
         </button>
         <button type="button" class="mx-2" mat-raised-button color="warn" (click)="onGoBack()">
             <i class="fa fa-minus" aria-hidden="true" ></i>

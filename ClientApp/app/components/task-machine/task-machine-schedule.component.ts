@@ -5,13 +5,14 @@ import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 import { Observable } from "rxjs/Rx";
 import { Subscription } from "rxjs/Subscription";
 // model
-import { TaskMachine, OptionSchedule, ProjectCodeMaster } from "../../models/model.index";
+import { TaskMachine, OptionSchedule, ProjectCodeMaster, Employee } from "../../models/model.index";
 // service
 import { TaskMachineService } from "../../services/task-machine/task-machine.service";
 import { ProjectCodeMasterService } from "../../services/projectcode-master/projectcode-master.service";
 import { ProjectCodeDetailEditService } from "../../services/projectcode-detail/projectcode-detail-edit.service";
 import { TypeMachineService } from "../../services/type-machine/type-machine.service";
 import { DialogsService } from "../../services/dialog/dialogs.service";
+import { AuthService } from "../../services/auth/auth.service";
 // 3rd patry
 import { Column, SelectItem, LazyLoadEvent } from "primeng/primeng";
 
@@ -51,6 +52,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
         private serviceProMaster: ProjectCodeMasterService,
         private serviceProDetail: ProjectCodeDetailEditService,
         private serviceTypeMachine: TypeMachineService,
+        private serviceAuth: AuthService,
         private viewContainerRef: ViewContainerRef,
         private fb: FormBuilder,
         private router: Router,
@@ -111,6 +113,13 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
             Mode: this.mode || 2,
         };
 
+        if (this.serviceAuth.getAuth) {
+            if (this.mode === 1) {
+                this.schedule.Creator = this.serviceAuth.getAuth.EmpCode;
+                this.schedule.CreatorName = this.serviceAuth.getAuth.NameThai;
+            }
+        }
+
         this.reportForm = this.fb.group({
             Filter: [this.schedule.Filter],
             JobNo: [this.schedule.JobNo],
@@ -119,6 +128,11 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
             Skip: [this.schedule.Skip],
             Take: [this.schedule.Take],
             TypeMachineId: [this.schedule.TypeMachineId],
+            Creator: [this.schedule.Creator],
+            Require: [this.schedule.Require],
+            // template
+            CreatorName: [this.schedule.CreatorName],
+            RequireName: [this.schedule.RequireName],
         });
 
         this.reportForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
@@ -335,5 +349,31 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
             Skip: event.first,
             Take: ((event.first || 0) + (event.rows || 4)),
         });
+    }
+
+    // on select dialog
+    onShowDialog(mode?:string): void {
+        if (mode) {
+            if (mode === "e") {
+                this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef, "singe")
+                    .subscribe(employee => {
+
+                        console.log(employee);
+                        let emp: Employee = Object.assign({}, employee[0]);
+                        this.reportForm.patchValue({
+                            Creator: emp.EmpCode,
+                            CreatorName: emp.NameThai,
+                        });
+                    });
+            } else {
+                this.serviceDialogs.dialogSelectedEmployeeGroup(this.viewContainerRef)
+                    .subscribe(group => {
+                        this.reportForm.patchValue({
+                            Require: group.GroupCode,
+                            RequireName: group.Description,
+                        });
+                    });
+            }
+        }
     }
 }

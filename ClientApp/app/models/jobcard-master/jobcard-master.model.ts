@@ -18,6 +18,7 @@ export interface JobCardMaster {
     //Fk
     EmpWrite?: string;
     EmpRequire?: string;
+    GroupCode?: string;
     ProjectCodeDetailId?: number;
     TypeMachineId?: number;
     JobCardDetails?: Array<JobCardDetail>;

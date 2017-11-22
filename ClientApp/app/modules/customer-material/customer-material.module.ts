@@ -32,12 +32,13 @@ import {
 import { ChartsModule } from "ng2-charts/ng2-charts";
 
 import { AngularSplitModule } from "angular-split";
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 // component
 import { DataTableComponent } from "../../components/base-component/data-table.component";
 import { SearchBoxComponent } from "../../components/base-component/search-box.component";
 import { AttactFileComponent } from "../../components/base-component/attact-file.component";
 import { ReuseTableComponent } from "../../components/base-component/reuse-table.component";
+import { BaseChartComponent } from "../../components/base-component/base-chart.component";
 import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 
 @NgModule({
@@ -47,11 +48,12 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         SearchBoxComponent,
         AttactFileComponent,
         ReuseTableComponent,
+        BaseChartComponent,
         // pipe
         DateOnlyPipe,
     ],
     imports: [
-        //Material
+        // material
         MatButtonModule,
         MatCheckboxModule,
         MatProgressBarModule,
@@ -64,11 +66,11 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         MatTabsModule,
         MatCardModule,
         MatProgressSpinnerModule,
-        //AngularSplit
+        // angularSplit
         AngularSplitModule,
-        //NgxDataTable
+        // ngxDataTable
         NgxDatatableModule,
-        //PrimeNg
+        // primeNg
         DataTableModule,
         DialogModule,
         SharedModule,
@@ -79,11 +81,11 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         TreeTableModule,
         AccordionModule,
         AutoCompleteModule,
-        // Chart
+        // chart
         ChartsModule
     ],
     exports: [
-        //Material
+        // material
         MatButtonModule,
         MatCheckboxModule,
         MatProgressBarModule,
@@ -96,11 +98,11 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         MatTabsModule,
         MatCardModule,
         MatProgressSpinnerModule,
-        //AngularSplit
+        // angularSplit
         AngularSplitModule,
-        //NgxDataTable
+        // ngxDataTable
         NgxDatatableModule,
-        //PrimeNg
+        // primeNg
         DataTableModule,
         DialogModule,
         SharedModule,
@@ -111,14 +113,15 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         TreeTableModule,
         AccordionModule,
         AutoCompleteModule,
-        //Component
+        // component
         SearchBoxComponent,
         DataTableComponent,
         AttactFileComponent,
         ReuseTableComponent,
-        //Pipe
+        BaseChartComponent,
+        // pipe
         DateOnlyPipe,
-        // Chart
+        // chart
         ChartsModule
     ],
     entryComponents: [
@@ -126,6 +129,7 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
         DataTableComponent,
         AttactFileComponent,
         ReuseTableComponent,
+        BaseChartComponent,
     ]
 })
 export class CustomMaterialModule { }
