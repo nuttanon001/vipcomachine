@@ -81,9 +81,10 @@ export class OvertimeEditComponent
                                 });
                             });
                     }
+
                     if (this.editValue.LastOverTimeId) {
                         this.service.getOneKeyNumber(this.editValue.LastOverTimeId)
-                            .subscribe(dbLastMaster => this.lastOverTimeMaster);
+                            .subscribe(dbLastMaster => this.lastOverTimeMaster = dbLastMaster);
                     }
                 }, error => console.error(error), () => this.defineData());
         } else {
@@ -249,14 +250,22 @@ export class OvertimeEditComponent
                                             ProjectCodeMasterId: controlMaster.value,
                                             GroupCode: controlGroup.value
                                         };
+
+                                        this.editValueForm.patchValue({
+                                            LastOverTimeId: undefined,
+                                        });
                                     }
                                 }, error => {
+                                    this.canNotSave = "";
                                     this.lastOverTimeMaster = {
                                         OverTimeMasterId: 0,
                                         OverTimeDate: new Date(),
                                         ProjectCodeMasterId: controlMaster.value,
                                         GroupCode: controlGroup.value
                                     };
+                                    this.editValueForm.patchValue({
+                                        LastOverTimeId: undefined,
+                                    });
                                 });
                         }
                     }

@@ -8,7 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 using System;
 using System.IO;
+using System.Net;
 using System.Linq;
+using System.Dynamic;
+using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
 using System.Collections.Generic;
@@ -17,7 +20,7 @@ using VipcoMachine.Models;
 using VipcoMachine.Helpers;
 using VipcoMachine.ViewModels;
 using VipcoMachine.Services.Interfaces;
-using System.Dynamic;
+
 using ReportClasses;
 
 namespace VipcoMachine.Controllers
@@ -33,9 +36,11 @@ namespace VipcoMachine.Controllers
         private IRepository<MachineHasOperator> repositoryOperator;
         private IRepository<JobCardDetail> repositoryJobDetail;
         private IRepository<JobCardMaster> repositoryJobMaster;
+        private IRepository<User> repositoryUser;
         private IMapper mapper;
         private IHostingEnvironment hostingEnvironment;
         private HelpersClass<TaskMachine> helpers;
+        private ValidEmail validEmail;
 
         private JsonSerializerSettings DefaultJsonSettings =>
             new JsonSerializerSettings()
@@ -51,50 +56,55 @@ namespace VipcoMachine.Controllers
                 listData.Add(this.mapper.Map<TableType, MapType>(item));
             return listData;
         }
-        private async Task<bool> UpdateJobCard(int JobCardDetailId,string Create, JobCardDetailStatus Status = JobCardDetailStatus.Task)
+        private async Task<JobCardDetail> UpdateJobCard(int JobCardDetailId,string Create, JobCardDetailStatus Status = JobCardDetailStatus.Task)
         {
-            var Includes = new List<string> { "JobCardDetails" };
-            var jobCardDetail = await this.repositoryJobDetail.GetAsync(JobCardDetailId);
+            var Includes = new List<string> { "JobCardMaster"  };
+            var jobCardDetail = await this.repositoryJobDetail.GetAsynvWithIncludes(JobCardDetailId, "JobCardDetailId",Includes);
             if (jobCardDetail != null)
             {
                 jobCardDetail.JobCardDetailStatus = Status;
                 jobCardDetail.ModifyDate = DateTime.Now;
                 jobCardDetail.Modifyer = Create;
-
                 if (await this.repositoryJobDetail.UpdateAsync(jobCardDetail,jobCardDetail.JobCardDetailId) != null)
                 {
+                    return jobCardDetail;
+                    #region Mark
+                        // JobCardMaster status will change manual
+                        //if (jobCardDetail.JobCardMasterId != null)
+                        //{
+                        //    var jobCardMaster = await this.repositoryJobMaster.GetAsynvWithIncludes(jobCardDetail.JobCardMasterId.Value, "JobCardMasterId", Includes);
 
-                    // JobCardMaster status will change manual
-                    //if (jobCardDetail.JobCardMasterId != null)
-                    //{
-                    //    var jobCardMaster = await this.repositoryJobMaster.GetAsynvWithIncludes(jobCardDetail.JobCardMasterId.Value, "JobCardMasterId", Includes);
+                        //    if (jobCardMaster != null)
+                        //    {
+                        //        if (!jobCardMaster.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Wait))
+                        //            jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Complete;
+                        //        else
+                        //        {
+                        //            if (jobCardMaster.JobCardMasterStatus == JobCardMasterStatus.Complete)
+                        //                jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Wait;
+                        //        }
 
-                    //    if (jobCardMaster != null)
-                    //    {
-                    //        if (!jobCardMaster.JobCardDetails.Any(x => x.JobCardDetailStatus == JobCardDetailStatus.Wait))
-                    //            jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Complete;
-                    //        else
-                    //        {
-                    //            if (jobCardMaster.JobCardMasterStatus == JobCardMasterStatus.Complete)
-                    //                jobCardMaster.JobCardMasterStatus = JobCardMasterStatus.Wait;
-                    //        }
-
-                    //        jobCardMaster.ModifyDate = DateTime.Now;
-                    //        jobCardMaster.Modifyer = Create;
-                    //        await this.repositoryJobMaster.UpdateAsync(jobCardMaster, jobCardMaster.JobCardMasterId);
-                    //    }
-                    //}
-
-                    return true;
+                        //        jobCardMaster.ModifyDate = DateTime.Now;
+                        //        jobCardMaster.Modifyer = Create;
+                        //        await this.repositoryJobMaster.UpdateAsync(jobCardMaster, jobCardMaster.JobCardMasterId);
+                        //    }
+                        //}
+                    #endregion
                 }
             }
 
-            return false;
+            return null;
         }
         private IEnumerable<DateTime> EachDay(DateTime from, DateTime thru)
         {
             for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
                 yield return day;
+        }
+
+        private IEnumerable<DateTime> EachCalendarDay(DateTime startDate, DateTime endDate)
+        {
+            for (var date = startDate.Date; date.Date <= endDate.Date; date = date.AddDays(1)) yield
+            return date;
         }
         private async Task<string> GeneratedCode(int JobDetailId, int MachineId)
         {
@@ -161,6 +171,43 @@ namespace VipcoMachine.Controllers
             return 0;
         }
 
+        private async Task TaskMachineSendMailToEmpRequire(JobCardDetail jobCardDetail,TaskMachine taskMachine)
+        {
+            try
+            {
+                if (jobCardDetail.JobCardMaster != null)
+                {
+                    var user = await this.repositoryUser.GetAllAsQueryable()
+                                        .Include(x => x.Employee)
+                                        .Where(x => x.EmpCode == jobCardDetail.JobCardMaster.EmpWrite)
+                                        .FirstOrDefaultAsync();
+                    if (user != null)
+                    {
+                        if (!this.validEmail.IsValidEmail(user.MailAddress))
+                            return;
+
+                        var BodyMessage = "<body style=font-size:11pt;font-family:Tahoma>" +
+                                            "<h4 style='color:steelblue;'>เมล์ฉบับนี้เป็นแจ้งเตือนจากระบบงาน VIPCO MACHINE SYSTEM</h4>" +
+                                            $"เรียน คุณ{user.Employee.NameThai}" +
+                                            $"<p>เรื่อง การเปิดใบงานเลขที่ {jobCardDetail.JobCardMaster.JobCardMasterNo} ได้รับการวางแผน</p>" +
+                                            $"<p>ณ.ขณะนี้ ทางหน่วยงานแมชชีนได้ทำการวางแผนการทำงานในใบงานของแผนกแมชชีนเลขที่ {taskMachine.TaskMachineName}</p>" +
+                                            $"<p>\"คุณ{user.Employee.NameThai}\" " +
+                                            $"สามารถเข้าไปตรวจติดตามข้อมูลได้ <a href='http://{Request.Host}/task-machine/link-mail/{taskMachine.TaskMachineId}'>ที่นี้</a> </p>" +
+                                            "<span style='color:steelblue;'>This mail auto generated by VIPCO MACHINE SYSTEM. Do not reply this email.</span>" +
+                                          "</body>";
+
+                        await this.SendMailMessage(user.MailAddress, user.Employee.NameThai,
+                                                   new List<string> { user.MailAddress },
+                                                   BodyMessage, "Notification mail from VIPCO MACHINE SYSTEM.");
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                var message = $"Has error {ex.ToString()}";
+            }
+        }
+
         #endregion PrivateMenbers
 
         #region Constructor
@@ -172,6 +219,7 @@ namespace VipcoMachine.Controllers
                 IRepository<MachineHasOperator> repoOperator,
                 IRepository<JobCardMaster> repoMaster,
                 IRepository<JobCardDetail> repoDetail,
+                IRepository<User> repoUser,
                 IHostingEnvironment hosting,
                 IMapper map)
         {
@@ -181,9 +229,11 @@ namespace VipcoMachine.Controllers
             this.repositoryJobDetail = repoDetail;
             this.repositoryMachine = repoMachine;
             this.repositoryOperator = repoOperator;
+            this.repositoryUser = repoUser;
             this.hostingEnvironment = hosting;
             this.mapper = map;
             this.helpers = new HelpersClass<TaskMachine>();
+            this.validEmail = new ValidEmail();
         }
 
         #endregion
@@ -220,6 +270,21 @@ namespace VipcoMachine.Controllers
             var taskMachine = await this.repository.GetAsynvWithIncludes(key, "TaskMachineId", Includes);
 
             return new JsonResult(new { Result = taskMachine.TaskMachineHasOverTimes.Any() }, this.DefaultJsonSettings);
+        }
+        [HttpGet("GetWorkGroup")]
+        public async Task<IActionResult> GetWorkGroupOfJobCardMaster()
+        {
+            var QueryData = await this.repositoryJobMaster.GetAllAsQueryable()
+                                                            .Where(x => x.JobCardMasterStatus != JobCardMasterStatus.Cancel)
+                                                            .Include(x => x.EmployeeGroup)
+                                                            .GroupBy(x => x.EmployeeGroup)
+                                                            .Select(x => x.Key)
+                                                            .ToListAsync();
+            if (QueryData.Any())
+            {
+                return new JsonResult(QueryData, this.DefaultJsonSettings);
+            }
+            return NotFound(new { Error = "Not found workgroup." });
         }
 
         #endregion
@@ -280,6 +345,9 @@ namespace VipcoMachine.Controllers
 
                 if (Scehdule != null)
                 {
+                    if (Scehdule.TaskMachineId.HasValue)
+                        QueryData = QueryData.Where(x => x.TaskMachineId == Scehdule.TaskMachineId);
+
                     if (!string.IsNullOrEmpty(Scehdule.Filter))
                     {
                         var filters = string.IsNullOrEmpty(Scehdule.Filter) ? new string[] { "" }
@@ -295,7 +363,7 @@ namespace VipcoMachine.Controllers
                     if (!string.IsNullOrEmpty(Scehdule.Creator))
                     {
                         QueryData = QueryData.Where(x =>
-                            x.JobCardDetail.JobCardMaster.EmpRequire == Scehdule.Creator);
+                            x.JobCardDetail.JobCardMaster.EmpWrite == Scehdule.Creator);
                     }
 
                     // Option Require
@@ -334,8 +402,8 @@ namespace VipcoMachine.Controllers
                     TotalRow = await QueryData.CountAsync();
 
                     // Option Skip and Task
-                    if (Scehdule.Skip.HasValue && Scehdule.Take.HasValue)
-                        QueryData = QueryData.Skip(Scehdule.Skip ?? 0).Take(Scehdule.Take ?? 4);
+                    // if (Scehdule.Skip.HasValue && Scehdule.Take.HasValue)
+                    QueryData = QueryData.Skip(Scehdule.Skip ?? 0).Take(Scehdule.Take ?? 5);
                 }
                 else
                 {
@@ -368,6 +436,9 @@ namespace VipcoMachine.Controllers
                     }
 
                     int countCol = 1;
+                    // add Date to max
+                    MaxDate = MaxDate.AddDays(2);
+                    MinDate = MinDate.AddDays(-2);
                     foreach (DateTime day in EachDay(MinDate, MaxDate))
                     {
                         // Get Month
@@ -420,6 +491,7 @@ namespace VipcoMachine.Controllers
                             {
                                 if (ColumnGroupBtm.Any(x => x.Key == day.Date))
                                 {
+
                                     var Col = ColumnGroupBtm.FirstOrDefault(x => x.Key == day.Date);
 
                                     // if Have Plan change value to 3
@@ -435,7 +507,7 @@ namespace VipcoMachine.Controllers
                     }
 
                     if (DataTable.Any())
-                        ColumnGroupBtm.OrderBy(x => x.Value).Select(x => x.Value)
+                        ColumnGroupBtm.OrderBy(x => x.Key.Date).Select(x => x.Value)
                             .ToList().ForEach(item => ColumnsAll.Add(item));
 
                     return new JsonResult(new
@@ -446,7 +518,7 @@ namespace VipcoMachine.Controllers
                             Name = x.Key,
                             Value = x.Value
                         }),
-                        ColumnsLow = ColumnGroupBtm.OrderBy(x => x.Value).Select(x => x.Key.Day),
+                        ColumnsLow = ColumnGroupBtm.OrderBy(x => x.Key.Date).Select(x => x.Key.Day),
                         ColumnsAll = ColumnsAll,
                         DataTable = DataTable
                     }, this.DefaultJsonSettings);
@@ -538,6 +610,7 @@ namespace VipcoMachine.Controllers
         {
             if (nTaskMachine != null)
             {
+                JobCardDetail jobCardDetail = null;
                 nTaskMachine.TaskMachineName = await this.GeneratedCode(nTaskMachine.JobCardDetailId, nTaskMachine.MachineId ?? 0);
                 // add hour to DateTime to set Asia/Bangkok
                 nTaskMachine = helpers.AddHourMethod(nTaskMachine);
@@ -574,7 +647,7 @@ namespace VipcoMachine.Controllers
                 {
                     if (InsertComplate.JobCardDetailId > 0)
                     {
-                        await this.UpdateJobCard(InsertComplate.JobCardDetailId, InsertComplate.Creator);
+                        jobCardDetail = await this.UpdateJobCard(InsertComplate.JobCardDetailId, InsertComplate.Creator);
                     }
                 }
 
@@ -583,6 +656,10 @@ namespace VipcoMachine.Controllers
                     InsertComplate.ActualManHours = await this.CalculatorManHour(InsertComplate);
                     await this.repository.UpdateAsync(InsertComplate, InsertComplate.TaskMachineId);
                 }
+
+                // Send Mail
+                if (jobCardDetail != null)
+                    await this.TaskMachineSendMailToEmpRequire(jobCardDetail,InsertComplate);
 
                 return new JsonResult(InsertComplate, this.DefaultJsonSettings);
             }
@@ -893,6 +970,39 @@ namespace VipcoMachine.Controllers
 
             return NotFound(new { Error = Message });
         }
+        #endregion
+
+        #region MAIL
+
+        private async Task SendMailMessage(string MailFrom,string NameFrom,List<string> MailTos,string Message,string Subject)
+        {
+            try
+            {
+                SmtpClient client = new SmtpClient("mail.vipco-thai.com", 25)
+                {
+                    UseDefaultCredentials = false,
+                    EnableSsl = false,
+                    // vipco-thai no need Credential
+                    // Credentials = new NetworkCredential("username", "password")
+                };
+
+                MailMessage mailMessage = new MailMessage
+                {
+                    From = new MailAddress(MailFrom, NameFrom),
+                    IsBodyHtml = true,
+                    Body = Message,
+                    Subject = Subject,
+                };
+                // Add MailAddress To
+                MailTos.ForEach(item => mailMessage.To.Add(item));
+                await client.SendMailAsync(mailMessage);
+            }catch(Exception ex)
+            {
+                var message = $"Has error {ex.ToString()}";
+            }
+
+        }
+
         #endregion
     }
 }

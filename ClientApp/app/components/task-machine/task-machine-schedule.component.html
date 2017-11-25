@@ -8,32 +8,32 @@
 
         </div>
 
-        <form [formGroup]="reportForm" class="form-content">
+        <form [formGroup]="reportForm" class="form-content" *ngIf="showForm">
 
             <div>
                 <i class="fa fa-search" aria-hidden="true"></i>
-                <input type="text" formControlName="Filter" placeholder="Insert require machine code to filter"
-                       style="width:250px;" matTooltip="Selected training">
+                <input type="text" formControlName="Filter" placeholder="Insert require/machine"
+                       style="width:200px;" >
             </div>
 
             <div>
                 <i class="fa fa-chain" aria-hidden="true"></i>
                 <p-dropdown [options]="proMasters" formControlName="JobNo" [filter]="true" matTooltip="Selected location of employee"
-                            [style]="{'width':'250px'}" placeholder="Filter by job number">
+                            [style]="{'width':'200px'}" placeholder="Filter by job number">
                 </p-dropdown>
             </div>
 
             <div>
                 <i class="fa fa-chain" aria-hidden="true"></i>
                 <p-dropdown [options]="proDetails" formControlName="Level2" [filter]="true" matTooltip="Selected location of employee"
-                            [style]="{'width':'250px'}" placeholder="Filter by job level2/3">
+                            [style]="{'width':'200px'}" placeholder="Filter by job level2/3">
                 </p-dropdown>
             </div>
 
             <div>
                 <i class="fa fa-chain" aria-hidden="true"></i>
                 <p-dropdown [options]="typeMachine" formControlName="TypeMachineId" [filter]="true" matTooltip="Selected group of employee"
-                            [style]="{'width':'250px'}" placeholder="Filter by machine type">
+                            [style]="{'width':'200px'}" placeholder="Filter by machine type">
                 </p-dropdown>
             </div>
 
@@ -41,14 +41,17 @@
                 <i class="fa fa-user-circle" aria-hidden="true"></i>
                 <input type="text" formControlName="CreatorName" placeholder="Select employee creator."
                        (click)="onShowDialog('e')" readonly
-                       style="width:250px;cursor:pointer;" matTooltip="Select employee creator">
+                       style="width:200px;cursor:pointer;" matTooltip="Select employee creator">
             </div>
 
             <div>
                 <i class="fa fa-group" aria-hidden="true"></i>
-                <input type="text" formControlName="RequireName" placeholder="Select group employee require."
+                <p-dropdown [options]="workGroup" formControlName="Require" [filter]="true" matTooltip="Selected group of employee"
+                            [style]="{'width':'200px'}" placeholder="Filter by work group of employee">
+                </p-dropdown>
+                <!--<input type="text" formControlName="RequireName" placeholder="Select group employee require."
                        (click)="onShowDialog('r')" readonly
-                       style="width:250px;cursor:pointer;" matTooltip="Select group employee require">
+                       style="width:200px;cursor:pointer;" matTooltip="Select group employee require">-->
             </div>
 
             <div style="margin:0 0 10px 0;">

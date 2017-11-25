@@ -101,7 +101,7 @@
                         <a class="username">
                             Welcome <i>{{authService.userName}}</i>
                         </a>-->
-                    <a class="mx-1">
+                    <a class="mx-1"  [routerLink]="['/register','1']" routerLinkActive="active">
                         Welcome <i>{{userName}}</i>
                     </a>
                     <a (click)="onLogOut()">

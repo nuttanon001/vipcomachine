@@ -41,10 +41,13 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
     // mode
     mode: number | undefined;
     schedule: OptionSchedule;
+    taskMachineId: number | undefined;
+    showForm: boolean;
     // array
     proMasters: Array<SelectItem>;
     proDetails: Array<SelectItem>;
     typeMachine: Array<SelectItem>;
+    workGroup: Array<SelectItem>;
     //  task-machine-schedule ctor */
     constructor(
         private service: TaskMachineService,
@@ -56,7 +59,7 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
         private viewContainerRef: ViewContainerRef,
         private fb: FormBuilder,
         private router: Router,
-        private route: ActivatedRoute,
+        public route: ActivatedRoute,
     ) { }
 
     // angular hook
@@ -70,16 +73,29 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
         }
 
         this.taskMachines = new Array;
+        this.showForm = true;
 
         this.route.paramMap.subscribe((param: ParamMap) => {
             let key: number = Number(param.get("condition") || 0);
 
             if (key) {
                 this.mode = key;
-                this.buildForm();
+
+                let schedule: OptionSchedule = {
+                    Mode: this.mode
+                };
+
+                if (this.serviceAuth.getAuth) {
+                    if (this.mode === 1) {
+                        schedule.Creator = this.serviceAuth.getAuth.EmpCode;
+                        schedule.CreatorName = this.serviceAuth.getAuth.NameThai;
+                    }
+                }
+
+                this.buildForm(schedule);
                 this.getProjectMasterArray();
                 this.getTypeMachineArray();
-
+                this.getWorkGroupArray();
                 this.proDetails = new Array;
                 this.proDetails.push({ label: "Selected level2/3", value: undefined });
             }
@@ -108,17 +124,13 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
     }
 
     // build form
-    buildForm(): void {
-        this.schedule = {
-            Mode: this.mode || 2,
-        };
-
-        if (this.serviceAuth.getAuth) {
-            if (this.mode === 1) {
-                this.schedule.Creator = this.serviceAuth.getAuth.EmpCode;
-                this.schedule.CreatorName = this.serviceAuth.getAuth.NameThai;
-            }
+    buildForm(schedule?: OptionSchedule): void {
+        if (!schedule) {
+            schedule = {
+                Mode: this.mode || 2,
+            };
         }
+        this.schedule = schedule;
 
         this.reportForm = this.fb.group({
             Filter: [this.schedule.Filter],
@@ -200,8 +212,24 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
             }, error => console.error(error));
     }
 
+    // get WorkGroup array
+    getWorkGroupArray(): void {
+        this.service.getWorkGroupOnlyHasJobCardMaster()
+            .subscribe(result => {
+                this.workGroup = new Array;
+                this.workGroup.push({ label: "Selected work group.", value: undefined });
+                for (let item of result) {
+                    this.workGroup.push({ label: item.Description || "", value: item.GroupCode });
+                }
+            }, error => console.error(error));
+    }
+
     // get request data
     onGetTaskMachineWaitAndProcessData(schedule: OptionSchedule): void {
+        if (this.taskMachineId) {
+            schedule.TaskMachineId = this.taskMachineId;
+        }
+
         this.service.getTaskMachineWaitAndProcess(schedule)
             .subscribe(dbDataSchedule => {
                 this.totalRecords = dbDataSchedule.TotalRow;
@@ -273,6 +301,9 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
                 this.columns.push({ header: "Pro", field: "Pro", style: { "width": NumWidth, } });
                 this.columns.push({ header: "Per", field: "Progess", style: { "width": NumWidth, } });
 
+                // debug here
+                // console.log(JSON.stringify(this.columnsLower));
+
                 let i: number = 0;
                 for (let name of dbDataSchedule.ColumnsAll) {
                     if (name.indexOf("Col") >= -1) {
@@ -282,6 +313,10 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
                         i++;
                     }
                 }
+                // debug here
+                // console.log(JSON.stringify(this.columns));
+                // debug here
+                // console.log(JSON.stringify(dbDataSchedule.DataTable));
 
                 this.taskMachines = dbDataSchedule.DataTable.slice();
 
@@ -347,7 +382,8 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
 
         this.reportForm.patchValue({
             Skip: event.first,
-            Take: ((event.first || 0) + (event.rows || 4)),
+            // mark Take: ((event.first || 0) + (event.rows || 4)),
+            Take: (event.rows || 5),
         });
     }
 
@@ -357,20 +393,25 @@ export class TaskMachineScheduleComponent implements OnInit, OnDestroy {
             if (mode === "e") {
                 this.serviceDialogs.dialogSelectEmployee(this.viewContainerRef, "singe")
                     .subscribe(employee => {
-
-                        console.log(employee);
-                        let emp: Employee = Object.assign({}, employee[0]);
-                        this.reportForm.patchValue({
-                            Creator: emp.EmpCode,
-                            CreatorName: emp.NameThai,
-                        });
+                        if (employee) {
+                            let emp: Employee = Object.assign({}, employee[0]);
+                            this.reportForm.patchValue({
+                                Creator: emp.EmpCode,
+                                CreatorName: emp.NameThai,
+                            });
+                        } else {
+                            this.reportForm.patchValue({
+                                Creator: "",
+                                CreatorName: "",
+                            });
+                        }
                     });
             } else {
                 this.serviceDialogs.dialogSelectedEmployeeGroup(this.viewContainerRef)
                     .subscribe(group => {
                         this.reportForm.patchValue({
-                            Require: group.GroupCode,
-                            RequireName: group.Description,
+                            Require: group ? group.GroupCode : "",
+                            RequireName: group ? group.Description : "",
                         });
                     });
             }

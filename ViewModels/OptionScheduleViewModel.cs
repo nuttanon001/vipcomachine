@@ -20,5 +20,6 @@ namespace VipcoMachine.ViewModels
         public int? Mode { get; set; }
         public string Creator { get; set; }
         public string Require { get; set; }
+        public int? TaskMachineId { get; set; }
     }
 }

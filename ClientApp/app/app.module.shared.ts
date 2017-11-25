@@ -2,7 +2,7 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule,ReactiveFormsModule } from "@angular/forms";
 import { HttpModule } from "@angular/http";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations"
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
 // components
 import { AppComponent } from "./components/app/app.component";
@@ -26,7 +26,7 @@ import {
 // services
 import { AuthGuard, AuthService } from "./services/service.index";
 // 3rd party
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import "hammerjs";
 import "popper.js";
 
@@ -40,8 +40,8 @@ import "popper.js";
         NavMenuOvertimeComponent,
         RegisterComponent,
         OvertimeMasterComponent,
-        // JobCardViewComponent,
-        // ProjectMasterComponent,
+        // mark JobCardViewComponent,
+        // mark ProjectMasterComponent,
     ],
     imports: [
         HttpModule,
@@ -53,6 +53,7 @@ import "popper.js";
             { path: "", redirectTo: "home", pathMatch: "full" },
             { path: "home", component: HomeComponent },
             { path: "login", component: LoginComponent },
+            { path: "register/:condition", component: RegisterComponent },
             { path: "register", component: RegisterComponent },
             { path: "test", component: OvertimeMasterComponent },
             // { path: "project", component: ProjectMasterComponent },
@@ -72,7 +73,7 @@ import "popper.js";
         EmployeeModule,
         DialogsModule,
         // 3rd party
-        // NgxDatatableModule,
+        // mark NgxDatatableModule,
     ],
     providers: [
         AuthGuard,

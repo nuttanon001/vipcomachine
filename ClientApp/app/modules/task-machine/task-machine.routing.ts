@@ -5,6 +5,7 @@ import { TaskMachineCenterComponent } from "../../components/task-machine/task-m
 import { TaskMachineMasterComponent } from "../../components/task-machine/task-machine-master.component";
 import { TaskMachineScheduleComponent } from "../../components/task-machine/task-machine-schedule.component";
 import { TaskMachineChartComponent } from "../../components/task-machine/task-machine-chart.component";
+import { TaskMacineLinkmailComponent } from "../../components/task-machine/task-macine-linkmail.component";
 // service
 import { AuthGuard } from "../../services/auth/auth-guard.service";
 
@@ -21,6 +22,10 @@ const taskMachineRoutes: Routes = [
             {
                 path: "task-machine-schedule/:condition",
                 component: TaskMachineScheduleComponent,
+            },
+            {
+                path: "link-mail/:condition",
+                component: TaskMacineLinkmailComponent,
             },
             {
                 path: "task-machine-schedule",

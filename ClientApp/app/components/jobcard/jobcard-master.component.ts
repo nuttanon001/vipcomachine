@@ -161,6 +161,9 @@ export class JobCardMasterComponent
     onInsertToDataBase(value: JobCardMaster): void {
         if (this.serverAuth.getAuth) {
             value.Creator = this.serverAuth.getAuth.UserName || "";
+        } else {
+            this.dialogsService.error("Error Message", "บัญชีผู้ใช้งาน ขาดการติดต่อกับระบบ โปรดล็อคอินใหม่ !!!", this.viewContainerRef);
+            return;
         }
         let attachs: FileList | undefined = value.AttachFile;
         // change timezone

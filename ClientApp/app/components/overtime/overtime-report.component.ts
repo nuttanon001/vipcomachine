@@ -10,6 +10,7 @@ import { OverTimeMasterService } from "../../services/overtime-master/overtime-m
 // overtime-report component*/
 export class OverTimeReportComponent implements OnInit {
     @Input("OverTimeMasterId") OverTimeMasterId: number;
+    @Input("previewOnly") previewOnly: boolean = false;
     @Output("Back") Back = new EventEmitter<boolean>();
     OverTime: any;
     // overtime-report ctor */
@@ -23,11 +24,15 @@ export class OverTimeReportComponent implements OnInit {
             this.service.getReportOverTimePdf2(this.OverTimeMasterId)
                 .subscribe(dbReport => {
                     this.OverTime = dbReport;
-                     setTimeout(() => {
-                         this.onPrintOverTimeMaster();
+                    if (!this.previewOnly) {
+                        setTimeout(() => {
+                            this.onPrintOverTimeMaster();
                         }, 1500);
-                    // this.onPrintOverTimeMaster();
+                        // this.onPrintOverTimeMaster();
+                    }
                 });
+        } else {
+            this.onBackToMaster();
         }
     }
 

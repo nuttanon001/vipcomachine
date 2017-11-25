@@ -70,5 +70,5 @@
     </div>
 </div>
 <ng-template #LoadBlock>
-    <overtime-report [OverTimeMasterId]="displayValue.OverTimeMasterId" (Back)="loadReport = !loadReport"></overtime-report>
+    <overtime-report [OverTimeMasterId]="OverTimeMasterId" [previewOnly]="preViewOnly" (Back)="loadReport = !loadReport"></overtime-report>
 </ng-template>

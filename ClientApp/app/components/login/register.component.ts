@@ -55,11 +55,16 @@ export class RegisterComponent implements OnInit {
         this.route.paramMap.subscribe((param: ParamMap) => {
             let key: number = Number(param.get("condition") || 0);
 
+            // debug here
+            console.log("Route key is :", key);
+
             if (key) {
                 if (this.serviceAuth.getAuth) {
                     this.user = this.serviceAuth.getAuth;
-                    this.buildForm();
 
+                    // debug here
+                    console.log("getAuth is :", JSON.stringify(this.user));
+                    this.buildForm();
                 } else {
                     this.onGoBack();
                 }
@@ -158,7 +163,7 @@ export class RegisterComponent implements OnInit {
     onSubmit(): void {
         if (this.userForm) {
             this.user = this.userForm.value;
-
+            // update TimeZone
             let zone:string = "Asia/Bangkok";
             if (this.user) {
                 if (this.user.CreateDate !== null) {
@@ -169,23 +174,41 @@ export class RegisterComponent implements OnInit {
                 }
             }
 
-            this.user.Creator = this.user.UserName;
+            if (this.user.UserId > 0) {
+                this.onUpdateData(this.user);
+            } else {
+                this.onInsertData(this.user);
+            }
 
-            this.service.post(this.user)
-                .subscribe(dBUser => {
-                    if (this.UpdateProfile) {
-                        this.serviceDialogs.context("Update Complate", "บัญชีผู้ใช้งานปรับปรุงเรียบร้อย", this.viewContainerRef)
-                            .subscribe(() => this.onGoBack());
-                    } else {
-                        this.serviceDialogs.context("Regiester Complate", "บัญชีผู้ใช้งานนี้สามารถเข้าใช้งานได้แล้ว", this.viewContainerRef)
-                            .subscribe(() => this.onGoBack());
-                    }
-                }, (error: string) => {
-                    let message:any = error.replace("404 - Not Found", "");
-
-                    this.serviceDialogs.error("Reguester Error", (message || ""), this.viewContainerRef);
-                });
         }
+    }
+
+    // on Insert
+    onInsertData(user: User): void {
+        user.Creator = user.UserName;
+
+        this.service.post(user)
+            .subscribe(dBUser => {
+                this.serviceDialogs.context("Regiester Complate", "บัญชีผู้ใช้งานนี้สามารถเข้าใช้งานได้แล้ว", this.viewContainerRef)
+                    .subscribe(() => this.onGoBack());
+            }, (error: string) => {
+                let message: any = error.replace("404 - Not Found", "");
+
+                this.serviceDialogs.error("Register Error", (message || ""), this.viewContainerRef);
+            });
+    }
+    // on Update
+    onUpdateData(user: User): void {
+        this.service.putKeyNumber(user,user.UserId)
+            .subscribe(dBUser => {
+                this.serviceAuth.setAuth = dBUser;
+                this.serviceDialogs.context("Update Complate", "บัญชีผู้ใช้งานปรับปรุงเรียบร้อย", this.viewContainerRef)
+                    .subscribe(() => this.onGoBack());
+            }, (error: string) => {
+                let message: any = error.replace("404 - Not Found", "");
+
+                this.serviceDialogs.error("Register Error", (message || ""), this.viewContainerRef);
+            });
     }
 
     // on go back

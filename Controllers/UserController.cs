@@ -127,14 +127,31 @@ namespace VipcoMachine.Controllers
         [HttpPut("{key}")]
         public async Task<IActionResult> PutByNumber(int key, [FromBody]User uUser)
         {
-            if (uUser != null)
-            {
-                uUser.ModifyDate = DateTime.Now;
-                uUser.Modifyer = uUser.Modifyer ?? "Someone";
+            var Message = "Not found user data.";
 
-                return new JsonResult(await this.repository.UpdateAsync(uUser, key), this.DefaultJsonSettings);
+            try
+            {
+                if (uUser != null)
+                {
+                    uUser.ModifyDate = DateTime.Now;
+                    uUser.Modifyer = uUser.Modifyer ?? "Someone";
+
+                    var UpdateData = await this.repository.UpdateAsync(uUser, key);
+                    if (UpdateData != null)
+                    {
+                        var Includes = new List<string> { "Employee" };
+                        return new JsonResult(
+                           this.mapper.Map<User, UserViewModel>(await this.repository.GetAsynvWithIncludes(key, "UserId", Includes)),
+                           this.DefaultJsonSettings);
+                    }
+                }
             }
-            return NotFound(new { Error = "Not found user data !!!" });
+            catch(Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+
+            return NotFound(new { Error = Message });
         }
         #endregion
 

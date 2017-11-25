@@ -60,9 +60,9 @@
     <div class="chlid-edit-container-center m-5">
         <button type="button" mat-raised-button color="primary" [disabled]="!userForm.valid" (click)="onSubmit()">
             <i class="fa fa-registered" aria-hidden="true" ></i>
-            <p *ngIf="!UpdateProfile;else CmdElse">
+            <span *ngIf="!UpdateProfile;else CmdElse">
                 Register User
-            </p>
+            </span>
             <ng-template #CmdElse>
                 Update Profile
             </ng-template>

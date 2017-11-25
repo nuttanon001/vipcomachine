@@ -257,7 +257,7 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
 
         this.reportForm.patchValue({
             Skip: event.first,
-            Take: ((event.first || 0) + (event.rows || 10)),
+            Take: (event.rows || 10),
         });
     }
 

@@ -30,7 +30,9 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 export class OvertimeMasterComponent
     extends BaseMasterComponent<OverTimeMaster, OverTimeMasterService> {
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
+    OverTimeMasterId: number = 0;
     onlyUser: boolean;
+    preViewOnly: boolean;
     loadReport: boolean = false;
 
     columns = [
@@ -169,8 +171,9 @@ export class OvertimeMasterComponent
             (error: any) => {
                 console.error(error);
                 this.editValue.Creator = undefined;
+                let message: any = error.replace("404 - Not Found", "");
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!",
+                this.dialogsService.error("Failed !", `Save failed with the following error: ${message}!!!`,
                     this.viewContainerRef);
             }
         );
@@ -192,15 +195,16 @@ export class OvertimeMasterComponent
             },
             (error: any) => {
                 console.error(error);
+                let message: any = error.replace("404 - Not Found", "");
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!",
+                this.dialogsService.error("Failed !", `Save failed with the following error: ${message}!!!`,
                     this.viewContainerRef);
             }
         );
     }
 
     // on detail view
-    onDetailView(value: OverTimeMaster): void {
+    onDetailView(value?: OverTimeMaster): void {
         if (this.ShowEdit) {
             return;
         }
@@ -215,19 +219,52 @@ export class OvertimeMasterComponent
         }
     }
 
-    // reportPdf
+    // on save complete override
+    onSaveComplete(): void {
+        this.dialogsService
+            .context("System message", "Save completed and Required-OverTime perview.", this.viewContainerRef)
+            .subscribe(result => {
+                this.canSave = false;
+                this.ShowEdit = false;
+                this.editValue = undefined;
+                let overtime: OverTimeMaster | undefined = this.displayValue;
+                this.onDetailView(undefined);
+                // report preview
+                if (overtime) {
+                    if (overtime.OverTimeStatus === 1) {
+                        this.reporPdf(overtime);
+                    }
+                }
+                setTimeout(() => {
+                    this.loadPagedData({
+                        Skip: 0,
+                        Take: 10,
+                        Reload: true
+                    });
+                }, 150);
+            });
+    }
+
+     // reportPdf
     reporPdf(value?: OverTimeMaster): void {
         if (value) {
+            this.OverTimeMasterId = value.OverTimeMasterId;
             if (value.OverTimeStatus) {
                 if (value.OverTimeStatus === 2 || value.OverTimeStatus === 3) {
+                    this.preViewOnly = false;
                     this.loadReport = !this.loadReport;
-                    return;
+                } else {
+                    this.preViewOnly = true;
+                    this.loadReport = !this.loadReport;
                 }
+            } else {
+                this.preViewOnly = true;
+                this.loadReport = !this.loadReport;
             }
         }
 
-        this.dialogsService.error("Error Message",
-            "Only overtime has been approverd could print.",
-            this.viewContainerRef);
+        // this.dialogsService.error("Error Message",
+        //    "Only overtime has been approverd could print.",
+        //    this.viewContainerRef);
     }
 }

@@ -1,8 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from "@angular/core";
-//service
+import { Route, Router, NavigationEnd } from "@angular/router";
+// service
 import { AuthService } from "../../services/service.index";
-
-
 
 @Component({
     selector: "app",
@@ -14,8 +13,10 @@ import { AuthService } from "../../services/service.index";
 export class AppComponent implements OnInit {
 
     option: string;
+    currentUrl: string;
     constructor(
-        private authService: AuthService
+        private authService: AuthService,
+        private router: Router
     ) { }
 
     // called by Angular after main-screen component initialized */
@@ -23,6 +24,16 @@ export class AppComponent implements OnInit {
         this.option = "";
         // reset login status
         this.authService.logout();
+
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                // console.log(event.url);
+                this.currentUrl = event.url;
+                if (this.currentUrl.indexOf("link-mail") !== -1) {
+                    this.option = "machine";
+                }
+            }
+        });
     }
 
     SelectApp(option?: string): void {

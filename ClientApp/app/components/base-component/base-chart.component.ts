@@ -73,6 +73,7 @@ export class BaseChartComponent implements OnInit {
             maintainAspectRatio: false,
             legend: { position: "left" }
         };
+
         if (!this.chartColors) {
             this.chartColors = new Array;
             this.chartColors = [{

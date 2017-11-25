@@ -506,6 +506,15 @@ namespace VipcoMachine.Controllers
                 uOverTimeMaster.ModifyDate = DateTime.Now;
                 uOverTimeMaster.Modifyer = uOverTimeMaster.Modifyer ?? "Someone";
 
+                //********************** For Old GoogleChorme **************************//
+                if (uOverTimeMaster.OverTimeStatus != OverTimeStatus.Required)
+                {
+                    var dbOverTimeMaster = await this.repository.GetAsync(key);
+                    if (dbOverTimeMaster != null)
+                        uOverTimeMaster.OverTimeDate = dbOverTimeMaster.OverTimeDate;
+                }
+                //**********************************************************************//
+
                 if (uOverTimeMaster.Creator == uOverTimeMaster.Modifyer)
                 {
                     if (uOverTimeMaster.OverTimeStatus == OverTimeStatus.WaitActual &&
@@ -810,7 +819,7 @@ namespace VipcoMachine.Controllers
                         int running = 1;
                         // Get ReportOverTimeDetail
                         foreach (var detail in QueryData.OverTimeDetails.Where(x => x.OverTimeDetailStatus != OverTimeDetailStatus.Cancel)
-                                                        .OrderBy(x => x.Employee.TypeEmployee))
+                                                        .OrderBy(x => x.EmpCode.Length).ThenBy(x => x.EmpCode))
                         {
                             if (!isWeekDay)
                             {
@@ -973,6 +982,8 @@ namespace VipcoMachine.Controllers
                 if (Option != null)
                 {
                     var QueryData = this.repository.GetAllAsQueryable()
+                                                   .Where(x => x.OverTimeStatus == OverTimeStatus.Complate ||
+                                                               x.OverTimeStatus == OverTimeStatus.WaitActual)
                                                    .Include(x => x.OverTimeDetails)
                                                    .Include(x => x.ProjectCodeMaster)
                                                    .Include(x => x.EmployeeGroup)
@@ -1000,7 +1011,8 @@ namespace VipcoMachine.Controllers
                         if (Option.TypeChart.Value == 1)
                         {
                             // GroupBy GroupCode
-                            foreach (var item in Data.GroupBy(x => x.EmployeeGroup))
+                            foreach (var item in Data.GroupBy(x => x.EmployeeGroup)
+                                .OrderBy(x => x.Sum(y => y.OverTimeDetails.Count())))
                             {
                                 var TotalOvertime = 0;
                                 var TotalHour = 0.0;
@@ -1010,14 +1022,15 @@ namespace VipcoMachine.Controllers
                                     TotalHour += item2.Where(x => x.OverTimeDetailStatus == OverTimeDetailStatus.Use).Sum(x => x.TotalHour);
                                 }
                                 ChartDatas.Add(TotalOvertime);
-                                Labels.Add($"{item.Key.Description} {TotalOvertime} Man {TotalHour} Hr.");
+                                Labels.Add($"{item.Key.Description} {TotalOvertime} Man {TotalHour} Hr");
                             }
                         }
                         // Chart GroupCode down ProjectMaster
                         else if (Option.TypeChart.Value == 2)
                         {
                             // GroupBy GroupCode
-                            foreach (var item in Data.GroupBy(x => x.ProjectCodeMaster))
+                            foreach (var item in Data.GroupBy(x => x.ProjectCodeMaster)
+                                .OrderBy(x => x.Sum(y => y.OverTimeDetails.Count())))
                             {
                                 var TotalOvertime = 0;
                                 var TotalHour = 0.0;
@@ -1028,12 +1041,24 @@ namespace VipcoMachine.Controllers
                                     TotalHour += item2.Where(x => x.OverTimeDetailStatus == OverTimeDetailStatus.Use).Sum(x => x.TotalHour);
                                 }
                                 ChartDatas.Add(TotalOvertime);
-                                Labels.Add($"{item.Key.ProjectCode} {TotalOvertime} Man {TotalHour} Hr.");
+                                Labels.Add($"{item.Key.ProjectCode} {TotalOvertime} Man {TotalHour} Hr");
                             }
                         }
 
                         if (Labels.Any() && ChartDatas.Any())
                         {
+                            var Total = ChartDatas.Sum();
+                            //var ChartDataPers = new List<double>();
+                            //ChartDatas.ForEach(item => {
+                            //    ChartDataPers.Add(Math.Round((item / Total) * 100, 1));
+                            //});
+
+                            for (int i = 0; i < ChartDatas.Count(); i++)
+                            {
+                                ChartDatas[i] = Math.Round((ChartDatas[i] / Total) * 100, 1);
+                                Labels[i] += $" {ChartDatas[i]}%";
+                            }
+
                             return new JsonResult(new {
                                 Labels = Labels,
                                 Datas = ChartDatas

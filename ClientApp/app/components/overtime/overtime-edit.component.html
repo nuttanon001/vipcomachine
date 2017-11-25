@@ -48,7 +48,7 @@
 
                     <div class="my-form">
                         <label class="my-label">Last OverTime-Date:</label>
-                        <div class="col-sm-4">
+                        <div class="col-sm-4" *ngIf="lastOverTimeMaster?.OverTimeMasterId">
                             {{(lastOverTimeMaster?.OverTimeDate | date:'dd/MM/yyyy') || '-'}}
                         </div>
                     </div>

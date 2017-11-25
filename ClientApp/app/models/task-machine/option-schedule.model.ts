@@ -8,6 +8,7 @@
     Mode?: number;
     Creator?: string;
     Require?: string;
+    TaskMachineId?: number;
     // template
     CreatorName?: string;
     RequireName?: string;

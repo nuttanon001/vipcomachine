@@ -41,7 +41,7 @@
                     <div class="my-label">
                         Last OT/Date
                     </div>
-                    <div class="my-value">
+                    <div class="my-value" *ngIf="lastOverTimeMaster?.OverTimeMasterId">
                         {{(lastOverTimeMaster?.OverTimeDate | date:'dd/MM/yyyy') || '-'}}
                     </div>
                 </div>

@@ -12,6 +12,7 @@ import { TaskMachineViewComponent } from "../../components/task-machine/task-mac
 import { TaskMachineScheduleComponent } from "../../components/task-machine/task-machine-schedule.component";
 import { TaskMachineProgressComponent } from "../../components/task-machine/task-machine-progress.component";
 import { TaskMachineChartComponent } from "../../components/task-machine/task-machine-chart.component";
+import { TaskMacineLinkmailComponent } from "../../components/task-machine/task-macine-linkmail.component";
 // module
 import { TaskMachineRouters } from "./task-machine.routing";
 import {
@@ -33,7 +34,8 @@ import {
         TaskMachineViewComponent,
         TaskMachineScheduleComponent,
         TaskMachineProgressComponent,
-        TaskMachineChartComponent
+        TaskMachineChartComponent,
+        TaskMacineLinkmailComponent
     ],
     imports: [
         // angular
