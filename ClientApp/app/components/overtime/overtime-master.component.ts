@@ -38,7 +38,7 @@ export class OvertimeMasterComponent
     columns = [
         { prop: "RequireString", name: "Require", flexGrow: 1 },
         { prop: "ProjectMasterString", name: "Job Number", flexGrow: 1 },
-        { prop: "GroupString", name: "Group", flexGrow: 1 },
+        { prop: "GroupString", name: "Group", flexGrow: 1 ,},
         { prop: "OverTimeDate", name: "Date", pipe: this.datePipe, flexGrow: 1 }
     ];
 

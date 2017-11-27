@@ -24,7 +24,7 @@ export class EmployeeViewComponent
     }
 
     // load more data
-    onLoadMoreData(value: Employee) {
-        // Load more data here
+    onLoadMoreData(value: Employee):void {
+        // load more data here
     }
 }

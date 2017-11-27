@@ -20,6 +20,7 @@ namespace VipcoMachine.Controllers
         #region PrivateMenbers
 
         private IRepository<EmployeeGroup> repository;
+        private IRepository<EmployeeGroupMIS> repositoryMis;
         private IRepository<Employee> repositoryEmployee;
         private IMapper mapper;
 
@@ -46,9 +47,11 @@ namespace VipcoMachine.Controllers
         public EmployeeGroupController(
             IRepository<EmployeeGroup> repo,
             IRepository<Employee> repoEmp,
+            IRepository<EmployeeGroupMIS> repoMis,
             IMapper map)
         {
             this.repository = repo;
+            this.repositoryMis = repoMis;
             this.repositoryEmployee = repoEmp;
             this.mapper = map;
         }
@@ -79,6 +82,19 @@ namespace VipcoMachine.Controllers
             return new JsonResult(await this.repository.GetAsync(key),this.DefaultJsonSettings);
         }
 
+        // GET: api/EmployeeGroup/Mis
+        [HttpGet("Mis")]
+        public async Task<IActionResult> GetMis()
+        {
+            return new JsonResult(await this.repositoryMis.GetAllAsync(), this.DefaultJsonSettings);
+        }
+
+        [HttpGet("Mis/{key}")]
+        public async Task<IActionResult> GetMis(string key)
+        {
+            return new JsonResult(await this.repositoryMis.GetAsync(key), this.DefaultJsonSettings);
+
+        }
         #endregion GET
 
         #region POST

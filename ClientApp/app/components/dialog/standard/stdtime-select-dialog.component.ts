@@ -1,22 +1,22 @@
 ﻿import { Component, OnDestroy, Inject } from "@angular/core";
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material";
 // models
-import { StandardTime, Scroll } from "../../models/model.index";
+import { StandardTime, Scroll } from "../../../models/model.index";
 // service
-import { StandardTimeService } from "../../services/standard-time/standard-time.service";
-import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
+import { StandardTimeService } from "../../../services/standard-time/standard-time.service";
+import { DataTableServiceCommunicate } from "../../../services/data-table/data-table.service";
 // base-component
-import { BaseDialogComponent } from "../base-component/base-dialog.component";
+import { BaseDialogComponent } from "../../base-component/base-dialog.component";
 @Component({
     selector: "stdtime-select-dialog",
     templateUrl: "./stdtime-select-dialog.component.html",
-    styleUrls: ["../../styles/master.style.scss"],
+    styleUrls: ["../../../styles/master.style.scss"],
     providers: [
         StandardTimeService,
         DataTableServiceCommunicate
     ]
 })
-/** stdtime-select-dialog component*/
+// stdtime-select-dialog component*/
 export class StdtimeSelectDialogComponent
     extends BaseDialogComponent<StandardTime, StandardTimeService> implements OnDestroy {
     /** cutting-plan-dialog ctor */

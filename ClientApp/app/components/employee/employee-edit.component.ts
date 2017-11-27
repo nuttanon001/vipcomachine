@@ -7,6 +7,7 @@ import { Employee, EmployeeGroup } from "../../models/model.index";
 import { BaseEditComponent } from "../base-component/base-edit.component";
 // services
 import { EmployeeService, EmployeeServiceCommunicate } from "../../services/employee/employee.service";
+import { EmployeeGroupMisService } from "../../services/employee-group/employee-group-mis.service";
 import { EmployeeGroupService } from "../../services/employee-group/employee-group.service";
 // primeng
 import { SelectItem } from "primeng/primeng";
@@ -22,6 +23,7 @@ export class EmployeeEditComponent
     extends BaseEditComponent<Employee, EmployeeService> {
 
     employeeGroup: Array<SelectItem>;
+    employeeGroupMis: Array<SelectItem>;
     employeeTitle: Array<SelectItem>;
 
     // employee-edit ctor */
@@ -30,6 +32,7 @@ export class EmployeeEditComponent
         serviceCom: EmployeeServiceCommunicate,
         private viewContainerRef: ViewContainerRef,
         private serviceEmployeeGroup: EmployeeGroupService,
+        private serviceEmployeeGroupMis: EmployeeGroupMisService,
         private fb: FormBuilder
     ) {
         super(
@@ -71,6 +74,16 @@ export class EmployeeEditComponent
                     this.employeeGroup.push({ label: `${(item.Description || "")}`, value: item.GroupCode });
                 }
             }, error => console.error(error));
+
+        // employeeGroupMis ComboBox
+        this.serviceEmployeeGroupMis.getAll()
+            .subscribe(dbEmployeeGroupMis => {
+                this.employeeGroupMis = new Array;
+                this.employeeGroupMis.push({ label: "-", value: undefined });
+                for (let item of dbEmployeeGroupMis) {
+                    this.employeeGroupMis.push({ label: `${(item.GroupDesc || "")}`, value: item.GroupMIS });
+                }
+            },error => console.error(error));
 
         // employeeTitle
         if (!this.employeeTitle) {
@@ -117,7 +130,11 @@ export class EmployeeEditComponent
                 ]
             ],
             GroupName: [this.editValue.GroupName],
-            GroupMIS: [this.editValue.GroupMIS],
+            GroupMIS: [this.editValue.GroupMIS,
+                [
+                    Validators.required,
+                ]
+            ],
             TypeEmployeeString: [this.editValue.TypeEmployeeString],
             InsertOrUpdate: [this.editValue.InsertOrUpdate]
         });
@@ -128,7 +145,7 @@ export class EmployeeEditComponent
     onFormValid(isValid: boolean): void {
         this.editValue = this.editValueForm.value;
         if (this.editValue.GroupCode) {
-            const groupName: SelectItem | undefined = this.employeeGroup.find((item) => item.value == this.editValue.GroupCode);
+            const groupName: SelectItem | undefined = this.employeeGroup.find((item) => item.value === this.editValue.GroupCode);
             if (groupName) {
                 this.editValue.GroupName = groupName.label;
             }

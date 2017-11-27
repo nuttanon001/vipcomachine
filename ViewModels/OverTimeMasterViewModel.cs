@@ -12,6 +12,7 @@ namespace VipcoMachine.ViewModels
         public string ApproveString { get; set; }
         public string RequireString { get; set; }
         public string GroupString { get; set; }
+        public string GroupMisString { get; set; }
         public string ProjectMasterString { get; set; }
         public string StatusString { get; set; }
     }

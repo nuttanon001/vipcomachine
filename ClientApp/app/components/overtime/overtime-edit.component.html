@@ -47,6 +47,31 @@
                     </div>
 
                     <div class="my-form">
+                        <label for="GroupMisString" class="my-label">GroupMisName:</label>
+                        <div class="col-sm-4">
+                            <label class="form-check-label">
+                                <input class="form-check-input" type="checkbox" (change)="onShowWorkGroupMis($event)">
+                                 Use GroupMis
+                            </label>
+                            <input type="text" class="my-input" placeholder="Choose group mis name require overtime"
+                                   (click)="onEmployeeGroupMisClick()" style="cursor:pointer;"
+                                   id="GroupMisString" formControlName="GroupMisString" readonly>
+                        </div>
+
+                        <!--<div class="col-sm-4">
+                            <input type="checkbox" class="form-check-input" (change)="onShowWorkGroupMis($event)">
+                        </div>-->
+
+                        <label for="GroupMisString" class="my-label">GroupMisName:</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="my-input" placeholder="Choose group mis name require overtime"
+                                   (click)="onEmployeeGroupMisClick()" style="cursor:pointer;"
+                                   id="GroupMisString" formControlName="GroupMisString" readonly>
+                            <validation-messages [control]="editValueForm.controls.GroupMisString"></validation-messages>
+                        </div>
+                    </div>
+
+                    <div class="my-form">
                         <label class="my-label">Last OverTime-Date:</label>
                         <div class="col-sm-4" *ngIf="lastOverTimeMaster?.OverTimeMasterId">
                             {{(lastOverTimeMaster?.OverTimeDate | date:'dd/MM/yyyy') || '-'}}
@@ -103,10 +128,17 @@
             </ng-template>
             <div class="edit-container">
                 <div class="edit-form-content" style="margin-bottom:5px;">
-                    <button (click)="onChooseEmployeeToOverTime()" mat-raised-button style="float:left">
-                        <i class="fa fa-get-pocket" aria-hidden="true"></i>
-                        <span>New Employee OverTime</span>
+                    <button type="button" mat-icon-button color="primary" (click)="onChooseEmployeeToOverTime()"
+                            matTooltip="New Employee OverTime" style="float:left">
+                        <i class="fa fa-2x fa-male" aria-hidden="true"></i>
                     </button>
+
+                    <!--
+                        <button (click)="onChooseEmployeeToOverTime()" mat-raised-button style="float:left">
+                            <i class="fa fa-get-pocket" aria-hidden="true"></i>
+                            <span>New Employee OverTime</span>
+                        </button>
+                    -->
 
                     <label for="InfoActual" class="my-label">Default Hour:</label>
                     <div class="col-3">

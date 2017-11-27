@@ -2,14 +2,14 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 // import { Employee, Scroll } from "../../models/model.index";
-import { Employee } from "../../models/employee/employee.model";
-import { Scroll } from "../../models/page/page.model";
+import { Employee } from "../../../models/employee/employee.model";
+import { Scroll } from "../../../models/page/page.model";
 // service
-import { EmployeeService } from "../../services/employee/employee.service";
-import { EmployeeGroupService } from "../../services/employee-group/employee-group.service";
-import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
+import { EmployeeService } from "../../../services/employee/employee.service";
+import { EmployeeGroupMisService } from "../../../services/employee-group/employee-group-mis.service";
+import { DataTableServiceCommunicate } from "../../../services/data-table/data-table.service";
 // base component
-import { BaseDialogComponent } from "../base-component/base-dialog.component";
+import { BaseDialogComponent } from "../../base-component/base-dialog.component";
 // rxjs
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
@@ -18,25 +18,24 @@ import { TableColumn } from "@swimlane/ngx-datatable";
 import { SelectItem } from "primeng/primeng";
 
 @Component({
-    selector: "employee-by-group-dialog",
-    templateUrl: "./employee-by-group-dialog.component.html",
+    selector: "employee-by-groupmis-dialog",
+    templateUrl: "./employee-by-groupmis-dialog.component.html",
     styleUrls: [
-        "../../styles/master.style.scss",
-        "../../styles/edit.style.scss"
+        "../../../styles/master.style.scss",
+        "../../../styles/edit.style.scss"
     ],
     providers: [
         EmployeeService,
-        EmployeeGroupService,
+        EmployeeGroupMisService,
         DataTableServiceCommunicate
     ]
 })
-// employee-by-group-dialog component*/
-export class EmployeeByGroupDialogComponent
+// employee-by-group-mis-dialog component*/
+export class EmployeeByGroupMisDialogComponent
     extends BaseDialogComponent<Employee, EmployeeService> implements OnDestroy {
     employees: Array<Employee>;
     groups: Array<SelectItem>;
     template: Scroll;
-
     get CanSelected(): boolean {
         if (this.employees) {
             if (this.employees.length > 0) {
@@ -45,13 +44,13 @@ export class EmployeeByGroupDialogComponent
         }
         return false;
     }
-    // employee-by-group-dialog ctor */
+    // employee-by-group-mis-dialog ctor */
     constructor(
         public service: EmployeeService,
-        private serviceGroup: EmployeeGroupService,
+        private serviceGroupMis: EmployeeGroupMisService,
         public serviceDataTable: DataTableServiceCommunicate<Employee>,
-        public dialogRef: MatDialogRef<EmployeeByGroupDialogComponent>,
-        @Inject(MAT_DIALOG_DATA) public groupCode: string
+        public dialogRef: MatDialogRef<EmployeeByGroupMisDialogComponent>,
+        @Inject(MAT_DIALOG_DATA) public groupMisCode: string
     ) {
         super(
             service,
@@ -60,9 +59,9 @@ export class EmployeeByGroupDialogComponent
         );
 
         this.columns = [
-            { prop: "EmpCode", name: "Code", flexGrow: 1 },
-            { prop: "NameThai", name: "Name", flexGrow: 1 },
-            { prop: "GroupName", name: "Group", flexGrow: 1 },
+            { prop: "EmpCode", name: "CodeMis", flexGrow: 1 },
+            { prop: "NameThai", name: "NameMis", flexGrow: 1 },
+            { prop: "GroupName", name: "GroupMis", flexGrow: 1 },
         ];
     }
 
@@ -74,21 +73,21 @@ export class EmployeeByGroupDialogComponent
             this.employees = new Array;
         }
 
-        this.serviceGroup.getAll()
-            .subscribe(dbGroupEmployee => {
+        this.serviceGroupMis.getAll()
+            .subscribe(dbGroupMis => {
                 this.groups = new Array;
                 this.groups.push({ label: "ทุกกลุ่มงาน", value: "" });
-                for (let item of dbGroupEmployee) {
-                    this.groups.push({ label: `${(item.Description || "")}`, value: item.GroupCode });
+                for (let item of dbGroupMis) {
+                    this.groups.push({ label: `${(item.GroupDesc || "")}`, value: item.GroupMIS });
                 }
             }, error => console.error(error));
     }
 
     // on get data with lazy load
     loadDataScroll(scroll: Scroll): void {
-        scroll.Where = this.groupCode.toString();
+        scroll.Where = this.groupMisCode.toString();
         // console.log("Scroll Data:", JSON.stringify(scroll));
-        this.service.getAllWithScroll(scroll)
+        this.service.getAllWithScroll(scroll,"GetScrollMis")
             .subscribe(scrollData => {
                 if (scrollData) {
                     if (scrollData.Scroll) {
@@ -109,8 +108,8 @@ export class EmployeeByGroupDialogComponent
 
     // on select employee by group
     onSelectByGroup(): void {
-        if (this.groupCode) {
-            this.service.getByMasterCode(this.groupCode)
+        if (this.groupMisCode) {
+            this.service.getByMasterCode(this.groupMisCode)
                 .subscribe(dbEmployee => {
                     if (dbEmployee) {
                         this.employees.push(...dbEmployee);
@@ -135,7 +134,7 @@ export class EmployeeByGroupDialogComponent
             this.template.Skip = 0;
             this.template.Take = 8;
             this.template.Where = event.value;
-            this.groupCode = event.value;
+            this.groupMisCode = event.value;
 
             // debug here
             // console.log("event :", JSON.stringify(this.template));

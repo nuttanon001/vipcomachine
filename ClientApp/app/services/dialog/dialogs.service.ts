@@ -9,7 +9,7 @@ import {
     StandardTime,UnitsMeasure,JobCardMaster,
     TaskMachine, ProjectCodeMaster,
     EmployeeGroup, OverTimeMaster,
-    MessageDialog
+    MessageDialog, EmployeeGroupMis
 } from "../../models/model.index";
 
 // components
@@ -22,7 +22,8 @@ import {
     UomDialogComponent, JobcardDialogComponent,
     JobCardWatingDialogComponent, TaskMachineDialogComponent,
     EmployeeGroupDialogComponent, EmployeeByGroupDialogComponent,
-    OvertimeDialogComponent,MessageDialogComponent
+    OvertimeDialogComponent, MessageDialogComponent,
+    EmployeeByGroupMisDialogComponent, EmpoyeeGroupmisDialogComponent
  } from "../../components/dialog/dialog.index";
 
 @Injectable()
@@ -157,6 +158,23 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
+    public dialogSelectEmployeeWithGroupMis(viewContainerRef: ViewContainerRef, groupMisCode: string = ""): Observable<Array<Employee>> {
+
+        let dialogRef: MatDialogRef<EmployeeByGroupMisDialogComponent>;
+        let config: MatDialogConfig = new MatDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        config.data = groupMisCode;
+        // config.height = this.height;
+        // config.width= this.width;
+        config.hasBackdrop = true;
+
+        // open dialog
+        dialogRef = this.dialog.open(EmployeeByGroupMisDialogComponent, config);
+        return dialogRef.afterClosed();
+    }
+
     public dialogSelectMachine(viewContainerRef: ViewContainerRef, mode:number = 0): Observable<Machine> {
         let dialogRef: MatDialogRef<MachineDialogComponent>;
         let config: MatDialogConfig  = new MatDialogConfig();
@@ -254,8 +272,7 @@ export class DialogsService {
         return dialogRef.afterClosed();
     }
 
-    public dialogSelectedJobCardDetailForWait
-        (viewContainerRef: ViewContainerRef, jobCardMasters: Array<JobCardMaster>): Observable<JobCardDetail> {
+    public dialogSelectedJobCardDetailForWait(viewContainerRef: ViewContainerRef, jobCardMasters: Array<JobCardMaster>): Observable<JobCardDetail> {
         let dialogRef: MatDialogRef<JobCardWatingDialogComponent>;
         let config: MatDialogConfig  = new MatDialogConfig();
 
@@ -299,6 +316,21 @@ export class DialogsService {
 
         // open dialog
         dialogRef = this.dialog.open(EmployeeGroupDialogComponent, config);
+        return dialogRef.afterClosed();
+    }
+
+    public dialogSelectedEmployeeGroupMis(viewContainerRef: ViewContainerRef): Observable<EmployeeGroupMis> {
+        let dialogRef: MatDialogRef<EmpoyeeGroupmisDialogComponent>;
+        let config: MatDialogConfig = new MatDialogConfig();
+
+        // config
+        config.viewContainerRef = viewContainerRef;
+        // config.height = this.height;
+        // config.width = this.width;
+        config.hasBackdrop = true;
+
+        // open dialog
+        dialogRef = this.dialog.open(EmpoyeeGroupmisDialogComponent, config);
         return dialogRef.afterClosed();
     }
 

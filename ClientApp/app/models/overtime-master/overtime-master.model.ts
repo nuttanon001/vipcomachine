@@ -19,6 +19,8 @@ export interface OverTimeMaster {
     LastOverTimeId?: number;
     // EmployeeGroup
     GroupCode?: string;
+    // EmployeeGroupMis
+    GroupMIS?: string;
     // ProjectMaster
     ProjectCodeMasterId?: number;
     // OverTimeDetail
@@ -26,6 +28,7 @@ export interface OverTimeMaster {
     // ViewModel
     ApproveString?:string;
     RequireString?:string;
-    GroupString?:string;
+    GroupString?: string;
+    GroupMisString?: string;
     ProjectMasterString?:string;
 }

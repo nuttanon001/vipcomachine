@@ -1,22 +1,22 @@
 ﻿import { Component, OnInit, Inject } from "@angular/core";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // pipes
-import { DateOnlyPipe } from "../../pipes/date-only.pipe";
+import { DateOnlyPipe } from "../../../pipes/date-only.pipe";
 // models
-import { JobCardMaster,JobCardDetail } from "../../models/model.index";
+import { JobCardMaster,JobCardDetail } from "../../../models/model.index";
 // rxjs
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 // 3rd party
 import { TableColumn } from "@swimlane/ngx-datatable";
 // service
-import { JobCardMasterService } from "../../services/jobcard-master/jobcard-master.service";
-import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-detail.service";
+import { JobCardMasterService } from "../../../services/jobcard-master/jobcard-master.service";
+import { JobCardDetailService } from "../../../services/jobcard-detail/jobcard-detail.service";
 
 @Component({
     selector: "job-card-wating-dialog",
     templateUrl: "./jobcard-wating-dialog.component.html",
-    styleUrls: ["../../styles/master.style.scss"],
+    styleUrls: ["../../../styles/master.style.scss"],
     providers: [
         JobCardMasterService,
         JobCardDetailService

@@ -20,3 +20,27 @@
     flex-grow: 0;
     flex-direction: column;
 }
+:host /deep/ .is-all {
+    background-color: transparent;
+    // color: red !important;
+}
+
+:host /deep/ .is-cancel {
+    background-color: red;
+    // color: red !important;
+}
+
+:host /deep/ .is-require {
+    background-color: darksalmon;
+    // color: red !important;
+}
+
+:host /deep/ .is-wait {
+    background-color: gold;
+    // color: gold !important;
+}
+
+:host /deep/ .is-complate {
+    background-color: lightgreen;
+    // color: lightgreen !important;
+}

@@ -1,11 +1,11 @@
 ﻿import { Component, OnInit, OnDestroy, Inject } from "@angular/core";
-import { FormGroup, FormBuilder, FormControl, Validators } from "@angular/forms";
+import { FormGroup, FormBuilder, FormControl, Validators, AbstractControl } from "@angular/forms";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
-import { StandardTime, GradeMaterial } from "../../models/model.index";
+import { StandardTime, GradeMaterial } from "../../../models/model.index";
 // service
 // import { StandardTimeService } from "../../services/standard-time/standard-time.service";
-import { GradeMaterialService } from "../../services/grade-material/grade-material.service";
+import { GradeMaterialService } from "../../../services/grade-material/grade-material.service";
 // rxjs
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
@@ -16,16 +16,15 @@ import { SelectItem } from "primeng/primeng";
     selector: "standard-time-dialog",
     templateUrl: "./standard-time-dialog.component.html",
     styleUrls: [
-        "../../styles/master.style.scss",
-        "../../styles/edit.style.scss"
+        "../../../styles/master.style.scss",
+        "../../../styles/edit.style.scss"
     ],
     providers: [
         GradeMaterialService,
     ]
 })
-/** standard-time-dialog component*/
-export class StandardTimeDialogComponent implements OnInit
-{
+// standard-time-dialog component*/
+export class StandardTimeDialogComponent implements OnInit {
     grades: Array<SelectItem>;
     standardForm: FormGroup;
     /** standard-time-dialog.component ctor */
@@ -74,7 +73,7 @@ export class StandardTimeDialogComponent implements OnInit
         });
 
         // control on value change
-        const controlStandard = this.standardForm.get("GradeMaterialId");
+        const controlStandard: AbstractControl|null = this.standardForm.get("GradeMaterialId");
         if (controlStandard) {
             controlStandard.valueChanges.subscribe((data: any) => this.onValueChange(data));
         }
@@ -92,12 +91,12 @@ export class StandardTimeDialogComponent implements OnInit
     onValueChange(data?: any): void {
         if (!this.standardForm) { return; }
 
-        const form = this.standardForm;
+        const form:FormGroup = this.standardForm;
         // check selectedMachine or selectedTool
-        const controlStandard = form.get("GradeMaterialId");
+        const controlStandard:AbstractControl|null = form.get("GradeMaterialId");
         if (controlStandard) {
             if (controlStandard.value) {
-                let comBoBoxItem = this.grades.find(value => value.value === controlStandard.value);
+                let comBoBoxItem:SelectItem|undefined = this.grades.find(value => value.value === controlStandard.value);
                 if (comBoBoxItem) {
                     form.patchValue({ GradeMaterialString: comBoBoxItem.label });
                 }
@@ -105,12 +104,12 @@ export class StandardTimeDialogComponent implements OnInit
         }
     }
 
-    // No Click
+    // no Click
     onCancelClick(): void {
         this.dialogRef.close();
     }
 
-    // Update Click
+    // update Click
     onUpdateClick(): void {
         this.dialogRef.close(this.standardForm.value);
     }

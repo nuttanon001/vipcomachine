@@ -61,6 +61,7 @@
     <None Remove="ClientApp\app\models\classification-material\classification-material.model.ts" />
     <None Remove="ClientApp\app\models\cutting-plan\cutting-plan-import.model.ts" />
     <None Remove="ClientApp\app\models\cutting-plan\cutting-plan.model.ts" />
+    <None Remove="ClientApp\app\models\employee-group\employee-group-mis.model.ts" />
     <None Remove="ClientApp\app\models\employee-group\employee-group.model.ts" />
     <None Remove="ClientApp\app\models\employee\employee.model.ts" />
     <None Remove="ClientApp\app\models\grade-material\grade-material.model.ts" />
@@ -167,6 +168,7 @@
     <TypeScriptCompile Include="ClientApp\app\models\classification-material\classification-material.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\cutting-plan\cutting-plan-import.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\cutting-plan\cutting-plan.model.ts" />
+    <TypeScriptCompile Include="ClientApp\app\models\employee-group\employee-group-mis.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\employee-group\employee-group.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\employee\employee.model.ts" />
     <TypeScriptCompile Include="ClientApp\app\models\grade-material\grade-material.model.ts" />

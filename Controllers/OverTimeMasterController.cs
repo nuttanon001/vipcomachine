@@ -85,7 +85,7 @@ namespace VipcoMachine.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var Includes = new List<string> { "EmployeeGroup", "ProjectCodeMaster", "ApproveBy", "RequireBy" };
+            var Includes = new List<string> { "EmployeeGroup","EmployeeGroupMIS", "ProjectCodeMaster", "ApproveBy", "RequireBy" };
             return new JsonResult(
                       this.ConverterTableToViewModel<OverTimeMasterViewModel, OverTimeMaster>
                       (await this.repository.GetAllWithInclude2Async(Includes)),
@@ -96,7 +96,7 @@ namespace VipcoMachine.Controllers
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(int key)
         {
-            var Includes = new List<string> { "EmployeeGroup", "ProjectCodeMaster", "ApproveBy", "RequireBy" };
+            var Includes = new List<string> { "EmployeeGroup","EmployeeGroupMIS", "ProjectCodeMaster", "ApproveBy", "RequireBy" };
             return new JsonResult(
                       this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>
                       (await this.repository.GetAsynvWithIncludes(key, "OverTimeMasterId", Includes)),
@@ -115,6 +115,7 @@ namespace VipcoMachine.Controllers
                                                 .Include(x => x.ApproveBy)
                                                 .Include(x => x.RequireBy)
                                                 .Include(x => x.ProjectCodeMaster)
+                                                .Include(x => x.EmployeeGroupMIS)
                                                 .Include(x => x.EmployeeGroup).AsQueryable();
 
                 if (CurrentId > 0)
@@ -179,6 +180,7 @@ namespace VipcoMachine.Controllers
                                                 .Include(x => x.RequireBy)
                                                 .Include(x => x.ProjectCodeMaster)
                                                 .Include(x => x.EmployeeGroup)
+                                                .Include(x => x.EmployeeGroupMIS)
                                                 .AsQueryable();
                 int TotalRow;
 
@@ -195,6 +197,7 @@ namespace VipcoMachine.Controllers
                                                              x.RequireBy.NameThai.ToLower().Contains(keyword) ||
                                                              x.ProjectCodeMaster.ProjectCode.ToLower().Contains(keyword) ||
                                                              x.ProjectCodeMaster.ProjectName.ToLower().Contains(keyword) ||
+                                                             x.EmployeeGroupMIS.GroupDesc.ToLower().Contains(keyword) ||
                                                              x.EmployeeGroup.Description.ToLower().Contains(keyword));
                         }
                     }
@@ -441,6 +444,9 @@ namespace VipcoMachine.Controllers
                 if (nOverTimeMaster.EmployeeGroup != null)
                     nOverTimeMaster.EmployeeGroup = null;
 
+                if (nOverTimeMaster.EmployeeGroupMIS != null)
+                    nOverTimeMaster.EmployeeGroupMIS = null;
+
                 if (nOverTimeMaster.ApproveBy != null)
                     nOverTimeMaster.ApproveBy = null;
 
@@ -453,6 +459,7 @@ namespace VipcoMachine.Controllers
                     foreach (var nDetail in nOverTimeMaster.OverTimeDetails)
                     {
                         Expression<Func<OverTimeDetail, bool>> condition = d =>
+                             d.OverTimeMaster.OverTimeStatus != OverTimeStatus.Cancel &&
                              d.OverTimeMaster.OverTimeDate.Date == nOverTimeMaster.OverTimeDate.Date &&
                              d.EmpCode == nDetail.EmpCode && d.OverTimeDetailStatus == OverTimeDetailStatus.Use;
                         // check if employee on auther overtime continue him
@@ -491,6 +498,83 @@ namespace VipcoMachine.Controllers
             return NotFound(new { Error = Message });
         }
 
+        // POST: api/OverTimeMaster
+        [HttpPost("V2")]
+        public async Task<IActionResult> PostV2([FromBody]OverTimeMaster nOverTimeMaster)
+        {
+            var Message = "Not found OverTimeMaster.";
+
+            if (nOverTimeMaster != null)
+            {
+                // add hour to DateTime to set Asia/Bangkok
+                nOverTimeMaster = helpers.AddHourMethod(nOverTimeMaster);
+
+                nOverTimeMaster.CreateDate = DateTime.Now;
+                nOverTimeMaster.Creator = nOverTimeMaster.Creator ?? "Someone";
+
+                if (nOverTimeMaster.ProjectCodeMaster != null)
+                    nOverTimeMaster.ProjectCodeMaster = null;
+
+                if (nOverTimeMaster.EmployeeGroup != null)
+                    nOverTimeMaster.EmployeeGroup = null;
+
+                if (nOverTimeMaster.EmployeeGroupMIS != null)
+                    nOverTimeMaster.EmployeeGroupMIS = null;
+
+                if (nOverTimeMaster.ApproveBy != null)
+                    nOverTimeMaster.ApproveBy = null;
+
+                if (nOverTimeMaster.RequireBy != null)
+                    nOverTimeMaster.RequireBy = null;
+
+                List<OverTimeDetail> remove = new List<OverTimeDetail>();
+                if (nOverTimeMaster.OverTimeDetails != null)
+                {
+                    foreach (var nDetail in nOverTimeMaster.OverTimeDetails)
+                    {
+                        Expression<Func<OverTimeDetail, bool>> condition = d =>
+                             d.OverTimeMaster.OverTimeStatus != OverTimeStatus.Cancel &&
+                             d.OverTimeMaster.OverTimeDate.Date == nOverTimeMaster.OverTimeDate.Date &&
+                             d.EmpCode == nDetail.EmpCode && d.OverTimeDetailStatus == OverTimeDetailStatus.Use;
+                        // check if employee on auther overtime continue him
+                        if (await this.repositoryOverTimeDetail.AnyDataAsync(condition))
+                        {
+                            remove.Add(nDetail);
+                            continue;
+                        }
+
+                        if (nDetail.OverTimeDetailStatus == null)
+                            nDetail.OverTimeDetailStatus = OverTimeDetailStatus.Use;
+                        if (nDetail.Employee != null)
+                            nDetail.Employee = null;
+                        //Set Create
+                        nDetail.CreateDate = nOverTimeMaster.CreateDate;
+                        nDetail.Creator = nOverTimeMaster.Creator;
+                    }
+                }
+
+                if (remove.Any())
+                {
+                    remove.ForEach(item =>
+                    {
+                        nOverTimeMaster.OverTimeDetails.Remove(item);
+                    });
+                }
+
+                if (nOverTimeMaster.OverTimeDetails.Any())
+                {
+                    return new JsonResult(new
+                    {
+                        OverTimeMaster = await this.repository.AddAsync(nOverTimeMaster),
+                        Remove = remove
+                    }, this.DefaultJsonSettings);
+                }
+
+                Message = "Employees for OverTime don't have.";
+            }
+
+            return NotFound(new { Error = Message });
+        }
         #endregion
 
         #region PUT
@@ -529,6 +613,9 @@ namespace VipcoMachine.Controllers
 
                 if (uOverTimeMaster.EmployeeGroup != null)
                     uOverTimeMaster.EmployeeGroup = null;
+
+                if (uOverTimeMaster.EmployeeGroupMIS != null)
+                    uOverTimeMaster.EmployeeGroupMIS = null;
 
                 if (uOverTimeMaster.ApproveBy != null)
                     uOverTimeMaster.ApproveBy = null;

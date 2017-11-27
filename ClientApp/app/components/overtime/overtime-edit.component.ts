@@ -139,6 +139,7 @@ export class OvertimeEditComponent
                     Validators.required
                 ]
             ],
+            GroupMIS: [this.editValue.GroupMIS],
             ProjectCodeMasterId: [this.editValue.ProjectCodeMasterId,
                 [
                     Validators.required
@@ -153,6 +154,7 @@ export class OvertimeEditComponent
                     Validators.required
                 ]
             ],
+            GroupMisString: [this.editValue.GroupMisString],
             ProjectMasterString: [this.editValue.ProjectMasterString,
                 [
                     Validators.required
@@ -390,7 +392,6 @@ export class OvertimeEditComponent
     onEmployeeGroupClick(): void {
         if (this.CanEditInRequiredOnly) {
             this.onCanEditInRequiredOnly();
-
             return;
         }
 
@@ -400,6 +401,24 @@ export class OvertimeEditComponent
                     this.editValueForm.patchValue({
                         GroupCode: resultGroup.GroupCode,
                         GroupString: resultGroup.Description,
+                    });
+                }
+            });
+    }
+
+    // on Employee Group Mis Click
+    onEmployeeGroupMisClick(): void {
+        if (this.CanEditInRequiredOnly) {
+            this.onCanEditInRequiredOnly();
+            return;
+        }
+
+        this.serviceDialogs.dialogSelectedEmployeeGroupMis(this.viewContainerRef)
+            .subscribe(resultGroup => {
+                if (resultGroup) {
+                    this.editValueForm.patchValue({
+                        GroupMIS: resultGroup.GroupMIS,
+                        GroupMisString: resultGroup.GroupDesc,
                     });
                 }
             });

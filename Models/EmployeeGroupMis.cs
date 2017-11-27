@@ -20,5 +20,7 @@ namespace VipcoMachine.Models
         //FK
         //Employee
         public ICollection<Employee> Employees { get; set; }
+        //OverTimeMaster
+        public ICollection<OverTimeMaster> OverTimeMasters { get; set; }
     }
 }

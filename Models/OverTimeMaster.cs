@@ -40,6 +40,9 @@ namespace VipcoMachine.Models
         // EmployeeGroup
         public string GroupCode { get; set; }
         public EmployeeGroup EmployeeGroup { get; set; }
+        // EmployeeGroupMis
+        public string GroupMIS { get; set; }
+        public EmployeeGroupMIS EmployeeGroupMIS { get; set; }
         // ProjectMaster
         public int? ProjectCodeMasterId { get; set; }
         public ProjectCodeMaster ProjectCodeMaster { get; set; }

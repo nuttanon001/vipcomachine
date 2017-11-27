@@ -20,6 +20,11 @@ namespace VipcoMachine.Helpers
                            (s.TypeEmployee.Value == TypeEmployee.พนักงานประจำรายชั่วโมง ? "พนักงานประจำรายชั่วโมง" :
                            (s.TypeEmployee.Value == TypeEmployee.พนักงานประจำรายเดือน ? "พนักงานประจำรายเดือน" : "พนักงานพม่า"))))));
             CreateMap<EmployeeViewModel, Employee>();
+            // EmployeeMis
+            CreateMap<Employee, EmployeeMisViewModel>()
+                .ForMember(x => x.GroupName,
+                           o => o.MapFrom(s => s.EmployeeGroupMIS == null ? "ไม่ระบุ" : s.EmployeeGroupMIS.GroupDesc));
+            CreateMap<EmployeeMisViewModel, Employee>();
 
             #endregion
 
@@ -214,6 +219,10 @@ namespace VipcoMachine.Helpers
                 .ForMember(x => x.GroupString,
                            o => o.MapFrom(s => s.EmployeeGroup == null ? "-" : s.EmployeeGroup.Description))
                 .ForMember(x => x.EmployeeGroup, o => o.Ignore())
+                // EmployeeGroupMis
+                .ForMember(x => x.GroupMisString,
+                           o => o.MapFrom(s => s.EmployeeGroupMIS == null ? "" : s.EmployeeGroupMIS.GroupDesc))
+                .ForMember(x => x.EmployeeGroupMIS, o => o.Ignore())
                 // ProjectCodeMaster
                 .ForMember(x => x.ProjectMasterString,
                            o => o.MapFrom(s => s.ProjectCodeMaster == null ? "-" : $"{s.ProjectCodeMaster.ProjectCode}/{s.ProjectCodeMaster.ProjectName}"))

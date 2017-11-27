@@ -50,7 +50,6 @@ export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster> {
         }
 
         if (value) {
-
             this.service.getByMasterId(value.OverTimeMasterId)
                 .subscribe(dbDetail => {
                     this.details = dbDetail.filter((item, index) => {
@@ -59,7 +58,6 @@ export class OvertimeViewComponent extends BaseViewComponent<OverTimeMaster> {
                 });
 
             if (value.LastOverTimeId) {
-
                 this.serviceMaster.getOneKeyNumber(value.LastOverTimeId)
                     .subscribe(dbLastMaster => {
                         this.lastOverTimeMaster = dbLastMaster;

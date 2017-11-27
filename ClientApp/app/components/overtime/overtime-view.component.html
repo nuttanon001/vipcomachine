@@ -37,6 +37,16 @@
                     </div>
                 </div>
 
+
+                <div class="row my-1" *ngIf="displayValue?.GroupMisString">
+                    <div class="my-label">
+                        GroupMisName
+                    </div>
+                    <div class="my-value">
+                        {{displayValue?.GroupMisString || "-"}}
+                    </div>
+                </div>
+
                 <div class="row my-1">
                     <div class="my-label">
                         Last OT/Date

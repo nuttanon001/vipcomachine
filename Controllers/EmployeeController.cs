@@ -158,6 +158,68 @@ namespace VipcoMachine.Controllers
                  this.DefaultJsonSettings);
         }
 
+        [HttpPost("GetScrollMis")]
+        public async Task<IActionResult> GetScrollMis([FromBody] ScrollViewModel Scroll)
+        {
+            var QueryData = this.repository.GetAllAsQueryable();
+            // Where
+            if (!string.IsNullOrEmpty(Scroll.Where))
+            {
+                if (Scroll.Where.IndexOf("SubContractor") != -1)
+                    QueryData = QueryData.Where(x => x.TypeEmployee == TypeEmployee.พนักงานพม่า);
+                else
+                    QueryData = QueryData.Where(x => x.GroupMIS == Scroll.Where);
+            }
+            // Filter
+            var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
+                                : Scroll.Filter.ToLower().Split(null);
+            foreach (var keyword in filters)
+            {
+                QueryData = QueryData.Where(x => x.NameEng.ToLower().Contains(keyword) ||
+                                                 x.NameThai.ToLower().Contains(keyword) ||
+                                                 x.EmpCode.ToLower().Contains(keyword) ||
+                                                 x.GroupCode.ToLower().Contains(keyword) ||
+                                                 x.GroupName.ToLower().Contains(keyword));
+            }
+
+            // Order
+            switch (Scroll.SortField)
+            {
+                case "EmpCode":
+                    if (Scroll.SortOrder == -1)
+                        QueryData = QueryData.OrderByDescending(e => e.EmpCode);
+                    else
+                        QueryData = QueryData.OrderBy(e => e.EmpCode);
+                    break;
+
+                case "NameThai":
+                    if (Scroll.SortOrder == -1)
+                        QueryData = QueryData.OrderByDescending(e => e.NameThai);
+                    else
+                        QueryData = QueryData.OrderBy(e => e.NameThai);
+                    break;
+
+                case "NameEng":
+                    if (Scroll.SortOrder == -1)
+                        QueryData = QueryData.OrderByDescending(e => e.NameEng);
+                    else
+                        QueryData = QueryData.OrderBy(e => e.NameEng);
+                    break;
+
+                default:
+                    QueryData = QueryData.OrderByDescending(e => e.EmpCode.Length)
+                                         .ThenBy(e => e.EmpCode);
+                    break;
+            }
+
+            // Skip and Take
+            QueryData = QueryData.Skip(Scroll.Skip ?? 0).Take(Scroll.Take ?? 50);
+
+            return new JsonResult(new ScrollDataViewModel<Employee>
+                (Scroll,
+                 this.ConverterTableToViewModel<EmployeeViewModel, Employee>(await QueryData.AsNoTracking().ToListAsync())),
+                 this.DefaultJsonSettings);
+        }
         // POST: api/Employee
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Employee nEmployee)

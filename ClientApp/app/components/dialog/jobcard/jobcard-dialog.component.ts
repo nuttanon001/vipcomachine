@@ -4,42 +4,41 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import {
     JobCardMaster, JobCardDetail,
     Scroll
-} from "../../models/model.index";
+} from "../../../models/model.index";
 // service
-import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
-import { JobCardMasterService } from "../../services/jobcard-master/jobcard-master.service";
-import { JobCardDetailService } from "../../services/jobcard-detail/jobcard-detail.service";
+import { DataTableServiceCommunicate } from "../../../services/data-table/data-table.service";
+import { JobCardMasterService } from "../../../services/jobcard-master/jobcard-master.service";
+import { JobCardDetailService } from "../../../services/jobcard-detail/jobcard-detail.service";
 // rxjs
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
 // 3rd party
 import { DatatableComponent, TableColumn } from "@swimlane/ngx-datatable";
 // pipes
-import { DateOnlyPipe } from "../../pipes/date-only.pipe";
+import { DateOnlyPipe } from "../../../pipes/date-only.pipe";
 
 @Component({
     selector: "jobcard-dialog",
     templateUrl: "./jobcard-dialog.component.html",
-    styleUrls: ["../../styles/master.style.scss"],
+    styleUrls: ["../../../styles/master.style.scss"],
     providers: [
         JobCardMasterService,
         JobCardDetailService,
         DataTableServiceCommunicate,
     ]
 })
-/** jobcard-dialog component*/
+// jobcard-dialog component*/
 export class JobcardDialogComponent
-    implements OnInit, OnDestroy
-{
+    implements OnInit, OnDestroy {
     details: Array<JobCardDetail>;
     templates: Array<JobCardDetail>;
-    //Detail
+    // detail
     selectedDetail: JobCardDetail | undefined;
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
-    //Subscription
+    // subscription
     subscription: Subscription;
     @ViewChild(DatatableComponent) table: DatatableComponent;
-    //Column
+    // column
     columns: Array<TableColumn> = [
         { prop: "JobCardMasterNo", name: "No.", flexGrow: 1 },
         { prop: "ProjectDetailString", name: "Job Level2/3", flexGrow: 1 },
@@ -50,10 +49,10 @@ export class JobcardDialogComponent
         { prop: "CuttingPlanString", name: "CuttingPlan", flexGrow: 1 },
         { prop: "StandardTimeString", name: "StandardTime", flexGrow: 1 },
         { prop: "Material", name: "Material", flexGrow: 1 },
-        //{ prop: "Quality", name: "Quality", flexGrow: 1 },
-        //{ prop: "UnitsMeasureString", name: "Uom", flexGrow: 1 },
+        // { prop: "Quality", name: "Quality", flexGrow: 1 },
+        // { prop: "UnitsMeasureString", name: "Uom", flexGrow: 1 },
     ];
-    // Property
+    // property
     get CanSelected(): boolean {
         return this.selectedDetail !== undefined;
     }
@@ -93,7 +92,7 @@ export class JobcardDialogComponent
             }, error => console.error(error));
     }
 
-    // Selected Project Master
+    // selected Project Master
     onSelectedMaster(master?: JobCardMaster): void {
         if (master) {
             this.serviceDetail.getByMasterId(master.JobCardMasterId)
@@ -110,7 +109,7 @@ export class JobcardDialogComponent
         }
     }
 
-    // Selected Project Detail
+    // selected Project Detail
     onSelectedDetail(selected?: any): void {
         if (selected) {
             this.selectedDetail = selected.selected[0];
@@ -119,25 +118,25 @@ export class JobcardDialogComponent
     }
 
     // on Filter
-    onFilter(search: string) {
+    onFilter(search: string):any {
         // filter our data
-        const temp = this.templates.slice().filter((item, index) => {
-            let searchStr = ((item.CuttingPlanString || "") + (item.Material || "")).toLowerCase();
-            return searchStr.indexOf(search.toLowerCase()) != -1;
+        const temp:JobCardDetail[] = this.templates.slice().filter((item, index) => {
+            let searchStr:string = ((item.CuttingPlanString || "") + (item.Material || "")).toLowerCase();
+            return searchStr.indexOf(search.toLowerCase()) !== -1;
         });
 
         // update the rows
         this.details = temp;
-        // Whenever the filter changes, always go back to the first page
+        // whenever the filter changes, always go back to the first page
         this.table.offset = 0;
     }
 
-    // No Click
+    // no Click
     onCancelClick(): void {
         this.dialogRef.close();
     }
 
-    // Update Click
+    // update Click
     onSelectedClick(): void {
         this.dialogRef.close(this.selectedDetail);
     }

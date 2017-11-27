@@ -34,6 +34,7 @@ import { MatCheckbox } from "@angular/material";
         [externalSorting]="true"
         (sort)="onSort($event)"
         [selectionType]="'single'"
+        [rowClass]="getRowClass"
         (select)="onSelect($event)"
         [style.height]="height">
     </ngx-datatable>
@@ -233,6 +234,22 @@ export class DataTableComponent implements OnInit,OnDestroy {
             // debug here
             // console.log("Scroll here :", this.scroll);
             this.dataTableService.toParent(this.scroll);
+        }
+    }
+    // row class
+    getRowClass(row?: any): any {
+        if (row) {
+            if (row.OverTimeStatus === 1) {
+                return { "is-require": true };
+            } else if (row.OverTimeStatus === 2) {
+                return { "is-wait": true };
+            } else if (row.OverTimeStatus === 3) {
+                return { "is-complate": true };
+            } else if (row.OverTimeStatus === 4) {
+                return { "is-cancel": true };
+            } else {
+                return { "is-all": true };
+            }
         }
     }
 }

@@ -1,8 +1,8 @@
 ﻿import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import 'rxjs/Rx';
-import 'hammerjs';
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import "rxjs/Rx";
+import "hammerjs";
 // services
 import {
     JobCardMasterService, JobCardDetailService,
@@ -18,7 +18,8 @@ import {
     UomDialogComponent, JobcardDialogComponent,
     JobCardWatingDialogComponent, TaskMachineDialogComponent,
     EmployeeGroupDialogComponent, EmployeeByGroupDialogComponent,
-    OvertimeDialogComponent,MessageDialogComponent
+    OvertimeDialogComponent, MessageDialogComponent, EmployeeByGroupMisDialogComponent,
+    EmpoyeeGroupmisDialogComponent
 } from "../../components/dialog/dialog.index";
 import { JobCardViewWaitingComponent } from "../../components/jobcard/jobcard-view-waiting.component";
 import { OvertimeViewWaitingComponent } from "../../components/overtime/overtime-view-waiting.component";
@@ -30,14 +31,14 @@ import { JobCardModule } from "../jobcard/jobcard.module";
 
 @NgModule({
     imports: [
-        // Angular
+        // angular
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        // Customer Module
+        // customer Module
         ValidationModule,
         CustomMaterialModule,
-        //JobCardModule,
+        // mark JobCardModule,
     ],
     exports: [
         ErrorDialog,
@@ -58,6 +59,8 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         EmployeeByGroupDialogComponent,
         OvertimeDialogComponent,
         MessageDialogComponent,
+        EmployeeByGroupMisDialogComponent,
+        EmpoyeeGroupmisDialogComponent,
     ],
     declarations: [
         ErrorDialog,
@@ -78,6 +81,8 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         EmployeeByGroupDialogComponent,
         OvertimeDialogComponent,
         MessageDialogComponent,
+        EmployeeByGroupMisDialogComponent,
+        EmpoyeeGroupmisDialogComponent,
         // view Component
         JobCardViewWaitingComponent,
         OvertimeViewWaitingComponent,
@@ -87,7 +92,7 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         JobCardMasterService,
         JobCardDetailService,
     ],
-    // A list of components that are not referenced in a reachable component template.
+    // a list of components that are not referenced in a reachable component template.
     // doc url is :https://angular.io/guide/ngmodule-faq
     entryComponents: [
         ErrorDialog,
@@ -109,6 +114,8 @@ import { JobCardModule } from "../jobcard/jobcard.module";
         EmployeeByGroupDialogComponent,
         OvertimeDialogComponent,
         MessageDialogComponent,
+        EmployeeByGroupMisDialogComponent,
+        EmpoyeeGroupmisDialogComponent,
     ],
 })
 export class DialogsModule { }

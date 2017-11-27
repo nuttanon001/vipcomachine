@@ -57,6 +57,18 @@
                             <validation-messages [control]="editValueForm.controls.GroupCode"></validation-messages>
                         </div>
                     </div>
+
+                    <div class="my-form">
+
+                        <label for="GroupMIS" class="my-label">GroupMIS:</label>
+                        <div class="col-sm-4">
+                            <p-dropdown class="my-input-combobox" [options]="employeeGroupMis" filter="filter" [style]="{'width':'100%'}"
+                                        appendTo="body"
+                                        id="GroupMIS" formControlName="GroupMIS" required>
+                            </p-dropdown>
+                            <validation-messages [control]="editValueForm.controls.GroupMIS"></validation-messages>
+                        </div>
+                    </div>
                 </form>
             </div>
         </mat-tab>

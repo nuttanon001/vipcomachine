@@ -2,11 +2,11 @@
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 // models
 // import { Employee, Scroll } from "../../models/model.index";
-import { Employee } from "../../models/employee/employee.model";
-import { Scroll } from "../../models/page/page.model";
+import { Employee } from "../../../models/employee/employee.model";
+import { Scroll } from "../../../models/page/page.model";
 // service
-import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
-import { EmployeeService } from "../../services/employee/employee.service";
+import { DataTableServiceCommunicate } from "../../../services/data-table/data-table.service";
+import { EmployeeService } from "../../../services/employee/employee.service";
 // rxjs
 import { Observable } from "rxjs/Observable";
 import { Subscription } from "rxjs/Subscription";
@@ -16,7 +16,7 @@ import { TableColumn } from "@swimlane/ngx-datatable";
 @Component({
     selector: "employee-dialog",
     templateUrl: "./employee-dialog.component.html",
-    styleUrls: ["../../styles/master.style.scss"],
+    styleUrls: ["../../../styles/master.style.scss"],
     providers: [
         EmployeeService,
         DataTableServiceCommunicate,
