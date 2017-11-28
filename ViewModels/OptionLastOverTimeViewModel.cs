@@ -10,6 +10,8 @@ namespace VipcoMachine.ViewModels
         public int? ProjectCodeId { get; set; }
         public string GroupCode { get; set; }
         public int? CurrentOverTimeId { get; set; }
+        public string GroupMis { get; set; }
+
         public DateTime? BeForDate { get; set; }
     }
 }

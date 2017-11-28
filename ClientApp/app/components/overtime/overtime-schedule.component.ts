@@ -271,17 +271,21 @@ export class OvertimeScheduleComponent implements OnInit, OnDestroy {
         // update data
         this.service.putUpdateStatus(value, value.OverTimeMasterId).subscribe(
             (complete: any) => {
-                this.serviceDialogs.confirm("Update Complate",
-                    "Update progress was complated. Do your want to print report Overtime-Require?",
-                    this.viewContainerRef)
-                    .subscribe(result => {
-                        if (result) {
-                            this.onReportPrint(complete);
-                        } else {
-                            this.onGetOverTimeMasterSechduleData(this.schedule);
-                        }
-                    });
-
+                if (value.OverTimeStatus === 4) {
+                    this.serviceDialogs.context("Update Complate", "Cancel overtime was complated.", this.viewContainerRef)
+                        .subscribe(gg => this.onGetOverTimeMasterSechduleData(this.schedule));
+                } else {
+                    this.serviceDialogs.confirm("Update Complate",
+                        "Update progress was complated. Do your want to print report Overtime-Require?",
+                        this.viewContainerRef)
+                        .subscribe(result => {
+                            if (result) {
+                                this.onReportPrint(complete);
+                            } else {
+                                this.onGetOverTimeMasterSechduleData(this.schedule);
+                            }
+                        });
+                }
             },
             (error: any) => {
                 console.error(error);

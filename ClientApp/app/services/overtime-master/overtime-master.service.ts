@@ -16,6 +16,17 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
         super(http, "api/OverTimeMaster/");
     }
 
+    // post Insert OverTimeMaster V2
+    postV2(nObject: OverTimeMaster): Observable<any> {
+        return this.http.post(this.actionUrl+"V2/", JSON.stringify(nObject), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
+    }
+    // put with key number
+    putKeyNumber(uObject: OverTimeMaster, key: number): Observable<any> {
+        // console.log(uObject);
+        return this.http.put(this.actionUrl + key + "/", JSON.stringify(uObject), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
+    }
     // get last OverTimeMaster
     getLastOverTimeMaster(LastOverTimeMasterId: number, GroupCode: string, CurrentId:number): Observable<OverTimeMaster> {
         let url: string = `${this.actionUrl}GetLastOverTime/${LastOverTimeMasterId}/${GroupCode}/${CurrentId}`;

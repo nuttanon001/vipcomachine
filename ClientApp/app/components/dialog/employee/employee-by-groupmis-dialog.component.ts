@@ -92,8 +92,13 @@ export class EmployeeByGroupMisDialogComponent
                 if (scrollData) {
                     if (scrollData.Scroll) {
                         this.template = scrollData.Scroll;
-                        // console.log("After:",JSON.stringify(scrollData.Scroll));
+                        // after
+                        // console.log("After:",JSON.stringify(scrollData));
                     }
+
+                    // after
+                    // console.log("After:",JSON.stringify(scrollData));
+
                     this.serviceDataTable.toChild(scrollData);
                 }
             }, error => console.error(error));

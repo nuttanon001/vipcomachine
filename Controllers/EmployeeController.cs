@@ -162,6 +162,7 @@ namespace VipcoMachine.Controllers
         public async Task<IActionResult> GetScrollMis([FromBody] ScrollViewModel Scroll)
         {
             var QueryData = this.repository.GetAllAsQueryable();
+
             // Where
             if (!string.IsNullOrEmpty(Scroll.Where))
             {
@@ -170,6 +171,7 @@ namespace VipcoMachine.Controllers
                 else
                     QueryData = QueryData.Where(x => x.GroupMIS == Scroll.Where);
             }
+
             // Filter
             var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
                                 : Scroll.Filter.ToLower().Split(null);

@@ -30,6 +30,7 @@ export class OvertimeEditComponent
     optionLastOver?: OptionOverTimeLast;
     indexOverTimeDetail: number;
     lockSave: boolean = false;
+    showWorkGroupMis: boolean = false;
     defaultHour: number;
     canNotSave: string = "";
     // propertity
@@ -81,13 +82,21 @@ export class OvertimeEditComponent
                                 });
                             });
                     }
-
+                    // group Mis
+                    if (this.editValue.GroupMIS) {
+                        this.showWorkGroupMis = true;
+                    } else {
+                        this.showWorkGroupMis = false;
+                    }
+                    // get LastOverTime
                     if (this.editValue.LastOverTimeId) {
                         this.service.getOneKeyNumber(this.editValue.LastOverTimeId)
                             .subscribe(dbLastMaster => this.lastOverTimeMaster = dbLastMaster);
                     }
                 }, error => console.error(error), () => this.defineData());
         } else {
+            this.showWorkGroupMis = false;
+
             this.editValue = {
                 OverTimeMasterId: 0,
                 OverTimeStatus: 1,
@@ -174,6 +183,7 @@ export class OvertimeEditComponent
         const controlMaster: AbstractControl | null = form.get("ProjectCodeMasterId");
         const controlGroup: AbstractControl | null = form.get("GroupCode");
         const controlDate: AbstractControl | null = form.get("OverTimeDate");
+        const controlMis: AbstractControl | null = form.get("GroupMIS");
 
         if (this.editValue.OverTimeStatus === 1) {
             if (controlMaster && controlGroup) {
@@ -184,7 +194,8 @@ export class OvertimeEditComponent
                         this.optionLastOver = {
                             CurrentOverTimeId: this.editValue.OverTimeMasterId,
                             GroupCode: controlGroup.value,
-                            ProjectCodeId: controlMaster.value
+                            ProjectCodeId: controlMaster.value,
+                            GroupMis: controlMis !== null ? controlMis.value : undefined
                         };
                         if (controlDate) {
                             this.optionLastOver.BeForDate = controlDate.value;
@@ -195,7 +206,8 @@ export class OvertimeEditComponent
                     if (this.optionLastOver) {
                         if (!byPass) {
                             let strGroup:any = controlGroup.value;
-                            let strPro:any = controlMaster.value;
+                            let strPro: any = controlMaster.value;
+                            let strMis: any = controlMis !== null ? controlMis.value : undefined;
 
                             if (controlDate) {
                                 // console.log("By OptionLastOver:", this.optionLastOver);
@@ -203,14 +215,16 @@ export class OvertimeEditComponent
 
                                 if (this.optionLastOver.GroupCode === strGroup &&
                                     this.optionLastOver.ProjectCodeId === strPro &&
-                                    this.optionLastOver.BeForDate === controlDate.value) {
+                                    this.optionLastOver.BeForDate === controlDate.value &&
+                                    this.optionLastOver.GroupMis === strMis) {
                                     byPass = false;
                                 } else {
                                     byPass = true;
                                 }
                             } else {
                                 if (this.optionLastOver.GroupCode === strGroup &&
-                                    this.optionLastOver.ProjectCodeId === strPro) {
+                                    this.optionLastOver.ProjectCodeId === strPro &&
+                                    this.optionLastOver.GroupMis === strMis) {
                                     byPass = false;
                                 } else {
                                     byPass = true;
@@ -221,10 +235,13 @@ export class OvertimeEditComponent
 
                         if (byPass) {
 
+                            let strMis: any = controlMis !== null ? controlMis.value : undefined;
+
                             this.optionLastOver = {
                                 CurrentOverTimeId: this.editValue.OverTimeMasterId,
                                 GroupCode: controlGroup.value,
-                                ProjectCodeId: controlMaster.value
+                                ProjectCodeId: controlMaster.value,
+                                GroupMis: controlMis !== null ? controlMis.value : undefined
                             };
                             if (controlDate) {
                                 this.optionLastOver.BeForDate = controlDate.value;
@@ -232,7 +249,7 @@ export class OvertimeEditComponent
 
                             this.service.getlastOverTimeMasterV2(this.optionLastOver)
                                 .subscribe(lastMaster => {
-                                    // console.log("LastMaster", lastMaster);
+                                    console.log("LastMaster", lastMaster);
                                     if (lastMaster) {
                                         this.lastOverTimeMaster = lastMaster;
                                         this.editValueForm.patchValue({
@@ -240,6 +257,14 @@ export class OvertimeEditComponent
                                         });
                                         this.canNotSave = "";
                                         if (lastMaster.OverTimeStatus !== 3) {
+                                            // if (strMis) {
+                                            //    this.canNotSave = "";
+                                            // } else {
+                                            //    this.canNotSave = "Last OverTime was Incompleted. This overtime can't save.";
+                                            //    this.serviceDialogs.error("Error Message",
+                                            //        "Last OverTime was Incompleted. This overtime can't save.",
+                                            //        this.viewContainerRef);
+                                            // }
                                             this.canNotSave = "Last OverTime was Incompleted. This overtime can't save.";
                                             this.serviceDialogs.error("Error Message",
                                                 "Last OverTime was Incompleted. This overtime can't save.",
@@ -279,52 +304,80 @@ export class OvertimeEditComponent
     }
 
     // new Detail
-    onChooseEmployeeToOverTime(): void {
+    onChooseEmployeeToOverTime(mode?:number): void {
         if (this.CanEditInRequiredOnly) {
             this.onCanEditInRequiredOnly();
             return;
         }
 
-        const form: FormGroup = this.editValueForm;
-        const controlGroup: AbstractControl | null = form.get("GroupCode");
+        if (mode) {
+            const form: FormGroup = this.editValueForm;
 
-        let group: string = "";
-        if (controlGroup) {
-            if (controlGroup.value) {
-                group = controlGroup.value;
-            }
-        }
+            if (mode === 1) {
+                const controlGroup: AbstractControl | null = form.get("GroupCode");
 
-        this.serviceDialogs.dialogSelectEmployeeWithGroup(this.viewContainerRef, group)
-            .subscribe(selectEmpoyee => {
-                if (selectEmpoyee) {
-                    selectEmpoyee.forEach(item => {
-                        let detail: OverTimeDetail = {
-                            OverTimeDetailId: 0,
-                            EmpCode: item.EmpCode,
-                            EmployeeString: item.NameThai,
-                            TotalHour: this.defaultHour,
-                            OverTimeDetailStatus: 1,
-                            StatusString: "Use",
-                            OverTimeMasterId : this.editValue.OverTimeMasterId
-                        };
-                        // if array is null
-                        if (!this.editValue.OverTimeDetails) {
-                            this.editValue.OverTimeDetails = new Array;
-                        }
+                let group: string = "";
+                if (controlGroup) {
+                    if (controlGroup.value) {
+                        group = controlGroup.value;
+                    }
+                }
 
-                        if (this.editValue.OverTimeDetails) {
-                            if (!this.editValue.OverTimeDetails.find(item2 => item2.EmpCode === item.EmpCode)) {
-                                // cloning an object
-                                this.editValue.OverTimeDetails.push(Object.assign({}, detail));
-                                this.editValueForm.patchValue({
-                                    OverTimeDetails: this.editValue.OverTimeDetails.slice(),
-                                });
-                            }
+                this.serviceDialogs.dialogSelectEmployeeWithGroup(this.viewContainerRef, group)
+                    .subscribe(selectEmpoyee => {
+                        if (selectEmpoyee) {
+                            this.addEmployeeDetailToOverTime(selectEmpoyee);
                         }
                     });
+            } else {
+                const controlGroupMis: AbstractControl | null = form.get("GroupMIS");
+
+                let groupMis: string = "";
+                if (controlGroupMis) {
+                    if (controlGroupMis.value) {
+                        groupMis = controlGroupMis.value;
+                    }
+                }
+
+                this.serviceDialogs.dialogSelectEmployeeWithGroupMis(this.viewContainerRef, groupMis)
+                    .subscribe(selectEmpoyee => {
+                        if (selectEmpoyee) {
+                            this.addEmployeeDetailToOverTime(selectEmpoyee);
+                        }
+                    });
+            }
+        }
+    }
+
+    // add Employee Detail
+    addEmployeeDetailToOverTime(listEmployee: Array<Employee>): void {
+        if (listEmployee) {
+            listEmployee.forEach(item => {
+                let detail: OverTimeDetail = {
+                    OverTimeDetailId: 0,
+                    EmpCode: item.EmpCode,
+                    EmployeeString: item.NameThai,
+                    TotalHour: this.defaultHour,
+                    OverTimeDetailStatus: 1,
+                    StatusString: "Use",
+                    OverTimeMasterId: this.editValue.OverTimeMasterId
+                };
+                // if array is null
+                if (!this.editValue.OverTimeDetails) {
+                    this.editValue.OverTimeDetails = new Array;
+                }
+
+                if (this.editValue.OverTimeDetails) {
+                    if (!this.editValue.OverTimeDetails.find(item2 => item2.EmpCode === item.EmpCode)) {
+                        // cloning an object
+                        this.editValue.OverTimeDetails.push(Object.assign({}, detail));
+                        this.editValueForm.patchValue({
+                            OverTimeDetails: this.editValue.OverTimeDetails.slice(),
+                        });
+                    }
                 }
             });
+        }
     }
 
     // remove Detail
@@ -420,6 +473,11 @@ export class OvertimeEditComponent
                         GroupMIS: resultGroup.GroupMIS,
                         GroupMisString: resultGroup.GroupDesc,
                     });
+                } else {
+                    this.editValueForm.patchValue({
+                        GroupMIS: "",
+                        GroupMisString: "",
+                    });
                 }
             });
     }
@@ -473,6 +531,18 @@ export class OvertimeEditComponent
         }
 
         // console.log("UPDATED!", this.employees[rowIndex][cell]);
+    }
+
+    // on show work group-mis
+    onShowWorkGroupMis(event?: any): void {
+        // debug here
+        console.log("Event is:", event);
+
+        if (event !== undefined) {
+            this.showWorkGroupMis = event;
+        }
+
+        console.log("ShowWorkGroupMis:", this.showWorkGroupMis);
     }
 
     // on valid data override

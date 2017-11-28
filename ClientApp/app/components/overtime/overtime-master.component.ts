@@ -3,7 +3,7 @@ import { Router, ActivatedRoute, ParamMap } from "@angular/router";
 // components
 import { BaseMasterComponent } from "../base-component/base-master.component";
 // models
-import { OverTimeMaster, Scroll, ScrollData } from "../../models/model.index";
+import { OverTimeMaster, Scroll, ScrollData, MessageDialog } from "../../models/model.index";
 // services
 import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
 import { DialogsService } from "../../services/dialog/dialogs.service";
@@ -162,11 +162,28 @@ export class OvertimeMasterComponent
         value = this.changeTimezone(value);
         // insert data
         // console.log("Value:", value);
-        this.service.post(value).subscribe(
+        this.service.postV2(value).subscribe(
             (complete: any) => {
-                this.displayValue = complete;
-                // this.useTemplate = true;
-                this.onSaveComplete();
+                if (complete.OverTimeMaster.OverTimeMasterId > 0) {
+                    this.displayValue = complete.OverTimeMaster;
+                    // this.useTemplate = true;
+                    if (complete.isRemove) {
+                        let message: MessageDialog = {
+                            headerMessage: "ระบบตรวจพบพนักงานดังกล่าวนี้ มีข้อมูลในการทำล่วงเวลาใบอื่นๆ",
+                            bodyMessage: complete.Remove
+                        };
+                        this.dialogsService.dialogMessage(this.viewContainerRef, message)
+                            .subscribe(gg => this.onSaveComplete());
+                    } else {
+                        this.onSaveComplete();
+                    }
+                } else {
+                    let message: MessageDialog = {
+                        headerMessage: "ระบบตรวจพบพนักงานดังกล่าวนี้ มีข้อมูลในการทำล่วงเวลาใบอื่นๆ",
+                        bodyMessage: complete.Remove
+                    };
+                    this.dialogsService.dialogMessage(this.viewContainerRef, message);
+                }
             },
             (error: any) => {
                 console.error(error);
@@ -189,9 +206,19 @@ export class OvertimeMasterComponent
         // update data
         this.service.putKeyNumber(value, value.OverTimeMasterId).subscribe(
             (complete: any) => {
-                this.displayValue = complete;
+                this.displayValue = complete.OverTimeMaster;
                 // this.useTemplate = true;
-                this.onSaveComplete();
+                if (complete.isRemove) {
+                    let message: MessageDialog = {
+                        headerMessage: "ระบบตรวจพบพนักงานดังกล่าวนี้ มีข้อมูลในการทำล่วงเวลาใบอื่นๆ",
+                        bodyMessage: complete.Remove
+                    };
+                    this.dialogsService.dialogMessage(this.viewContainerRef, message)
+                        .subscribe(gg => this.onSaveComplete());
+                } else {
+                    // this.useTemplate = true;
+                    this.onSaveComplete();
+                }
             },
             (error: any) => {
                 console.error(error);

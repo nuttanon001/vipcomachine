@@ -144,6 +144,7 @@ namespace VipcoMachine.Controllers
                                                 .Include(x => x.ApproveBy)
                                                 .Include(x => x.RequireBy)
                                                 .Include(x => x.ProjectCodeMaster)
+                                                .Include(x => x.EmployeeGroupMIS)
                                                 .Include(x => x.EmployeeGroup).AsQueryable();
 
                 if (OptionLastOver.CurrentOverTimeId.HasValue)
@@ -156,6 +157,11 @@ namespace VipcoMachine.Controllers
                 {
                     OptionLastOver.BeForDate = OptionLastOver.BeForDate.Value.AddHours(7);
                     QueryData = QueryData.Where(x => x.OverTimeDate.Date <= OptionLastOver.BeForDate.Value.Date);
+                }
+
+                if (!string.IsNullOrEmpty(OptionLastOver.GroupMis))
+                {
+                    QueryData = QueryData.Where(x => x.GroupMIS == OptionLastOver.GroupMis);
                 }
 
                 var LastOverTime = await QueryData.FirstOrDefaultAsync(x => x.ProjectCodeMasterId == OptionLastOver.ProjectCodeId &&
@@ -528,6 +534,7 @@ namespace VipcoMachine.Controllers
                     nOverTimeMaster.RequireBy = null;
 
                 List<OverTimeDetail> remove = new List<OverTimeDetail>();
+                List<string> emps = new List<string>();
                 if (nOverTimeMaster.OverTimeDetails != null)
                 {
                     foreach (var nDetail in nOverTimeMaster.OverTimeDetails)
@@ -540,6 +547,10 @@ namespace VipcoMachine.Controllers
                         if (await this.repositoryOverTimeDetail.AnyDataAsync(condition))
                         {
                             remove.Add(nDetail);
+                            var emp = await this.repositoryEmployee.GetAsync(nDetail.EmpCode);
+                            if (emp != null)
+                                emps.Add($"{emp.EmpCode} คุณ{emp.NameThai}");
+
                             continue;
                         }
 
@@ -566,11 +577,19 @@ namespace VipcoMachine.Controllers
                     return new JsonResult(new
                     {
                         OverTimeMaster = await this.repository.AddAsync(nOverTimeMaster),
-                        Remove = remove
+                        Remove = emps,
+                        isRemove = emps.Any()
                     }, this.DefaultJsonSettings);
                 }
-
-                Message = "Employees for OverTime don't have.";
+                else
+                {
+                    return new JsonResult(new
+                    {
+                        OverTimeMaster = nOverTimeMaster,
+                        Remove = emps,
+                        isRemove = emps.Any()
+                    }, this.DefaultJsonSettings);
+                }
             }
 
             return NotFound(new { Error = Message });
@@ -648,6 +667,7 @@ namespace VipcoMachine.Controllers
 
                 // update Master not update Detail it need to update Detail directly
                 var updateComplate = await this.repository.UpdateAsync(uOverTimeMaster, key);
+                List<string> emps = new List<string>();
 
                 if (updateComplate != null)
                 {
@@ -661,6 +681,7 @@ namespace VipcoMachine.Controllers
                         if (!uOverTimeMaster.OverTimeDetails.Any(x => x.OverTimeDetailId == dbOvertimeDetail.OverTimeDetailId))
                             await this.repositoryOverTimeDetail.DeleteAsync(dbOvertimeDetail.OverTimeDetailId);
                     }
+
                     //Update OverTimeDetails
                     foreach (var uOvertime in uOverTimeMaster.OverTimeDetails)
                     {
@@ -669,11 +690,18 @@ namespace VipcoMachine.Controllers
                         else
                         {
                             Expression<Func<OverTimeDetail, bool>> conditionD = d =>
+                                d.OverTimeMaster.OverTimeStatus != OverTimeStatus.Cancel &&
                                 d.OverTimeMaster.OverTimeDate.Date == uOverTimeMaster.OverTimeDate.Date &&
                                 d.EmpCode == uOvertime.EmpCode && d.OverTimeDetailStatus == OverTimeDetailStatus.Use;
                             // check if employee on auther overtime continue him
                             if (await this.repositoryOverTimeDetail.AnyDataAsync(conditionD))
+                            {
+                                var emp = await this.repositoryEmployee.GetAsync(uOvertime.EmpCode);
+                                if (emp != null)
+                                    emps.Add($"{emp.EmpCode} คุณ{emp.NameThai}");
+
                                 continue;
+                            }
 
                             if (uOvertime.OverTimeMasterId < 1)
                                 uOvertime.OverTimeMasterId = uOverTimeMaster.OverTimeMasterId;
@@ -682,7 +710,14 @@ namespace VipcoMachine.Controllers
                         }
                     }
                 }
-                return new JsonResult(updateComplate, this.DefaultJsonSettings);
+
+                // return new JsonResult(updateComplate, this.DefaultJsonSettings);
+                return new JsonResult(new
+                {
+                    OverTimeMaster = updateComplate,
+                    Remove = emps,
+                    isRemove = emps.Any()
+                }, this.DefaultJsonSettings);
             }
             return NotFound(new { Error = "OverTimeMaster not found. " });
         }
@@ -863,6 +898,7 @@ namespace VipcoMachine.Controllers
                 {
                     var QueryData = await this.repository.GetAllAsQueryable()
                                                          .Include(x => x.EmployeeGroup)
+                                                         .Include(x => x.EmployeeGroupMIS)
                                                          .Include(x => x.ProjectCodeMaster)
                                                          .Include(x => x.ApproveBy)
                                                          .Include(x => x.RequireBy)
@@ -886,7 +922,7 @@ namespace VipcoMachine.Controllers
                         {
                             ApproverBy = QueryData.ApproveBy == null ? "" : $"คุณ{QueryData?.ApproveBy?.NameThai ?? ""}",
                             DateOverTime = QueryData.OverTimeDate.ToString("dd/MM/") + year,
-                            GroupName = QueryData?.EmployeeGroup?.Description ?? "",
+                            GroupName = (QueryData?.EmployeeGroup?.Description ?? "") + (QueryData.EmployeeGroupMIS == null ? "" : $" / {QueryData?.EmployeeGroupMIS?.GroupDesc}"),
                             JobNumber = $"{(QueryData?.ProjectCodeMaster?.ProjectCode ?? "")} {(QueryData?.ProjectCodeMaster?.ProjectName ?? "")}",
                             LastActual = QueryData?.LastOverTimeMaster?.InfoActual ?? "",
                             LastPlan = QueryData?.LastOverTimeMaster?.InfoPlan ?? "",
