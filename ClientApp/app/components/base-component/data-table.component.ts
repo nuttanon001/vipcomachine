@@ -99,7 +99,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
     isSort: boolean;
     // subscription
     subscription: Subscription;
-
+    subscription2: Subscription;
     constructor(
         private dataTableService: DataTableServiceCommunicate<any>,
         private el: ElementRef
@@ -128,6 +128,9 @@ export class DataTableComponent implements OnInit,OnDestroy {
                         }
                     }
                     this.rows.push(...scrollData.Data);
+
+                    // debug here
+                    // console.log("Row:", JSON.stringify(this.rows));
                 } else {
                     if (this.isFilter) {
                         this.rows = new Array;
@@ -136,24 +139,37 @@ export class DataTableComponent implements OnInit,OnDestroy {
                 }
                 this.isLoading = false;
             });
+
+        this.subscription2 = this.dataTableService.ToReload$
+            .subscribe((reload: boolean) => {
+                this.onScroll(0);
+            });
     }
+
     // angular hook destroy
     ngOnDestroy(): void {
         if (this.subscription) {
             // prevent memory leak when component destroyed
             this.subscription.unsubscribe();
         }
+
+        if (this.subscription2) {
+            this.subscription2.unsubscribe();
+        }
     }
+
     // emit row selected to output
-    onSelect(selected: any):void {
+    onSelect(selected: any): void {
         // if (selected) {
         //    this.selected.emit(selected.selected[0]);
         // }
 
         this.selected.emit(selected.selected[0]);
     }
+
     // on Scroll bar
-    onScroll(offsetY: number):void {
+    onScroll(offsetY: number): void {
+
         // total height of all rows in the viewport
         const viewHeight:number = this.el.nativeElement.getBoundingClientRect().height - this.headerHeight;
 
@@ -176,8 +192,11 @@ export class DataTableComponent implements OnInit,OnDestroy {
             this.loadPage(limit);
         }
     }
+
     // loadPage
-    private loadPage(limit: number):void {
+    private loadPage(limit: number): void {
+        // console.log("loadPage");
+
         // set the loading flag, which serves two purposes:
         // 1) it prevents the same page from being loaded twice
         // 2) it enables display of the loading indicator
@@ -195,6 +214,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
         //    this.isLoading = false;
         // });
     }
+
     // on Sort data
     onSort(event:any):void {
         // event was triggered, start sort sequence
@@ -210,6 +230,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
         // console.log("Scroll here :", this.scroll);
         this.dataTableService.toParent(this.scroll);
     }
+
     // on Filter data
     onFilter(search: string):void {
         this.isFilter = true;
@@ -221,6 +242,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
         // console.log("Scroll here :", this.scroll);
         this.dataTableService.toParent(this.scroll);
     }
+
     // on More Codition
     onCondition(event?:any): void {
         // console.log("on Condition :", event);
@@ -236,6 +258,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
             this.dataTableService.toParent(this.scroll);
         }
     }
+
     // row class
     getRowClass(row?: any): any {
         if (row) {

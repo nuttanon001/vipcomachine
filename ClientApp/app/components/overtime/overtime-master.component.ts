@@ -150,6 +150,22 @@ export class OvertimeMasterComponent
         super.onDetailEdit(value);
     }
 
+    // on detail view
+    onDetailView(value?: OverTimeMaster): void {
+        if (this.ShowEdit) {
+            return;
+        }
+
+        if (value) {
+            this.service.getOneKeyNumber(value.OverTimeMasterId)
+                .subscribe(dbData => {
+                    this.displayValue = dbData;
+                }, error => this.displayValue = undefined);
+        } else {
+            this.displayValue = undefined;
+        }
+    }
+
     // on insert data
     onInsertToDataBase(value: OverTimeMaster): void {
         if (this.serverAuth.getAuth) {
@@ -230,22 +246,6 @@ export class OvertimeMasterComponent
         );
     }
 
-    // on detail view
-    onDetailView(value?: OverTimeMaster): void {
-        if (this.ShowEdit) {
-            return;
-        }
-
-        if (value) {
-            this.service.getOneKeyNumber(value.OverTimeMasterId)
-                .subscribe(dbData => {
-                    this.displayValue = dbData;
-                }, error => this.displayValue = undefined);
-        } else {
-            this.displayValue = undefined;
-        }
-    }
-
     // on save complete override
     onSaveComplete(): void {
         this.dialogsService
@@ -263,11 +263,7 @@ export class OvertimeMasterComponent
                     }
                 }
                 setTimeout(() => {
-                    this.loadPagedData({
-                        Skip: 0,
-                        Take: 10,
-                        Reload: true
-                    });
+                    this.dataTableServiceCom.toReload(true);
                 }, 150);
             });
     }

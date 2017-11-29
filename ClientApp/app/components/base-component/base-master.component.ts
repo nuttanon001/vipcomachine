@@ -120,11 +120,7 @@ export abstract class BaseMasterComponent<Model, Service> implements OnInit, OnD
                 this.editValue = undefined;
                 this.onDetailView(undefined);
                 setTimeout(() => {
-                    this.loadPagedData({
-                        Skip: 0,
-                        Take: 10,
-                        Reload: true
-                    });
+                    this.dataTableServiceCom.toReload(true);
                 }, 150);
             });
     }

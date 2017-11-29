@@ -16,6 +16,7 @@ import {
 // service
 import { EmployeeService , EmployeeServiceCommunicate } from "../../services/employee/employee.service";
 import { EmployeeGroupService } from "../../services/employee-group/employee-group.service";
+import { EmployeeGroupMisService } from "../../services/employee-group/employee-group-mis.service";
 
 @NgModule({
     declarations: [
@@ -37,6 +38,7 @@ import { EmployeeGroupService } from "../../services/employee-group/employee-gro
     providers: [
         EmployeeService,
         EmployeeServiceCommunicate,
+        EmployeeGroupMisService,
         EmployeeGroupService,
     ]
 })

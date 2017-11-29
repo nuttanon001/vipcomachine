@@ -9,10 +9,14 @@
                     <div class="my-form">
                         <label for="OverTimeDate" class="my-label">Date-OverTime:</label>
                         <div class="col-sm-4">
-                            <p-calendar formControlName="OverTimeDate" [showIcon]="true" required
+                            <!--<p-calendar formControlName="OverTimeDate" [showIcon]="true" required
                                         appendTo="body"
                                         id="OverTimeDate" dateFormat="dd/mm/yy" placeholder="  Choose a date"
                                         [disabled]="CanEditInRequiredOnly">
+                            </p-calendar>-->
+                            <p-calendar formControlName="OverTimeDate" [showIcon]="true" required
+                                        appendTo="body"
+                                        id="OverTimeDate" dateFormat="dd/mm/yy" placeholder="  Choose a date">
                             </p-calendar>
                             <span class="is-request-date">**</span>
                             <validation-messages [control]="editValueForm.controls.OverTimeDate"></validation-messages>

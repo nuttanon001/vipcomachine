@@ -171,6 +171,15 @@ export class OvertimeEditComponent
             ],
         });
         this.editValueForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
+
+        if (this.CanEditInRequiredOnly) {
+            const form: FormGroup = this.editValueForm;
+            const controlDate: AbstractControl | null = form.get("OverTimeDate");
+
+            if (controlDate) {
+                controlDate.disable();
+            }
+        }
     }
 
     // onValueChanged Override

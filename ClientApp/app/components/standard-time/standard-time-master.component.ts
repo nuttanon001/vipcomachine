@@ -19,10 +19,9 @@ import { TableColumn } from "@swimlane/ngx-datatable";
     styleUrls: ["../../styles/master.style.scss"],
     providers: [DataTableServiceCommunicate]
 })
-/** standard-time-master component*/
+// standard-time-master component*/
 export class StandardTimeMasterComponent
-    extends BaseMasterComponent<TypeStandardTime, TypeStandardTimeService>
-{
+    extends BaseMasterComponent<TypeStandardTime, TypeStandardTimeService> {
     columns:Array<TableColumn> = [
         { prop: "TypeMachineString", name: "Name", flexGrow: 2 },
         { prop: "Name", name: "Code", flexGrow: 1 },
@@ -64,7 +63,7 @@ export class StandardTimeMasterComponent
 
     // on change time zone befor update to webapi
     changeTimezone(value: TypeStandardTime): TypeStandardTime {
-        var zone = "Asia/Bangkok";
+        let zone:string = "Asia/Bangkok";
         if (value !== null) {
             if (value.CreateDate !== null) {
                 value.CreateDate = moment.tz(value.CreateDate, zone).toDate();
@@ -82,8 +81,9 @@ export class StandardTimeMasterComponent
                         Standard.ModifyDate = moment.tz(Standard.ModifyDate, zone).toDate();
                     }
 
-                    if (value.StandardTimes)
+                    if (value.StandardTimes) {
                         value.StandardTimes[index] = Standard;
+                    }
                 });
             }
         }
@@ -107,7 +107,8 @@ export class StandardTimeMasterComponent
                 console.error(error);
                 this.editValue.Creator = undefined;
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!",
+                    this.viewContainerRef);
             }
         );
     }
@@ -128,7 +129,8 @@ export class StandardTimeMasterComponent
             (error: any) => {
                 console.error(error);
                 this.canSave = true;
-                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!", this.viewContainerRef)
+                this.dialogsService.error("Failed !", "Save failed with the following error: Invalid Identifier code !!!",
+                    this.viewContainerRef);
             }
         );
     }
@@ -142,7 +144,7 @@ export class StandardTimeMasterComponent
         if (value) {
             this.service.getOneKeyNumber(value.TypeStandardTimeId)
                 .subscribe(dbData => {
-                    // Debug here
+                    // debug here
                     // console.log("Data is :", dbData);
 
                     this.displayValue = dbData;
