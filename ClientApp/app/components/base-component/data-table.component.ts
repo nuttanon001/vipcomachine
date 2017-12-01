@@ -97,6 +97,8 @@ export class DataTableComponent implements OnInit,OnDestroy {
     isLoading: boolean;
     isFilter: boolean;
     isSort: boolean;
+    isForce: boolean = false;
+    templateLimit: number;
     // subscription
     subscription: Subscription;
     subscription2: Subscription;
@@ -127,8 +129,18 @@ export class DataTableComponent implements OnInit,OnDestroy {
                             return;
                         }
                     }
-                    this.rows.push(...scrollData.Data);
 
+                    if (this.isForce) {
+                        this.rows.splice(0, this.templateLimit);
+                        this.isForce = false;
+
+                        scrollData.Data.forEach(item => {
+                            this.rows.push(item);
+                        });
+
+                    } else {
+                        this.rows.push(...scrollData.Data);
+                    }
                     // debug here
                     // console.log("Row:", JSON.stringify(this.rows));
                 } else {
@@ -142,7 +154,11 @@ export class DataTableComponent implements OnInit,OnDestroy {
 
         this.subscription2 = this.dataTableService.ToReload$
             .subscribe((reload: boolean) => {
-                this.onScroll(0);
+                // this.rows = new Array<any>();
+                if (!this.templateLimit) {
+                    this.templateLimit = this.rows.length;
+                }
+                this.loadPage2(0,this.templateLimit);
             });
     }
 
@@ -169,10 +185,9 @@ export class DataTableComponent implements OnInit,OnDestroy {
 
     // on Scroll bar
     onScroll(offsetY: number): void {
-
         // total height of all rows in the viewport
         const viewHeight:number = this.el.nativeElement.getBoundingClientRect().height - this.headerHeight;
-
+        
         // check if we scrolled to the end of the viewport
         if (!this.isLoading && offsetY + viewHeight >= this.rows.length * this.rowHeight) {
 
@@ -189,6 +204,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
                 // (otherwise, we won't be able to scroll past it)
                 limit = Math.max(pageSize, this.pageLimit);
             }
+
             this.loadPage(limit);
         }
     }
@@ -203,9 +219,30 @@ export class DataTableComponent implements OnInit,OnDestroy {
         this.isLoading = true;
         this.scroll.Skip = this.rows.length;
         this.scroll.Take = limit;
+        // Template Load
+        this.templateLimit = limit + (this.rows.length || 0);
 
         // debug here
         // console.log("Scroll here :", this.scroll);
+
+        this.dataTableService.toParent(this.scroll);
+
+        // this.serverResultsService.getResults(this.rows.length, limit).subscribe(results => {
+        //    this.rows.push(...results.data);
+        //    this.isLoading = false;
+        // });
+    }
+
+    private loadPage2(skip: number,limit: number): void {
+        // console.log("loadPage");
+
+        // set the loading flag, which serves two purposes:
+        // 1) it prevents the same page from being loaded twice
+        // 2) it enables display of the loading indicator
+        this.isLoading = true;
+        this.isForce = true;
+        this.scroll.Skip = skip;
+        this.scroll.Take = limit;
 
         this.dataTableService.toParent(this.scroll);
 
@@ -262,6 +299,9 @@ export class DataTableComponent implements OnInit,OnDestroy {
     // row class
     getRowClass(row?: any): any {
         if (row) {
+            // debug 
+            // console.log("On row");
+
             if (row.OverTimeStatus === 1) {
                 return { "is-require": true };
             } else if (row.OverTimeStatus === 2) {

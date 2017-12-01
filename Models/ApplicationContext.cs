@@ -26,7 +26,6 @@ namespace VipcoMachine.Models
             modelBuilder.Entity<JobCardMasterHasAttach>().ToTable("JobCardMasterHasAttach");
             modelBuilder.Entity<Machine>().ToTable("Machines");
             modelBuilder.Entity<MachineHasOperator>().ToTable("MachineHasOperator");
-
             // material
             modelBuilder.Entity<Material>().ToTable("Material");
             //set key
@@ -40,6 +39,7 @@ namespace VipcoMachine.Models
             modelBuilder.Entity<PropertyMachine>().ToTable("PropertyMachine");
             modelBuilder.Entity<StandardTime>().ToTable("StandardTime");
             modelBuilder.Entity<TaskMachine>().ToTable("TaskMachine");
+            modelBuilder.Entity<NoTaskMachine>().ToTable("NoTaskMachine");
             modelBuilder.Entity<TypeMachine>().ToTable("TypeMachine");
             modelBuilder.Entity<TaskMachineHasOverTime>().ToTable("TaskMachineHasOverTime");
             modelBuilder.Entity<TemplateProjectDetail>().ToTable("TemplateProjectDetail");
@@ -69,6 +69,7 @@ namespace VipcoMachine.Models
         public DbSet<PropertyMachine> PropertyMachines { get; set; }
         public DbSet<StandardTime> StandardTimes { get; set; }
         public DbSet<TaskMachine> TaskMachines { get; set; }
+        public DbSet<NoTaskMachine> NoTaskMachines { get; set; }
         public DbSet<TaskMachineHasOverTime> TaskMachineHasOverTimes { get; set; }
         public DbSet<TemplateProjectDetail> TemplateProjectDetails { get; set; }
         public DbSet<TypeMachine> TypeMachines { get; set; }

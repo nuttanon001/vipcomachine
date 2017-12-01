@@ -133,6 +133,8 @@ namespace VipcoMachine.Controllers
         #endregion
 
         #region POST
+
+        // POST: api/OverTimeMaster/GetLastOverTimeV2
         [HttpPost("GetLastOverTimeV2/")]
         public async Task<IActionResult> GetLastOverTimeV2([FromBody]OptionLastOverTimeViewModel OptionLastOver)
         {
@@ -168,7 +170,71 @@ namespace VipcoMachine.Controllers
                                                                             x.GroupCode == OptionLastOver.GroupCode);
 
                 if (LastOverTime != null)
+                {
                     return new JsonResult(this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>(LastOverTime), this.DefaultJsonSettings);
+                }
+            }
+
+            return NotFound(new { Error = "Not found ProjectCodeMasterId ,GroupCode or LastOverTime." });
+        }
+
+        // POST: api/OverTimeMaster/GetLastOverTimeV3
+        [HttpPost("GetLastOverTimeV3/")]
+        public async Task<IActionResult> GetLastOverTimeV3([FromBody]OptionLastOverTimeViewModel OptionLastOver)
+        {
+            if (OptionLastOver.ProjectCodeId.HasValue && !string.IsNullOrEmpty(OptionLastOver.GroupCode))
+            {
+                var QueryData = this.repository.GetAllAsQueryable()
+                                                .Where(x => x.OverTimeStatus != OverTimeStatus.Cancel)
+                                                .OrderByDescending(x => x.OverTimeDate)
+                                                .Include(x => x.ApproveBy)
+                                                .Include(x => x.RequireBy)
+                                                .Include(x => x.ProjectCodeMaster)
+                                                .Include(x => x.EmployeeGroupMIS)
+                                                .Include(x => x.EmployeeGroup).AsQueryable();
+
+                if (OptionLastOver.CurrentOverTimeId.HasValue)
+                {
+                    if (OptionLastOver.CurrentOverTimeId.Value > 0)
+                        QueryData = QueryData.Where(x => x.OverTimeMasterId != OptionLastOver.CurrentOverTimeId);
+                }
+
+                if (OptionLastOver.BeForDate.HasValue)
+                {
+                    OptionLastOver.BeForDate = OptionLastOver.BeForDate.Value.AddHours(7);
+                    QueryData = QueryData.Where(x => x.OverTimeDate.Date <= OptionLastOver.BeForDate.Value.Date);
+                }
+
+                if (!string.IsNullOrEmpty(OptionLastOver.GroupMis))
+                {
+                    QueryData = QueryData.Where(x => x.GroupMIS == OptionLastOver.GroupMis);
+                }
+
+                var LastOverTime = await QueryData.FirstOrDefaultAsync(x => x.ProjectCodeMasterId == OptionLastOver.ProjectCodeId &&
+                                                                            x.GroupCode == OptionLastOver.GroupCode);
+
+                if (LastOverTime != null)
+                {
+                    // if has date overtime
+                    if (OptionLastOver.BeForDate.HasValue)
+                    {
+                        // if has date overtime sunday
+                        if (OptionLastOver.BeForDate.Value.DayOfWeek == DayOfWeek.Sunday)
+                        {
+                            var Date1 = OptionLastOver.BeForDate.Value.AddDays(-1).Date;
+                            if (Date1 == LastOverTime.OverTimeDate.Date)
+                            {
+                                if (LastOverTime.OverTimeDate.DayOfWeek == DayOfWeek.Saturday)
+                                {
+                                    LastOverTime.OverTimeStatus = OverTimeStatus.Complate;
+                                    return new JsonResult(this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>(LastOverTime), this.DefaultJsonSettings);
+                                }
+                            }
+                        }
+                    }
+
+                    return new JsonResult(this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>(LastOverTime), this.DefaultJsonSettings);
+                }
             }
 
             return NotFound(new { Error = "Not found ProjectCodeMasterId ,GroupCode or LastOverTime." });
@@ -277,7 +343,8 @@ namespace VipcoMachine.Controllers
 
                     foreach (DateTime day in EachDay(MinDate, MaxDate))
                     {
-                        Columns.Add(day.Date.ToString("dd/MM/yy"));
+                        if (GetData.Any(x => x.OverTimeDate.Date == day.Date))
+                            Columns.Add(day.Date.ToString("dd/MM/yy"));
                     }
 
                     var DataTable = new List<IDictionary<String, Object>>();

@@ -91,7 +91,19 @@ export class OvertimeEditComponent
                     // get LastOverTime
                     if (this.editValue.LastOverTimeId) {
                         this.service.getOneKeyNumber(this.editValue.LastOverTimeId)
-                            .subscribe(dbLastMaster => this.lastOverTimeMaster = dbLastMaster);
+                            .subscribe(dbLastMaster => {
+                                this.lastOverTimeMaster = dbLastMaster;
+                                if (this.lastOverTimeMaster) {
+                                    if (this.lastOverTimeMaster.OverTimeStatus) {
+                                        if (this.lastOverTimeMaster.OverTimeStatus !== 3) {
+                                            this.canNotSave = "Last OverTime was Incompleted. This overtime can't save.";
+                                            this.serviceDialogs.error("Error Message",
+                                                "Last OverTime was Incompleted. This overtime can't save.",
+                                                this.viewContainerRef);
+                                        }
+                                    }
+                                }
+                            });
                     }
                 }, error => console.error(error), () => this.defineData());
         } else {
@@ -256,9 +268,9 @@ export class OvertimeEditComponent
                                 this.optionLastOver.BeForDate = controlDate.value;
                             }
 
-                            this.service.getlastOverTimeMasterV2(this.optionLastOver)
+                            this.service.getlastOverTimeMasterV3(this.optionLastOver)
                                 .subscribe(lastMaster => {
-                                    console.log("LastMaster", lastMaster);
+                                    // console.log("LastMaster", lastMaster);
                                     if (lastMaster) {
                                         this.lastOverTimeMaster = lastMaster;
                                         this.editValueForm.patchValue({

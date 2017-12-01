@@ -103,6 +103,9 @@ export class OvertimeMasterComponent
             }
         }
 
+        //debug here
+        // console.log("LoadData", JSON.stringify(scroll));
+
         this.scroll = scroll;
         this.service.getAllWithScroll(scroll)
             .subscribe((scrollData: ScrollData<OverTimeMaster>) => {

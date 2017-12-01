@@ -99,7 +99,7 @@ export class TaskMachineMasterComponent
         }
 
         // debug here
-        console.log("Scroll is", JSON.stringify(scroll));
+        // console.log("Scroll is", JSON.stringify(scroll));
 
         this.scroll = scroll;
         this.service.getAllWithScroll(scroll)

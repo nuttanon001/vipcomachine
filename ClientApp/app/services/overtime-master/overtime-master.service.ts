@@ -38,6 +38,12 @@ export class OverTimeMasterService extends BaseRestService<OverTimeMaster> {
         return this.http.post(url, JSON.stringify(Option), this.getRequestOption())
             .map(this.extractData).catch(this.handleError);
     }
+    // get last OverTimeMaster V3
+    getlastOverTimeMasterV3(Option: OptionOverTimeLast): Observable<OverTimeMaster> {
+        let url: string = `${this.actionUrl}GetLastOverTimeV3/`;
+        return this.http.post(url, JSON.stringify(Option), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
+    }
 
     // put with key number
     putUpdateStatus(uObject: OverTimeMaster, key: number): Observable<OverTimeMaster> {

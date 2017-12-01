@@ -31,6 +31,7 @@ namespace VipcoMachine.Controllers
     {
         #region PrivateMenbers
         private IRepository<TaskMachine> repository;
+        private IRepository<NoTaskMachine> repositoryNoTask;
         private IRepository<TaskMachineHasOverTime> repositoryOverTime;
         private IRepository<Machine> repositoryMachine;
         private IRepository<MachineHasOperator> repositoryOperator;
@@ -214,6 +215,7 @@ namespace VipcoMachine.Controllers
 
         public TaskMachineController(
                 IRepository<TaskMachine> repo,
+                IRepository<NoTaskMachine> repoNo,
                 IRepository<TaskMachineHasOverTime> repoOverTime,
                 IRepository<Machine> repoMachine,
                 IRepository<MachineHasOperator> repoOperator,
@@ -224,6 +226,7 @@ namespace VipcoMachine.Controllers
                 IMapper map)
         {
             this.repository = repo;
+            this.repositoryNoTask = repoNo;
             this.repositoryOverTime = repoOverTime;
             this.repositoryJobMaster = repoMaster;
             this.repositoryJobDetail = repoDetail;
@@ -271,6 +274,7 @@ namespace VipcoMachine.Controllers
 
             return new JsonResult(new { Result = taskMachine.TaskMachineHasOverTimes.Any() }, this.DefaultJsonSettings);
         }
+
         [HttpGet("GetWorkGroup")]
         public async Task<IActionResult> GetWorkGroupOfJobCardMaster()
         {
@@ -667,6 +671,31 @@ namespace VipcoMachine.Controllers
             return NotFound(new { Error = "TaskMachine not found. " });
         }
 
+        // POST: api/TaskMachine/NoTaskMachine
+        [HttpPost("NoTaskMachine")]
+        public async Task<IActionResult> PostNoTaskMachine([FromBody] NoTaskMachine nNoTaskMachine)
+        {
+            var Message = "No Data";
+            if (nNoTaskMachine != null)
+            {
+                nNoTaskMachine.CreateDate = DateTime.Now;
+                nNoTaskMachine.Creator = nNoTaskMachine.Creator ?? "Someone";
+
+                var helpersNo = new HelpersClass<NoTaskMachine>();
+                nNoTaskMachine = helpersNo.AddHourMethod(nNoTaskMachine);
+
+                var InsertComplate = await this.repositoryNoTask.AddAsync(nNoTaskMachine);
+                if (InsertComplate != null)
+                {
+                    if (InsertComplate.JobCardDetailId > 0)
+                        await this.UpdateJobCard(InsertComplate.JobCardDetailId, InsertComplate.Creator);
+
+                    return new JsonResult(InsertComplate, this.DefaultJsonSettings);
+                }
+            }
+            return NotFound(new { Error = Message });
+        }
+
         #endregion
 
         #region PUT
@@ -766,6 +795,31 @@ namespace VipcoMachine.Controllers
                 //return new JsonResult(await this.repository.UpdateAsync(uTaskMachine, key), this.DefaultJsonSettings);
             }
             return NotFound(new { Error = "TaskMachine not found. " });
+        }
+
+        // PUT: api/TaskMachine/NoTaskMachine/5
+        [HttpPut("NoTaskMachine/{key}")]
+        public async Task<IActionResult> NoTaskMachinePutByNumber(int key, [FromBody] NoTaskMachine uNoTaskMachine)
+        {
+            var Message = "No Data.";
+            if (uNoTaskMachine != null)
+            {
+                var helpersNo = new HelpersClass<NoTaskMachine>();
+                uNoTaskMachine = helpersNo.AddHourMethod(uNoTaskMachine);
+
+                uNoTaskMachine.ModifyDate = DateTime.Now;
+                uNoTaskMachine.Modifyer = uNoTaskMachine.Modifyer ?? "Someone";
+
+                var UpdateComplate = await this.repositoryNoTask.AddAsync(uNoTaskMachine);
+                if (UpdateComplate != null)
+                {
+                    if (UpdateComplate.JobCardDetailId > 0)
+                        await this.UpdateJobCard(UpdateComplate.JobCardDetailId, UpdateComplate.Modifyer);
+
+                    return new JsonResult(UpdateComplate, this.DefaultJsonSettings);
+                }
+            }
+            return NotFound(new { Error = Message });
         }
         #endregion
 
