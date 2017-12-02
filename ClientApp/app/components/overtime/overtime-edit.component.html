@@ -187,7 +187,10 @@
                     <ngx-datatable-column [flexGrow]="1" [sortable]="false">
                         <ng-template let-row="row" ngx-datatable-cell-template>
                             <button mat-button (click)="onRemoveOverTimeDetailOrCancelOverTimeDetail(row)" color="warn">Remove</button>
-                            <button mat-button (click)="onRemoveOverTimeDetailOrCancelOverTimeDetail(row,1)" color="accent">Cancel</button>
+                            <button mat-button (click)="onRemoveOverTimeDetailOrCancelOverTimeDetail(row,1)"
+                                    color="accent" *ngIf="row?.OverTimeDetailId">
+                                Cancel
+                            </button>
                         </ng-template>
                     </ngx-datatable-column>
                 </ngx-datatable>

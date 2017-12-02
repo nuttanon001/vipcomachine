@@ -264,6 +264,16 @@ namespace VipcoMachine.Controllers
                       this.DefaultJsonSettings);
             // return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
         }
+        // GET: api/TaskMachine/NoTaskMachine/5
+        [HttpGet("NoTaskMachine/{key}")]
+        public async Task<IActionResult> GetNoTaskMachine(int key)
+        {
+            var Includes = new List<string> { "Employee", "EmployeeGroup" };
+            return new JsonResult(
+                      this.mapper.Map<NoTaskMachine, NoTaskMachineViewModel>(await this.repositoryNoTask.GetAsynvWithIncludes(key, "NoTaskMachineId", Includes)),
+                      this.DefaultJsonSettings);
+            // return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
+        }
 
         // GET: api/TaskMachine/GetTaskMachineHasOverTime
         [HttpGet("GetTaskMachineHasOverTime/{key}")]
@@ -810,7 +820,7 @@ namespace VipcoMachine.Controllers
                 uNoTaskMachine.ModifyDate = DateTime.Now;
                 uNoTaskMachine.Modifyer = uNoTaskMachine.Modifyer ?? "Someone";
 
-                var UpdateComplate = await this.repositoryNoTask.AddAsync(uNoTaskMachine);
+                var UpdateComplate = await this.repositoryNoTask.UpdateAsync(uNoTaskMachine,key);
                 if (UpdateComplate != null)
                 {
                     if (UpdateComplate.JobCardDetailId > 0)

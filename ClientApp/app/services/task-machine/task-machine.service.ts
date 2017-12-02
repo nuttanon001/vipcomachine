@@ -1,7 +1,7 @@
 ﻿import { Injectable } from "@angular/core";
 import { Http, ResponseContentType } from "@angular/http";
 // model
-import { TaskMachine,OptionSchedule,EmployeeGroup } from "../../models/model.index";
+import { TaskMachine,OptionSchedule,EmployeeGroup,NoTaskMachine } from "../../models/model.index";
 // base-service
 import { BaseRestService, BaseCommunicateService } from "../service.index";
 // rx/js
@@ -61,6 +61,23 @@ export class TaskMachineService extends BaseRestService<TaskMachine> {
         return this.http.get(url, { responseType: ResponseContentType.Blob })
             .map(res => res.blob())
             .catch(this.handleError);
+    }
+
+    // ===================== NoTaskMachine ================================\\
+    // get NoTaskMachine with key number
+    getNoTaskMachineOneKeyNumber(key: number): Observable<NoTaskMachine> {
+        return this.http.get(this.actionUrl + key + "/")
+            .map(this.extractData).catch(this.handleError);
+    }
+    // post NoTaskMachine
+    postNoTaskMachine(nObject: NoTaskMachine): Observable<NoTaskMachine> {
+        return this.http.post(this.actionUrl + "NoTaskMachine/", JSON.stringify(nObject), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
+    }
+    // put NoTaskMachine
+    putNoTaskMachineKeyNumber(uObject: NoTaskMachine, key: number): Observable<NoTaskMachine> {
+        return this.http.put(this.actionUrl + "NoTaskMachine/" + key + "/", JSON.stringify(uObject), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
     }
 
 }

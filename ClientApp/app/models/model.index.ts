@@ -27,6 +27,7 @@ export { ValidationMaster, ValidationResult, FormErrors } from "./vaildation/val
 export { Page,Scroll } from "./page/page.model";
 export { PageData, ScrollData } from "./page/page-data.model";
 export { TaskMachineHasOverTime } from "./over-time/over-time.model";
+export { NoTaskMachine } from "./task-machine/no-task-machine.model";
 export { OverTimeMaster } from "./overtime-master/overtime-master.model";
 export { OptionOverTimeLast } from "./overtime-master/option-overtime-last.model";
 export { OptionOverTimeChart } from "./overtime-master/option-overtime-chart.model";

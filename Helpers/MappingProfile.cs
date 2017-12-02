@@ -252,6 +252,21 @@ namespace VipcoMachine.Helpers
 
             CreateMap<OverTimeDetailViewModel, OverTimeDetail>();
             #endregion
+
+            #region NoTaskMachine
+
+            CreateMap<NoTaskMachine, NoTaskMachineViewModel>()
+                // AssignedBy
+                .ForMember(x => x.AssignedByString,
+                           o => o.MapFrom(s => s.Employee == null ? "-" : $"คุณ{s.Employee}"))
+                .ForMember(x => x.Employee, o => o.Ignore())
+                // EmployeeGroup
+                .ForMember(x => x.GroupCodeString,
+                            o => o.MapFrom(s => s.EmployeeGroup == null ? "-" : s.EmployeeGroup.Description))
+                .ForMember(x => x.EmployeeGroup, o => o.Ignore());
+
+            CreateMap<NoTaskMachineViewModel, NoTaskMachine>();
+            #endregion
         }
     }
 }
