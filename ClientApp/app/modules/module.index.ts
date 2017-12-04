@@ -10,3 +10,4 @@ export { StandardTimeModule } from "./standard-time/standard-time.module";
 export { TaskMachineModule } from "./task-machine/task-machine.module";
 export { OverTimeModule } from "./overtime/overtime.module";
 export { EmployeeModule } from "./employee/employee.module";
+export { NoTaskMachineModule } from "./no-task-machine/no-task-machine.module";

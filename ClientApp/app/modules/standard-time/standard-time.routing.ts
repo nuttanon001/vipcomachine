@@ -18,7 +18,7 @@ const standardTimeRoutes: Routes = [
             }
         ],
     }
-]
+];
 
 @NgModule({
     imports: [

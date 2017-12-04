@@ -242,7 +242,7 @@ export class DataTableComponent implements OnInit,OnDestroy {
         this.isLoading = true;
         this.isForce = true;
         this.scroll.Skip = skip;
-        this.scroll.Take = limit;
+        this.scroll.Take = limit < 10 ? 10 : limit;
 
         this.dataTableService.toParent(this.scroll);
 

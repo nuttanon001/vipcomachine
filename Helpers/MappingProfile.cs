@@ -258,8 +258,12 @@ namespace VipcoMachine.Helpers
             CreateMap<NoTaskMachine, NoTaskMachineViewModel>()
                 // AssignedBy
                 .ForMember(x => x.AssignedByString,
-                           o => o.MapFrom(s => s.Employee == null ? "-" : $"คุณ{s.Employee}"))
+                           o => o.MapFrom(s => s.Employee == null ? "-" : $"คุณ{s.Employee.NameThai}"))
                 .ForMember(x => x.Employee, o => o.Ignore())
+                // CuttingPlne
+                .ForMember(x => x.CuttingPlanNo,
+                           o => o.MapFrom(s => s.JobCardDetail.CuttingPlan == null ? "-" : s.JobCardDetail.CuttingPlan.CuttingPlanNo ))
+                .ForMember(x => x.JobCardDetail,o => o.Ignore())
                 // EmployeeGroup
                 .ForMember(x => x.GroupCodeString,
                             o => o.MapFrom(s => s.EmployeeGroup == null ? "-" : s.EmployeeGroup.Description))

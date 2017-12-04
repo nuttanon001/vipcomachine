@@ -253,7 +253,7 @@ namespace VipcoMachine.Controllers
                       this.DefaultJsonSettings);
             //return new JsonResult(await this.repository.GetAllAsync(), this.DefaultJsonSettings);
         }
-
+       
         // GET: api/TaskMachine/5
         [HttpGet("{key}")]
         public async Task<IActionResult> Get(int key)
@@ -263,6 +263,17 @@ namespace VipcoMachine.Controllers
                       this.mapper.Map<TaskMachine, TaskMachineViewModel>(await this.repository.GetAsynvWithIncludes(key, "TaskMachineId", Includes)),
                       this.DefaultJsonSettings);
             // return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
+        }
+
+        #region NoTaskMachine
+        // GET: api/TaskMachine/NoTaskMachine
+        [HttpGet("NoTaskMachine")]
+        public async Task<IActionResult> GetNoTaskMachine()
+        {
+            var Includes = new List<string> { "Employee", "EmployeeGroup" };
+            return new JsonResult(
+                      this.ConverterTableToViewModel<NoTaskMachineViewModel, NoTaskMachine>(await this.repositoryNoTask.GetAllWithInclude2Async(Includes)),
+                      this.DefaultJsonSettings);
         }
         // GET: api/TaskMachine/NoTaskMachine/5
         [HttpGet("NoTaskMachine/{key}")]
@@ -274,6 +285,7 @@ namespace VipcoMachine.Controllers
                       this.DefaultJsonSettings);
             // return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
         }
+        #endregion
 
         // GET: api/TaskMachine/GetTaskMachineHasOverTime
         [HttpGet("GetTaskMachineHasOverTime/{key}")]
@@ -618,6 +630,76 @@ namespace VipcoMachine.Controllers
             return NotFound(new { Error = Message });
         }
 
+        // POST: api/TaskMachine/GetScroll
+        [HttpPost("GetScrollNoTaskMachine")]
+        public async Task<IActionResult> GetScrollNoTaskMachine([FromBody] ScrollViewModel Scroll)
+        {
+            var Message = "";
+            try
+            {
+                var QueryData = this.repositoryNoTask.GetAllAsQueryable()
+                                    .Include(x => x.EmployeeGroup)
+                                    .Include(x => x.JobCardDetail.CuttingPlan)
+                                    .AsQueryable();
+
+                if (!string.IsNullOrEmpty(Scroll.Where))
+                {
+                    QueryData = QueryData.Where(x => x.Creator == Scroll.Where);
+                }
+
+                // Filter
+                var filters = string.IsNullOrEmpty(Scroll.Filter) ? new string[] { "" }
+                                    : Scroll.Filter.ToLower().Split(null);
+                foreach (var keyword in filters)
+                {
+                    QueryData = QueryData.Where(x => x.Description.ToLower().Contains(keyword) ||
+                                                     x.JobCardDetail.CuttingPlan.CuttingPlanNo.ToLower().Contains(keyword) ||
+                                                     x.EmployeeGroup.Description.ToLower().Contains(keyword));
+                }
+
+                // Order
+                switch (Scroll.SortField)
+                {
+                    case "NoTaskMachineCode":
+                        if (Scroll.SortOrder == -1)
+                            QueryData = QueryData.OrderByDescending(e => e.NoTaskMachineCode);
+                        else
+                            QueryData = QueryData.OrderBy(e => e.NoTaskMachineCode);
+                        break;
+
+                    case "CuttingPlanNo":
+                        if (Scroll.SortOrder == -1)
+                            QueryData = QueryData.OrderByDescending(e => e.JobCardDetail.CuttingPlan.CuttingPlanNo);
+                        else
+                            QueryData = QueryData.OrderBy(e => e.JobCardDetail.CuttingPlan.CuttingPlanNo);
+                        break;
+
+                    case "GroupCodeString":
+                        if (Scroll.SortOrder == -1)
+                            QueryData = QueryData.OrderByDescending(e => e.EmployeeGroup.Description);
+                        else
+                            QueryData = QueryData.OrderBy(e => e.EmployeeGroup.Description);
+                        break;
+
+                    default:
+                        QueryData = QueryData.OrderByDescending(e => e.Date);
+                        break;
+                }
+
+                QueryData = QueryData.Skip(Scroll.Skip ?? 0).Take(Scroll.Take ?? 50);
+
+                return new JsonResult(new ScrollDataViewModel<NoTaskMachineViewModel>
+                        (Scroll,
+                        this.ConverterTableToViewModel<NoTaskMachineViewModel, NoTaskMachine>(await QueryData.AsNoTracking().ToListAsync())),
+                        this.DefaultJsonSettings);
+            }
+            catch (Exception ex)
+            {
+                Message = $"Has error {ex.ToString()}";
+            }
+            return NotFound(new { Error = Message });
+        }
+
         // POST: api/TaskMachine
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]TaskMachine nTaskMachine)
@@ -688,6 +770,8 @@ namespace VipcoMachine.Controllers
             var Message = "No Data";
             if (nNoTaskMachine != null)
             {
+                nNoTaskMachine.NoTaskMachineCode = DateTime.Now.ToString("ddMMyyhhmm");
+                // No task
                 nNoTaskMachine.CreateDate = DateTime.Now;
                 nNoTaskMachine.Creator = nNoTaskMachine.Creator ?? "Someone";
 

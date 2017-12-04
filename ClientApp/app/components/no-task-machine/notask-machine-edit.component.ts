@@ -23,12 +23,12 @@ import { TableColumn } from "@swimlane/ngx-datatable";
 import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 
 @Component({
-    selector: "app-notask-machine",
-    templateUrl: "./notask-machine.component.html",
+    selector: "notask-machine-edit",
+    templateUrl: "./notask-machine-edit.component.html",
     styleUrls: ["../../styles/edit.style.scss"],
 })
 // notask-machine component*/
-export class NoTaskMachineComponent 
+export class NoTaskMachineEditComponent 
     extends BaseEditComponent<NoTaskMachine, TaskMachineService> {
     jobCardDetail: JobCardDetail;
 
@@ -60,6 +60,21 @@ export class NoTaskMachineComponent
                             this.editValue.Date = this.editValue.Date != null ?
                                 new Date(this.editValue.Date) : new Date();
                         }
+
+                        if (this.editValue.JobCardDetailId) {
+                            this.serviceJobDetail.getOneKeyNumber(this.editValue.JobCardDetailId)
+                                .subscribe(dbJobCardDetail => {
+                                    this.jobCardDetail = dbJobCardDetail;
+                                    this.jobCardDetail.StandardTimeString = "-";
+
+                                    if (this.editValueForm) {
+                                        this.editValueForm.patchValue({
+                                            Quantity: dbJobCardDetail.Quality,
+                                        });
+                                    }
+                                }, error => console.error(error));
+                        }
+
                     }, error => console.error(error), () => this.defineData());
             } else {
                 if (value.JobCardDetailId) {
@@ -74,6 +89,20 @@ export class NoTaskMachineComponent
                         this.editValue.AssignedByString = this.serviceAuth.getAuth.NameThai;
                     }
                     this.defineData();
+
+                    if (this.editValue.JobCardDetailId) {
+                        this.serviceJobDetail.getOneKeyNumber(this.editValue.JobCardDetailId)
+                            .subscribe(dbJobCardDetail => {
+                                this.jobCardDetail = dbJobCardDetail;
+                                this.jobCardDetail.StandardTimeString = "-";
+
+                                if (this.editValueForm) {
+                                    this.editValueForm.patchValue({
+                                        Quantity: dbJobCardDetail.Quality,
+                                    });
+                                }
+                            }, error => console.error(error));
+                    }
                 }
 
                 if (this.serviceAuth.getAuth) {
@@ -139,25 +168,9 @@ export class NoTaskMachineComponent
         this.editValueForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
     }
 
-    // jobCardDetail
+    // job card detail
     onSelectJobCardDetail(): void {
-        this.serviceDialogs.dialogSelectedJobCardDetail(this.viewContainerRef, 1)
-            .subscribe(jobCardDetail => {
-                if (jobCardDetail) {
-                    this.serviceJobDetail.getOneKeyNumber(jobCardDetail.JobCardDetailId)
-                        .subscribe(dbJobCardDetail => {
-                            this.jobCardDetail = dbJobCardDetail;
-                            if (this.jobCardDetail.StandardTimeString === "-") {
-                                this.jobCardDetail.StandardTimeString = "Click to selected StandardTime here.";
-                            }
-
-                            this.editValueForm.patchValue({
-                                JobCardDetailId: this.jobCardDetail.JobCardDetailId,
-                                TotalQuantity: this.jobCardDetail.Quality,
-                            });
-                        });
-                }
-            });
+        return;
     }
 
     // assignedBy

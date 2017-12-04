@@ -21,9 +21,8 @@ import { DateOnlyPipe } from "../../pipes/date-only.pipe";
     templateUrl: "./task-machine-view.component.html",
     styleUrls: ["../../styles/view.style.scss"],
 })
-/** task-machine-view component*/
-export class TaskMachineViewComponent extends BaseViewComponent<TaskMachine>
-{
+// task-machine-view component*/
+export class TaskMachineViewComponent extends BaseViewComponent<TaskMachine> {
     // parameter
     datePipe: DateOnlyPipe = new DateOnlyPipe("it");
     jobCardDetail: JobCardDetail | undefined;

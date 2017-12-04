@@ -1,7 +1,7 @@
 ﻿import { Injectable } from "@angular/core";
 import { Http, ResponseContentType } from "@angular/http";
 // model
-import { TaskMachine,OptionSchedule,EmployeeGroup,NoTaskMachine } from "../../models/model.index";
+import { TaskMachine, OptionSchedule, EmployeeGroup, NoTaskMachine, Scroll, ScrollData } from "../../models/model.index";
 // base-service
 import { BaseRestService, BaseCommunicateService } from "../service.index";
 // rx/js
@@ -64,9 +64,23 @@ export class TaskMachineService extends BaseRestService<TaskMachine> {
     }
 
     // ===================== NoTaskMachine ================================\\
+
+    // noTaskMachine
+    // get all with page
+    getAllWithScrollNoTaskMachine(scroll: Scroll, subAction: string = "GetScrollNoTaskMachine/"): Observable<ScrollData<NoTaskMachine>> {
+        return this.http.post(this.actionUrl + subAction, JSON.stringify(scroll), this.getRequestOption())
+            .map(this.extractData).catch(this.handleError);
+    }
+
+    // get all NoTaskMachine
+    getAllNoTaskMachine(): Observable<Array<NoTaskMachine>> {
+        return this.http.get(this.actionUrl + "NoTaskMachine/")
+            .map(this.extractData).catch(this.handleError);
+    }
+
     // get NoTaskMachine with key number
     getNoTaskMachineOneKeyNumber(key: number): Observable<NoTaskMachine> {
-        return this.http.get(this.actionUrl + key + "/")
+        return this.http.get(this.actionUrl + "NoTaskMachine/" + key + "/")
             .map(this.extractData).catch(this.handleError);
     }
     // post NoTaskMachine

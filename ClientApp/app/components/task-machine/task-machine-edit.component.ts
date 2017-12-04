@@ -146,8 +146,6 @@ export class TaskMachineEditComponent
                         this.serviceJobCardDetail.getOneKeyNumber(this.editValue.JobCardDetailId)
                             .subscribe(dbJobCardDetail => {
                                 this.jobCardDetail = dbJobCardDetail;
-
-                                this.jobCardDetail = dbJobCardDetail;
                                 if (this.jobCardDetail.StandardTimeString === "-") {
                                     this.jobCardDetail.StandardTimeString = "Click to selected StandardTime here.";
                                 }

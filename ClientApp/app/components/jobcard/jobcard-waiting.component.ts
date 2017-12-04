@@ -147,7 +147,15 @@ export class JobCardWaitingComponent implements OnInit, OnDestroy {
                             } else {
                                 // debug here
                                 // console.log("JobCardDetail: ", jobCardDetail);
-                                this.router.navigate(["task-machine/jobcard-detail/", jobCardDetail.JobCardDetailId]);
+                                
+                                this.serviceDialogs.confirm("Choose Work for CuttingPlan", "Yes:For machine group.| No:For other group.", this.viewContainerRef)
+                                    .subscribe(result => {
+                                        if (result) {
+                                            this.router.navigate(["task-machine/jobcard-detail/", jobCardDetail.JobCardDetailId]);
+                                        } else {
+                                            this.router.navigate(["notask-machine/notask-withjob/", jobCardDetail.JobCardDetailId]);
+                                        }
+                                    });
                             }
                         }
                     });
