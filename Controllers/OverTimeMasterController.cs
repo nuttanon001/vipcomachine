@@ -963,6 +963,13 @@ namespace VipcoMachine.Controllers
             {
                 if (OverTimeMasterId > 0)
                 {
+                    var HoiDay = new List<DateTime>()
+                    {
+                        new DateTime(2017,12,5),
+                        new DateTime(2017,12,30),
+                        new DateTime(2017,12,31),
+                    };
+
                     var QueryData = await this.repository.GetAllAsQueryable()
                                                          .Include(x => x.EmployeeGroup)
                                                          .Include(x => x.EmployeeGroupMIS)
@@ -982,6 +989,8 @@ namespace VipcoMachine.Controllers
                             (QueryData.OverTimeDate.Year + 543).ToString();
                         // Check type of DayOfWeek
                         var isWeekDay = QueryData.OverTimeDate.DayOfWeek != DayOfWeek.Sunday;
+                        isWeekDay = !HoiDay.Any(x => x.Date == QueryData.OverTimeDate.Date);
+
                         var ThreeTime = false;
 
                         // Get ReportOverTimeMaster

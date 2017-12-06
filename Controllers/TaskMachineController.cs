@@ -29,7 +29,7 @@ namespace VipcoMachine.Controllers
     [Route("api/TaskMachine")]
     public class TaskMachineController : Controller
     {
-        #region PrivateMenbers
+        #region PrivateMembers
         private IRepository<TaskMachine> repository;
         private IRepository<NoTaskMachine> repositoryNoTask;
         private IRepository<TaskMachineHasOverTime> repositoryOverTime;
@@ -212,7 +212,6 @@ namespace VipcoMachine.Controllers
         #endregion PrivateMenbers
 
         #region Constructor
-
         public TaskMachineController(
                 IRepository<TaskMachine> repo,
                 IRepository<NoTaskMachine> repoNo,
@@ -266,6 +265,7 @@ namespace VipcoMachine.Controllers
         }
 
         #region NoTaskMachine
+
         // GET: api/TaskMachine/NoTaskMachine
         [HttpGet("NoTaskMachine")]
         public async Task<IActionResult> GetNoTaskMachine()
@@ -285,6 +285,7 @@ namespace VipcoMachine.Controllers
                       this.DefaultJsonSettings);
             // return new JsonResult(await this.repository.GetAsync(key), this.DefaultJsonSettings);
         }
+
         #endregion
 
         // GET: api/TaskMachine/GetTaskMachineHasOverTime
@@ -930,7 +931,6 @@ namespace VipcoMachine.Controllers
 
         private IActionResult TestScheduler()
         {
-
             return NotFound(new { Error = "" });
         }
 
