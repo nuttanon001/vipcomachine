@@ -35,10 +35,19 @@ export class OvertimeMasterComponent
     preViewOnly: boolean;
     loadReport: boolean = false;
 
+    get DisableChange(): boolean {
+        if (this.serverAuth.getAuth) {
+            if (this.serverAuth.getAuth.LevelUser) {
+                return this.serverAuth.getAuth.LevelUser < 3;
+            }
+        }
+        return true;
+    }
+
     columns = [
         { prop: "RequireString", name: "Require", flexGrow: 1 },
         { prop: "ProjectMasterString", name: "Job Number", flexGrow: 1 },
-        { prop: "GroupString", name: "Group", flexGrow: 1 ,},
+        { prop: "GroupString", name: "Group", flexGrow: 1, },
         { prop: "OverTimeDate", name: "Date", pipe: this.datePipe, flexGrow: 1 }
     ];
 
@@ -249,6 +258,31 @@ export class OvertimeMasterComponent
         );
     }
 
+    // on change status
+    onChangeStatus(value?: OverTimeMaster): void {
+        if (value) {
+            if (this.serverAuth.getAuth) {
+                // console.log(this.serverAuth.getAuth);
+                if (this.serverAuth.getAuth.LevelUser > 2) {
+                    // console.log(value);
+                    this.service.getChangeStatus(value.OverTimeMasterId).subscribe(
+                        (complete: any) => {
+                            this.displayValue = complete.OverTimeMaster;
+                            this.onSaveComplete();
+                        },
+                        (error: any) => {
+                            console.error(error);
+                            let message: any = error.replace("404 - Not Found", "");
+                            this.canSave = true;
+                            this.dialogsService.error("Failed !", `Save failed with the following error: ${message}!!!`,
+                                this.viewContainerRef);
+                        }
+                    );
+                }
+            }
+        }
+    }
+
     // on save complete override
     onSaveComplete(): void {
         this.dialogsService
@@ -271,7 +305,7 @@ export class OvertimeMasterComponent
             });
     }
 
-     // reportPdf
+    // reportPdf
     reporPdf(value?: OverTimeMaster): void {
         if (value) {
             this.OverTimeMasterId = value.OverTimeMasterId;

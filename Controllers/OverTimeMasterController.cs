@@ -25,12 +25,13 @@ namespace VipcoMachine.Controllers
     [Route("api/OverTimeMaster")]
     public class OverTimeMasterController : Controller
     {
-        #region PrivateMenbers
+        #region PrivateMembers
         private IRepository<OverTimeMaster> repository;
         private IRepository<OverTimeDetail> repositoryOverTimeDetail;
         private IRepository<ProjectCodeMaster> repositoryProjectMaster;
         private IRepository<EmployeeGroup> repositoryEmpGroup;
         private IRepository<Employee> repositoryEmployee;
+        private IRepository<HolidayOverTime> repositoryHoliday;
         private IMapper mapper;
         private IHostingEnvironment hostingEnvironment;
         private HelpersClass<OverTimeMaster> helpers;
@@ -54,20 +55,22 @@ namespace VipcoMachine.Controllers
             for (var day = from.Date; day.Date <= thru.Date; day = day.AddDays(1))
                 yield return day;
         }
+
         #endregion PrivateMenbers
 
         #region Constructor
-
         public OverTimeMasterController(
                 IRepository<OverTimeMaster> repo,
                 IRepository<OverTimeDetail> repoOverTimeDetail,
                 IRepository<ProjectCodeMaster> repoProjectMaster,
                 IRepository<EmployeeGroup> repoEmpGroup,
                 IRepository<Employee> repoEmp,
+                IRepository<HolidayOverTime> repoHoli,
                 IHostingEnvironment hosting,
                 IMapper map)
         {
             this.repository = repo;
+            this.repositoryHoliday = repoHoli;
             this.repositoryOverTimeDetail = repoOverTimeDetail;
             this.repositoryProjectMaster = repoProjectMaster;
             this.repositoryEmpGroup = repoEmpGroup;
@@ -128,6 +131,22 @@ namespace VipcoMachine.Controllers
             }
 
             return NotFound(new { Error = "Not found ProjectCodeMasterId ,GroupCode or LastOverTime." });
+        }
+
+        // GET: api/OverTimeMaster/ChangeStatus
+        [HttpGet("ChangeStatus/{key}")]
+        public async Task<IActionResult> GetChangeOverTimeStatus(int key)
+        {
+            if (key > 0)
+            {
+                var OverTimeMasterP = await this.repository.GetAsync(key);
+                if (OverTimeMasterP != null)
+                {
+                    OverTimeMasterP.OverTimeStatus = OverTimeStatus.WaitActual;
+                    return new JsonResult(await this.repository.UpdateAsync(OverTimeMasterP, key), this.DefaultJsonSettings);
+                }
+            }
+            return NotFound(new { Error = "Not found overtime." });
         }
 
         #endregion
@@ -963,12 +982,16 @@ namespace VipcoMachine.Controllers
             {
                 if (OverTimeMasterId > 0)
                 {
-                    var HoiDay = new List<DateTime>()
-                    {
-                        new DateTime(2017,12,5),
-                        new DateTime(2017,12,30),
-                        new DateTime(2017,12,31),
-                    };
+                    Expression<Func<HolidayOverTime, bool>> condition = h => h.HolidayStatus != HolidayStatus.Cancel && 
+                                                                             h.HolidayDate != null;
+                    var Holiday = await this.repositoryHoliday.GetAllWithConditionAndIncludeAsync(condition);
+
+                    // var HoiDay = new List<DateTime>()
+                    // {
+                    //    new DateTime(2017,12,5),
+                    //    new DateTime(2017,12,30),
+                    //    new DateTime(2017,12,31),
+                    // };
 
                     var QueryData = await this.repository.GetAllAsQueryable()
                                                          .Include(x => x.EmployeeGroup)
@@ -985,11 +1008,11 @@ namespace VipcoMachine.Controllers
                     {
                         // Check year Thai
                         string year = QueryData.OverTimeDate.Year > 2500 ?
-                            QueryData.OverTimeDate.Year.ToString() :
-                            (QueryData.OverTimeDate.Year + 543).ToString();
+                                      QueryData.OverTimeDate.Year.ToString() :
+                                     (QueryData.OverTimeDate.Year + 543).ToString();
                         // Check type of DayOfWeek
                         var isWeekDay = QueryData.OverTimeDate.DayOfWeek != DayOfWeek.Sunday;
-                        isWeekDay = !HoiDay.Any(x => x.Date == QueryData.OverTimeDate.Date);
+                        isWeekDay = !Holiday.Any(x => x.HolidayDate.Value.Date == QueryData.OverTimeDate.Date);
 
                         var ThreeTime = false;
 
@@ -1037,7 +1060,6 @@ namespace VipcoMachine.Controllers
                             else
                             {
                                 var AddHour = detail.TotalHour < 5 ? detail.TotalHour + 8 : detail.TotalHour + 9;
-
                                 Stime = new TimeSpan(8, 0, 0);
                                 Etime = new TimeSpan((int)AddHour, 0, 0);
                             }
@@ -1051,7 +1073,6 @@ namespace VipcoMachine.Controllers
                                 RowNumber = running,
                                 StartTime = Stime.ToString(@"hh\:mm")
                             });
-
                             running++;
                         }
 

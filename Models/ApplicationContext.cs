@@ -34,6 +34,7 @@ namespace VipcoMachine.Models
             //    .HasName("Unique_Size");
             modelBuilder.Entity<OverTimeDetail>().ToTable("OverTimeDetail");
             modelBuilder.Entity<OverTimeMaster>().ToTable("OverTimeMaster");
+            modelBuilder.Entity<HolidayOverTime>().ToTable("HolidayOverTime");
             modelBuilder.Entity<ProjectCodeDetail>().ToTable("ProjectCodeDetail");
             modelBuilder.Entity<ProjectCodeMaster>().ToTable("ProjectCodeMaster");
             modelBuilder.Entity<PropertyMachine>().ToTable("PropertyMachine");
@@ -62,6 +63,7 @@ namespace VipcoMachine.Models
         public DbSet<Machine> Machines { get; set; }
         public DbSet<MachineHasOperator> MachineHasOperators { get; set; }
         public DbSet<Material> Materials { get; set; }
+        public DbSet<HolidayOverTime> HolidayOverTimes { get; set; }
         public DbSet<OverTimeDetail> OverTimeDetails { get; set; }
         public DbSet<OverTimeMaster> OverTimeMasters { get; set; }
         public DbSet<ProjectCodeDetail> ProjectCodeDetails { get; set; }

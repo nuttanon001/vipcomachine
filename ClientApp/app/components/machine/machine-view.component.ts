@@ -8,12 +8,13 @@ import { BaseViewComponent } from "../base-component/base-view.component";
 import { MachineHasOperatorService } from "../../services/machine-has-operator/machine-has-operator.service";
 // 3rd Party
 import { TableColumn } from "@swimlane/ngx-datatable";
+
 @Component({
     selector: "machine-view",
     templateUrl: "./machine-view.component.html",
     styleUrls: ["../../styles/view.style.scss"],
 })
-/** machine-view component*/
+// machine-view component*/
 export class MachineViewComponent
     extends BaseViewComponent<Machine>
 {

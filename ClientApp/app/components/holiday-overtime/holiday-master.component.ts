@@ -2,37 +2,39 @@
 // components
 import { BaseMasterComponent } from "../base-component/base-master.component";
 // models
-import { Machine,Scroll,ScrollData } from "../../models/model.index";
+import { HolidayOverTime, Scroll, ScrollData } from "../../models/model.index";
 // services
 import { DialogsService } from "../../services/dialog/dialogs.service";
 import { DataTableServiceCommunicate } from "../../services/data-table/data-table.service";
-import { MachineService , MachineServiceCommunicate } from "../../services/machine/machine.service";
+import { HolidayOverTimeService , HolidayOverTimeServiceCommunicate } from "../../services/overtime-master/holiday-overtime.service";
 import { AuthService } from "../../services/auth/auth.service";
 // timezone
 import * as moment from "moment-timezone";
 // 3rd Party
 import { TableColumn } from "@swimlane/ngx-datatable";
+// pipes
+import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 
 @Component({
-    selector: "machine-master",
-    templateUrl: "./machine-master.component.html",
+    selector: "holiday-master",
+    templateUrl: "./holiday-master.component.html",
     styleUrls: ["../../styles/master.style.scss"],
-    providers: [DataTableServiceCommunicate]
+    providers: [ DataTableServiceCommunicate ]
 })
-// machine-master component*/
-export class MachineMasterComponent
-    extends BaseMasterComponent<Machine, MachineService> {
-    columns:Array<TableColumn> = [
-        { prop: "MachineCode", name: "Code", flexGrow: 1 },
-        { prop: "MachineName", name: "Name", flexGrow: 2 },
-        { prop: "TypeMachineString", name: "Group", flexGrow : 1},
-    ];
+// holiday-master component*/
+export class HolidayMasterComponent 
+    extends BaseMasterComponent<HolidayOverTime, HolidayOverTimeService> {
+    datePipe: DateOnlyPipe = new DateOnlyPipe("it");
 
-    /** machine-master ctor */
+    columns: Array<TableColumn> = [
+        { prop: "HolidayName", name: "Name", flexGrow: 1 },
+        { prop: "HolidayDate", name: "Date", flexGrow: 1, pipe: this.datePipe,},
+    ];
+    /** holiday-master ctor */
     constructor(
-        service: MachineService,
-        serviceCom: MachineServiceCommunicate,
-        serviceComDataTable: DataTableServiceCommunicate<Machine>,
+        service: HolidayOverTimeService,
+        serviceCom: HolidayOverTimeServiceCommunicate,
+        serviceComDataTable: DataTableServiceCommunicate<HolidayOverTime>,
         dialogsService: DialogsService,
         viewContainerRef: ViewContainerRef,
         private serverAuth: AuthService,
@@ -64,8 +66,8 @@ export class MachineMasterComponent
     }
 
     // on change time zone befor update to webapi
-    changeTimezone(value: Machine): Machine {
-        let zone:string = "Asia/Bangkok";
+    changeTimezone(value: HolidayOverTime): HolidayOverTime {
+        let zone: string = "Asia/Bangkok";
         if (value !== null) {
             if (value.CreateDate !== null) {
                 value.CreateDate = moment.tz(value.CreateDate, zone).toDate();
@@ -73,35 +75,21 @@ export class MachineMasterComponent
             if (value.ModifyDate !== null) {
                 value.ModifyDate = moment.tz(value.ModifyDate, zone).toDate();
             }
-            if (value.InstalledDate !== null) {
-                value.InstalledDate = moment.tz(value.InstalledDate, zone).toDate();
-            }
-
-            if (value.MachineHasOperators) {
-                value.MachineHasOperators.forEach((Operator, index) => {
-                    if (Operator.CreateDate) {
-                        Operator.CreateDate = moment.tz(Operator.CreateDate, zone).toDate();
-                    }
-                    if (Operator.ModifyDate) {
-                        Operator.ModifyDate = moment.tz(Operator.ModifyDate, zone).toDate();
-                    }
-
-                    if (value.MachineHasOperators) {
-                        value.MachineHasOperators[index] = Operator;
-                    }
-                });
+            if (value.HolidayDate !== null) {
+                value.HolidayDate = moment.tz(value.HolidayDate, zone).toDate();
             }
         }
         return value;
     }
 
     // on insert data
-    onInsertToDataBase(value: Machine): void {
+    onInsertToDataBase(value: HolidayOverTime): void {
         if (this.serverAuth.getAuth) {
             value.Creator = this.serverAuth.getAuth.UserName || "";
         }
         // change timezone
         value = this.changeTimezone(value);
+        // console.log(value);
         // insert data
         this.service.post(value).subscribe(
             (complete: any) => {
@@ -119,14 +107,14 @@ export class MachineMasterComponent
     }
 
     // on update data
-    onUpdateToDataBase(value: Machine): void {
+    onUpdateToDataBase(value: HolidayOverTime): void {
         if (this.serverAuth.getAuth) {
             value.Modifyer = this.serverAuth.getAuth.UserName || "";
         }
         // change timezone
         value = this.changeTimezone(value);
         // update data
-        this.service.putKeyNumber(value, value.MachineId).subscribe(
+        this.service.putKeyNumber(value, value.HolidayId).subscribe(
             (complete: any) => {
                 this.displayValue = complete;
                 this.onSaveComplete();
@@ -141,13 +129,13 @@ export class MachineMasterComponent
     }
 
     // on detail view
-    onDetailView(value: Machine): void {
+    onDetailView(value: HolidayOverTime): void {
         if (this.ShowEdit) {
             return;
         }
 
         if (value) {
-            this.service.getOneKeyNumber(value.MachineId)
+            this.service.getOneKeyNumber(value.HolidayId)
                 .subscribe(dbData => {
                     this.displayValue = dbData;
                 }, error => this.displayValue = undefined);

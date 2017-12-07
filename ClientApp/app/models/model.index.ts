@@ -33,6 +33,7 @@ export { OptionOverTimeLast } from "./overtime-master/option-overtime-last.model
 export { OptionOverTimeChart } from "./overtime-master/option-overtime-chart.model";
 export { ReportOverTimeSummary } from "./overtime-master/overtime-master-report.model";
 export { OptionOverTimeSchedule } from "./overtime-master/option-overtime-schedule.model";
+export { HolidayOverTime } from "./overtime-master/holiday-overtime.model";
 export { OverTimeDetail } from "./overtime-detail/overtime-detail.model";
 export { EmployeeGroup } from "./employee-group/employee-group.model";
 export { EmployeeGroupMis } from "./employee-group/employee-group-mis.model";

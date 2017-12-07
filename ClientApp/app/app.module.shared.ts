@@ -21,7 +21,8 @@ import {
     DialogsModule, DeveloperModule, JobCardModule,
     ProjectModule, MachineModule, CuttingPlanModule,
     StandardTimeModule, TaskMachineModule,
-    OverTimeModule,EmployeeModule, NoTaskMachineModule
+    OverTimeModule, EmployeeModule, NoTaskMachineModule,
+    HolidayModule
  } from "./modules/module.index";
 // services
 import { AuthGuard, AuthService } from "./services/service.index";
@@ -72,6 +73,7 @@ import "popper.js";
         OverTimeModule,
         EmployeeModule,
         NoTaskMachineModule,
+        HolidayModule,
         DialogsModule,
         // 3rd party
         // mark NgxDatatableModule,
