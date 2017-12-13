@@ -23,27 +23,16 @@
 
                 <div class="row my-1">
                     <div class="my-label">
-                        GroupName
+                        GroupMisName
                     </div>
                     <div class="my-value">
-                        {{displayValue?.GroupString || "-"}}
+                        {{displayValue?.GroupMisString || "-"}}
                     </div>
-
                     <div class="my-label">
                         JobNumber
                     </div>
                     <div class="my-value">
                         {{displayValue?.ProjectMasterString || "-"}}
-                    </div>
-                </div>
-
-
-                <div class="row my-1" *ngIf="displayValue?.GroupMisString">
-                    <div class="my-label">
-                        GroupMisName
-                    </div>
-                    <div class="my-value">
-                        {{displayValue?.GroupMisString || "-"}}
                     </div>
                 </div>
 

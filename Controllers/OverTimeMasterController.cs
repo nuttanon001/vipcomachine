@@ -106,7 +106,7 @@ namespace VipcoMachine.Controllers
                       this.DefaultJsonSettings);
         }
 
-        // GET: api/OverTimeMaster/GetOverTimeMasterHasOverTime
+        // GET: api/OverTimeMaster/GetLastOverTime
         [HttpGet("GetLastOverTime/{ProjectCodeId}/{GroupCode}/{CurrentId}")]
         public async Task<IActionResult> GetLastOverTime(int ProjectCodeId,string GroupCode,int CurrentId)
         {
@@ -142,7 +142,7 @@ namespace VipcoMachine.Controllers
                 var OverTimeMasterP = await this.repository.GetAsync(key);
                 if (OverTimeMasterP != null)
                 {
-                    OverTimeMasterP.OverTimeStatus = OverTimeStatus.WaitActual;
+                    OverTimeMasterP.OverTimeStatus = OverTimeStatus.Required;
                     return new JsonResult(await this.repository.UpdateAsync(OverTimeMasterP, key), this.DefaultJsonSettings);
                 }
             }
@@ -201,7 +201,7 @@ namespace VipcoMachine.Controllers
         [HttpPost("GetLastOverTimeV3/")]
         public async Task<IActionResult> GetLastOverTimeV3([FromBody]OptionLastOverTimeViewModel OptionLastOver)
         {
-            if (OptionLastOver.ProjectCodeId.HasValue && !string.IsNullOrEmpty(OptionLastOver.GroupCode))
+            if (OptionLastOver.ProjectCodeId.HasValue && !string.IsNullOrEmpty(OptionLastOver.GroupMis))
             {
                 var QueryData = this.repository.GetAllAsQueryable()
                                                 .Where(x => x.OverTimeStatus != OverTimeStatus.Cancel)
@@ -209,53 +209,75 @@ namespace VipcoMachine.Controllers
                                                 .Include(x => x.ApproveBy)
                                                 .Include(x => x.RequireBy)
                                                 .Include(x => x.ProjectCodeMaster)
-                                                .Include(x => x.EmployeeGroupMIS)
-                                                .Include(x => x.EmployeeGroup).AsQueryable();
-
+                                                .Include(x => x.EmployeeGroupMIS).AsQueryable();
                 if (OptionLastOver.CurrentOverTimeId.HasValue)
                 {
                     if (OptionLastOver.CurrentOverTimeId.Value > 0)
                         QueryData = QueryData.Where(x => x.OverTimeMasterId != OptionLastOver.CurrentOverTimeId);
                 }
-
                 if (OptionLastOver.BeForDate.HasValue)
                 {
                     OptionLastOver.BeForDate = OptionLastOver.BeForDate.Value.AddHours(7);
                     QueryData = QueryData.Where(x => x.OverTimeDate.Date <= OptionLastOver.BeForDate.Value.Date);
                 }
 
-                if (!string.IsNullOrEmpty(OptionLastOver.GroupMis))
-                {
-                    QueryData = QueryData.Where(x => x.GroupMIS == OptionLastOver.GroupMis);
-                }
-
                 var LastOverTime = await QueryData.FirstOrDefaultAsync(x => x.ProjectCodeMasterId == OptionLastOver.ProjectCodeId &&
-                                                                            x.GroupCode == OptionLastOver.GroupCode);
+                                                                            x.GroupMIS == OptionLastOver.GroupMis);
 
                 if (LastOverTime != null)
                 {
                     // if has date overtime
                     if (OptionLastOver.BeForDate.HasValue)
                     {
-                        // if has date overtime sunday
-                        if (OptionLastOver.BeForDate.Value.DayOfWeek == DayOfWeek.Sunday)
+                        Expression<Func<HolidayOverTime, bool>> condition = h => h.HolidayStatus != HolidayStatus.Cancel &&
+                                                                             h.HolidayDate != null;
+                        var Holiday = await this.repositoryHoliday.GetAllWithConditionAndIncludeAsync(condition);
+
+                        if (Holiday.Any(x => x.HolidayDate.Value.Date == OptionLastOver.BeForDate.Value.Date))
                         {
                             var Date1 = OptionLastOver.BeForDate.Value.AddDays(-1).Date;
                             if (Date1 == LastOverTime.OverTimeDate.Date)
                             {
-                                if (LastOverTime.OverTimeDate.DayOfWeek == DayOfWeek.Saturday)
+                                LastOverTime.OverTimeStatus = OverTimeStatus.Complate;
+                                return new JsonResult
+                                    (this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>(LastOverTime), 
+                                     this.DefaultJsonSettings);
+                            }
+                        }
+                        else
+                        {
+                            if (OptionLastOver.BeForDate.Value.DayOfWeek == DayOfWeek.Sunday)
+                            {
+                                var Date1 = OptionLastOver.BeForDate.Value.AddDays(-1).Date;
+                                if (Date1 == LastOverTime.OverTimeDate.Date)
                                 {
-                                    LastOverTime.OverTimeStatus = OverTimeStatus.Complate;
-                                    return new JsonResult(this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>(LastOverTime), this.DefaultJsonSettings);
+                                    if (LastOverTime.OverTimeDate.DayOfWeek == DayOfWeek.Saturday)
+                                    {
+                                        LastOverTime.OverTimeStatus = OverTimeStatus.Complate;
+                                        return new JsonResult(this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>(LastOverTime), this.DefaultJsonSettings);
+                                    }
                                 }
                             }
                         }
+                        #region Don't user
+                        // if has date overtime sunday
+                        // if (OptionLastOver.BeForDate.Value.DayOfWeek == DayOfWeek.Sunday)
+                        // {
+                        //    var Date1 = OptionLastOver.BeForDate.Value.AddDays(-1).Date;
+                        //    if (Date1 == LastOverTime.OverTimeDate.Date)
+                        //    {
+                        //        if (LastOverTime.OverTimeDate.DayOfWeek == DayOfWeek.Saturday)
+                        //        {
+                        //            LastOverTime.OverTimeStatus = OverTimeStatus.Complate;
+                        //            return new JsonResult(this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>(LastOverTime), this.DefaultJsonSettings);
+                        //        }
+                        //    }
+                        // }
+                        #endregion
                     }
-
                     return new JsonResult(this.mapper.Map<OverTimeMaster, OverTimeMasterViewModel>(LastOverTime), this.DefaultJsonSettings);
                 }
             }
-
             return NotFound(new { Error = "Not found ProjectCodeMasterId ,GroupCode or LastOverTime." });
         }
 
@@ -368,7 +390,7 @@ namespace VipcoMachine.Controllers
 
                     var DataTable = new List<IDictionary<String, Object>>();
 
-                    foreach (var Data in GetData.OrderBy(x => x.ProjectCodeMaster.ProjectCode).ThenBy(x => x.EmployeeGroup.Description))
+                    foreach (var Data in GetData.OrderBy(x => x.ProjectCodeMaster.ProjectCode).ThenBy(x => x.EmployeeGroupMIS?.GroupDesc))
                     {
                         var JobNumber = $"{Data?.ProjectCodeMaster?.ProjectCode}/{Data?.ProjectCodeMaster.ProjectName}";
                         IDictionary<String, Object> rowData;
@@ -403,7 +425,7 @@ namespace VipcoMachine.Controllers
                                 ListMaster.Add(new OverTimeMaster
                                 {
                                     OverTimeMasterId = Data.OverTimeMasterId,
-                                    GroupCode = Data.EmployeeGroup.Description,
+                                    GroupCode = Data?.EmployeeGroupMIS?.GroupDesc ?? "-",
                                 });
 
                                 rowData[Key] = ListMaster;
@@ -413,7 +435,7 @@ namespace VipcoMachine.Controllers
                                 var Master = new OverTimeMaster()
                                 {
                                     OverTimeMasterId = Data.OverTimeMasterId,
-                                    GroupCode = Data.EmployeeGroup.Description,
+                                    GroupCode = Data?.EmployeeGroupMIS?.GroupDesc ?? "-",
                                 };
                                 rowData.Add(Key, new List<OverTimeMaster>() {Master});
                             }
@@ -455,6 +477,7 @@ namespace VipcoMachine.Controllers
                                     .Include(x => x.RequireBy)
                                     .Include(x => x.ProjectCodeMaster)
                                     .Include(x => x.EmployeeGroup)
+                                    .Include(x => x.EmployeeGroupMIS)
                                     .AsQueryable();
                 // Where
                 if (!string.IsNullOrEmpty(Scroll.Where))
@@ -471,7 +494,7 @@ namespace VipcoMachine.Controllers
                                                      x.RequireBy.NameThai.ToLower().Contains(keyword) ||
                                                      x.ProjectCodeMaster.ProjectCode.ToLower().Contains(keyword) ||
                                                      x.ProjectCodeMaster.ProjectName.ToLower().Contains(keyword) ||
-                                                     x.EmployeeGroup.Description.ToLower().Contains(keyword));
+                                                     x.EmployeeGroupMIS.GroupDesc.ToLower().Contains(keyword));
                 }
 
                 // Order
@@ -492,9 +515,9 @@ namespace VipcoMachine.Controllers
                         break;
                     case "GroupString":
                         if (Scroll.SortOrder == -1)
-                            QueryData = QueryData.OrderByDescending(e => e.EmployeeGroup.Description);
+                            QueryData = QueryData.OrderByDescending(e => e.EmployeeGroupMIS.GroupDesc);
                         else
-                            QueryData = QueryData.OrderBy(e => e.EmployeeGroup.Description);
+                            QueryData = QueryData.OrderBy(e => e.EmployeeGroupMIS.GroupDesc);
                         break;
 
                     default:
@@ -1011,8 +1034,8 @@ namespace VipcoMachine.Controllers
                                       QueryData.OverTimeDate.Year.ToString() :
                                      (QueryData.OverTimeDate.Year + 543).ToString();
                         // Check type of DayOfWeek
-                        var isWeekDay = QueryData.OverTimeDate.DayOfWeek != DayOfWeek.Sunday;
-                        isWeekDay = !Holiday.Any(x => x.HolidayDate.Value.Date == QueryData.OverTimeDate.Date);
+                        var isWeekDay = QueryData.OverTimeDate.DayOfWeek != DayOfWeek.Sunday && !Holiday.Any(x => x.HolidayDate.Value.Date == QueryData.OverTimeDate.Date);
+                        // isWeekDay = !Holiday.Any(x => x.HolidayDate.Value.Date == QueryData.OverTimeDate.Date);
 
                         var ThreeTime = false;
 
@@ -1021,7 +1044,7 @@ namespace VipcoMachine.Controllers
                         {
                             ApproverBy = QueryData.ApproveBy == null ? "" : $"คุณ{QueryData?.ApproveBy?.NameThai ?? ""}",
                             DateOverTime = QueryData.OverTimeDate.ToString("dd/MM/") + year,
-                            GroupName = (QueryData?.EmployeeGroup?.Description ?? "") + (QueryData.EmployeeGroupMIS == null ? "" : $" / {QueryData?.EmployeeGroupMIS?.GroupDesc}"),
+                            GroupName = (QueryData.EmployeeGroupMIS == null ? "" : $"{QueryData?.EmployeeGroupMIS?.GroupDesc}"),
                             JobNumber = $"{(QueryData?.ProjectCodeMaster?.ProjectCode ?? "")} {(QueryData?.ProjectCodeMaster?.ProjectName ?? "")}",
                             LastActual = QueryData?.LastOverTimeMaster?.InfoActual ?? "",
                             LastPlan = QueryData?.LastOverTimeMaster?.InfoPlan ?? "",
@@ -1043,12 +1066,6 @@ namespace VipcoMachine.Controllers
                         foreach (var detail in QueryData.OverTimeDetails.Where(x => x.OverTimeDetailStatus != OverTimeDetailStatus.Cancel)
                                                         .OrderBy(x => x.EmpCode.Length).ThenBy(x => x.EmpCode))
                         {
-                            if (!isWeekDay)
-                            {
-                                if (detail.TotalHour > 8)
-                                    ThreeTime = true;
-                            }
-
                             var Stime = new TimeSpan();
                             var Etime = new TimeSpan();
 
@@ -1062,6 +1079,9 @@ namespace VipcoMachine.Controllers
                                 var AddHour = detail.TotalHour < 5 ? detail.TotalHour + 8 : detail.TotalHour + 9;
                                 Stime = new TimeSpan(8, 0, 0);
                                 Etime = new TimeSpan((int)AddHour, 0, 0);
+
+                                if (detail.TotalHour > 8)
+                                    ThreeTime = true;
                             }
 
                             ReportOverTimeMaster.Details.Add(new ReportOverTimeDetailViewModel()
@@ -1141,7 +1161,7 @@ namespace VipcoMachine.Controllers
                                                 .Include(x => x.OverTimeDetails)
                                                     .ThenInclude(x => x.Employee)
                                                 .Include(x => x.ProjectCodeMaster)
-                                                .Include(x => x.EmployeeGroup)
+                                                .Include(x => x.EmployeeGroupMIS)
                                                 .AsQueryable();
                 if (option.SDate.HasValue)
                 {
@@ -1155,9 +1175,9 @@ namespace VipcoMachine.Controllers
                 var ReportSummary = new List<ReportOverTimeSummary>();
                 var Runing = 1;
 
-                foreach(var item in Datas.OrderBy(x => x.EmployeeGroup.Description).GroupBy(x => x.EmployeeGroup))
+                foreach(var item in Datas.OrderBy(x => x.EmployeeGroupMIS.GroupDesc).GroupBy(x => x.EmployeeGroupMIS))
                 {
-                    Expression<Func<Employee, bool>> condition = e => e.GroupCode == item.Key.GroupCode;
+                    Expression<Func<Employee, bool>> condition = e => e.GroupMIS == item.Key.GroupMIS;
                     var ToltalGroup = await this.repositoryEmployee.CountWithMatchAsync(condition);
                     var TotalOvertime = 0;
                     foreach(var item2 in item.Select(x => x.OverTimeDetails))
@@ -1165,7 +1185,7 @@ namespace VipcoMachine.Controllers
 
                     var newReport = new ReportOverTimeSummary()
                     {
-                        GroupName = item?.Key?.Description ?? "-",
+                        GroupName = item?.Key?.GroupDesc ?? "-",
                         ProjectNumber = string.Join(",", item?.Select(x => x.ProjectCodeMaster.ProjectCode ?? "-")),
                         Remark = "",
                         Runing = Runing,
@@ -1206,11 +1226,11 @@ namespace VipcoMachine.Controllers
                                                                x.OverTimeStatus == OverTimeStatus.WaitActual)
                                                    .Include(x => x.OverTimeDetails)
                                                    .Include(x => x.ProjectCodeMaster)
-                                                   .Include(x => x.EmployeeGroup)
+                                                   .Include(x => x.EmployeeGroupMIS)
                                                    .AsQueryable();
 
                     if (!string.IsNullOrEmpty(Option.GroupCode))
-                        QueryData = QueryData.Where(x => x.GroupCode == Option.GroupCode);
+                        QueryData = QueryData.Where(x => x.GroupMIS == Option.GroupCode);
 
                     if (Option.ProjectMaster.HasValue)
                         QueryData = QueryData.Where(x => x.ProjectCodeMasterId == Option.ProjectMaster);
@@ -1231,7 +1251,7 @@ namespace VipcoMachine.Controllers
                         if (Option.TypeChart.Value == 1)
                         {
                             // GroupBy GroupCode
-                            foreach (var item in Data.GroupBy(x => x.EmployeeGroup)
+                            foreach (var item in Data.GroupBy(x => x.EmployeeGroupMIS)
                                 .OrderBy(x => x.Sum(y => y.OverTimeDetails.Count())))
                             {
                                 var TotalOvertime = 0;
@@ -1242,7 +1262,7 @@ namespace VipcoMachine.Controllers
                                     TotalHour += item2.Where(x => x.OverTimeDetailStatus == OverTimeDetailStatus.Use).Sum(x => x.TotalHour);
                                 }
                                 ChartDatas.Add(TotalOvertime);
-                                Labels.Add($"{item.Key.Description} {TotalOvertime} Man {TotalHour} Hr");
+                                Labels.Add($"{item.Key.GroupDesc} {TotalOvertime} Man {TotalHour} Hr");
                             }
                         }
                         // Chart GroupCode down ProjectMaster

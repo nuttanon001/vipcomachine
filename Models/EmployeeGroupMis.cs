@@ -22,5 +22,7 @@ namespace VipcoMachine.Models
         public ICollection<Employee> Employees { get; set; }
         //OverTimeMaster
         public ICollection<OverTimeMaster> OverTimeMasters { get; set; }
+        // NoTaskMachine
+        public ICollection<NoTaskMachine> NoTaskMachines { get; set; }
     }
 }

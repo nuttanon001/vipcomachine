@@ -13,7 +13,9 @@
     JobCardDetailId ?: number;
     AssignedBy?:string;
     GroupCode?: string;
+    GroupMis?:string;
     // ViewModel
     AssignedByString?: string;
     GroupCodeString?: string;
+    GroupMisString?: string;
 }

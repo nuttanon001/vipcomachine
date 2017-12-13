@@ -264,6 +264,10 @@ namespace VipcoMachine.Helpers
                 .ForMember(x => x.CuttingPlanNo,
                            o => o.MapFrom(s => s.JobCardDetail.CuttingPlan == null ? "-" : s.JobCardDetail.CuttingPlan.CuttingPlanNo ))
                 .ForMember(x => x.JobCardDetail,o => o.Ignore())
+                // EmployeeMisGroup
+                .ForMember(x => x.GroupMisString,
+                           o => o.MapFrom(s => s.EmployeeGroupMIS == null ? "-" : s.EmployeeGroupMIS.GroupDesc))
+                .ForMember(x => x.EmployeeGroupMIS, o => o.Ignore())
                 // EmployeeGroup
                 .ForMember(x => x.GroupCodeString,
                             o => o.MapFrom(s => s.EmployeeGroup == null ? "-" : s.EmployeeGroup.Description))

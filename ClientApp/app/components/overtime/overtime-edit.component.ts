@@ -155,12 +155,12 @@ export class OvertimeEditComponent
             EmpApprove: [this.editValue.EmpApprove],
             EmpRequire: [this.editValue.EmpRequire],
             LastOverTimeId: [this.editValue.LastOverTimeId],
-            GroupCode: [this.editValue.GroupCode,
+            GroupCode: [this.editValue.GroupCode],
+            GroupMIS: [this.editValue.GroupMIS,
                 [
                     Validators.required
                 ]
             ],
-            GroupMIS: [this.editValue.GroupMIS],
             ProjectCodeMasterId: [this.editValue.ProjectCodeMasterId,
                 [
                     Validators.required
@@ -170,12 +170,12 @@ export class OvertimeEditComponent
             // viewModel
             ApproveString: [this.editValue.ApproveString],
             RequireString: [this.editValue.RequireString],
-            GroupString: [this.editValue.GroupString,
+            GroupString: [this.editValue.GroupString],
+            GroupMisString: [this.editValue.GroupMisString,
                 [
                     Validators.required
                 ]
             ],
-            GroupMisString: [this.editValue.GroupMisString],
             ProjectMasterString: [this.editValue.ProjectMasterString,
                 [
                     Validators.required
@@ -202,19 +202,19 @@ export class OvertimeEditComponent
 
         const form: FormGroup = this.editValueForm;
         const controlMaster: AbstractControl | null = form.get("ProjectCodeMasterId");
-        const controlGroup: AbstractControl | null = form.get("GroupCode");
+        // const controlGroup: AbstractControl | null = form.get("GroupCode");
         const controlDate: AbstractControl | null = form.get("OverTimeDate");
         const controlMis: AbstractControl | null = form.get("GroupMIS");
 
         if (this.editValue.OverTimeStatus === 1) {
-            if (controlMaster && controlGroup) {
-                if (controlMaster.value && controlGroup.value) {
+            if (controlMaster && controlMis) {
+                if (controlMaster.value && controlMis.value) {
                     // check if alrady have last overtime master check if don't same get new last over time master
                     let byPass: boolean = false;
                     if (!this.optionLastOver) {
                         this.optionLastOver = {
                             CurrentOverTimeId: this.editValue.OverTimeMasterId,
-                            GroupCode: controlGroup.value,
+                            // GroupCode: controlGroup.value,
                             ProjectCodeId: controlMaster.value,
                             GroupMis: controlMis !== null ? controlMis.value : undefined
                         };
@@ -226,7 +226,7 @@ export class OvertimeEditComponent
 
                     if (this.optionLastOver) {
                         if (!byPass) {
-                            let strGroup:any = controlGroup.value;
+                            // let strGroup:any = controlGroup.value;
                             let strPro: any = controlMaster.value;
                             let strMis: any = controlMis !== null ? controlMis.value : undefined;
 
@@ -234,8 +234,7 @@ export class OvertimeEditComponent
                                 // console.log("By OptionLastOver:", this.optionLastOver);
                                 // console.log("By Control:", strGroup, strPro, controlDate.value);
 
-                                if (this.optionLastOver.GroupCode === strGroup &&
-                                    this.optionLastOver.ProjectCodeId === strPro &&
+                                if (this.optionLastOver.ProjectCodeId === strPro &&
                                     this.optionLastOver.BeForDate === controlDate.value &&
                                     this.optionLastOver.GroupMis === strMis) {
                                     byPass = false;
@@ -243,8 +242,7 @@ export class OvertimeEditComponent
                                     byPass = true;
                                 }
                             } else {
-                                if (this.optionLastOver.GroupCode === strGroup &&
-                                    this.optionLastOver.ProjectCodeId === strPro &&
+                                if (this.optionLastOver.ProjectCodeId === strPro &&
                                     this.optionLastOver.GroupMis === strMis) {
                                     byPass = false;
                                 } else {
@@ -260,7 +258,6 @@ export class OvertimeEditComponent
 
                             this.optionLastOver = {
                                 CurrentOverTimeId: this.editValue.OverTimeMasterId,
-                                GroupCode: controlGroup.value,
                                 ProjectCodeId: controlMaster.value,
                                 GroupMis: controlMis !== null ? controlMis.value : undefined
                             };
@@ -295,8 +292,7 @@ export class OvertimeEditComponent
                                         this.lastOverTimeMaster = {
                                             OverTimeMasterId: 0,
                                             OverTimeDate: new Date(),
-                                            ProjectCodeMasterId: controlMaster.value,
-                                            GroupCode: controlGroup.value
+                                            ProjectCodeMasterId: controlMaster.value
                                         };
 
                                         this.editValueForm.patchValue({
@@ -308,8 +304,7 @@ export class OvertimeEditComponent
                                     this.lastOverTimeMaster = {
                                         OverTimeMasterId: 0,
                                         OverTimeDate: new Date(),
-                                        ProjectCodeMasterId: controlMaster.value,
-                                        GroupCode: controlGroup.value
+                                        ProjectCodeMasterId: controlMaster.value
                                     };
                                     this.editValueForm.patchValue({
                                         LastOverTimeId: undefined,

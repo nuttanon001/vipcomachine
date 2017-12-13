@@ -162,8 +162,10 @@ export class NoTaskMachineEditComponent
             ],
             AssignedBy: [this.editValue.AssignedBy],
             GroupCode: [this.editValue.GroupCode],
+            GroupMis:[this.editValue.GroupMis],
             AssignedByString: [this.editValue.AssignedByString],
-            GroupCodeString: [this.editValue.GroupCodeString]
+            GroupCodeString: [this.editValue.GroupCodeString],
+            GroupMisString: [this.editValue.GroupMisString]
         });
         this.editValueForm.valueChanges.subscribe((data: any) => this.onValueChanged(data));
     }
@@ -200,5 +202,19 @@ export class NoTaskMachineEditComponent
                     });
                 }
             });
+    }
+
+    // groupmis
+    onSelectedGroupMisBy(): void {
+        this.serviceDialogs.dialogSelectedEmployeeGroupMis(this.viewContainerRef)
+            .subscribe(groupMis => {
+                if (groupMis) {
+                    // cloning an object
+                    this.editValueForm.patchValue({
+                        GroupMis: groupMis.GroupMIS,
+                        GroupMisString: groupMis.GroupDesc,
+                    });
+                }
+            })
     }
 }

@@ -3,6 +3,8 @@ import { FormBuilder, FormGroup, FormControl, Validators } from "@angular/forms"
 // service
 import { OverTimeMasterService } from "../../services/overtime-master/overtime-master.service";
 import { EmployeeGroupService } from "../../services/employee-group/employee-group.service";
+import { EmployeeGroupMisService } from "../../services/employee-group/employee-group-mis.service";
+
 import { ProjectCodeMasterService } from "../../services/projectcode-master/projectcode-master.service";
 // model
 import { OptionOverTimeChart } from "../../models/model.index";
@@ -31,6 +33,7 @@ export class OverTimeChartComponent implements OnInit {
     constructor(
         private service: OverTimeMasterService,
         private serviceGrpEmp: EmployeeGroupService,
+        private serviceGrpMis: EmployeeGroupMisService,
         private serviceProMst: ProjectCodeMasterService,
         private fb: FormBuilder
     ) { }
@@ -97,12 +100,12 @@ export class OverTimeChartComponent implements OnInit {
 
     // get employee group array
     getEmployeeGroup(): void {
-        this.serviceGrpEmp.getAll()
+        this.serviceGrpMis.getAll()
             .subscribe(result => {
                 this.groupEmployees = new Array;
                 this.groupEmployees.push({ label: "Selected employee group.", value: undefined });
                 for (let item of result) {
-                    this.groupEmployees.push({ label: item.Description || "", value: item.GroupCode });
+                    this.groupEmployees.push({ label: item.GroupDesc || "", value: item.GroupMIS });
                 }
             }, error => console.error(error));
     }

@@ -12,5 +12,6 @@ namespace VipcoMachine.ViewModels
         public string AssignedByString { get; set; }
         public string GroupCodeString { get; set; }
         public string CuttingPlanNo { get; set; }
+        public string GroupMisString { get; set; }
     }
 }

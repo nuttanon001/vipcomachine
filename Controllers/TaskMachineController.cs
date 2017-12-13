@@ -270,7 +270,7 @@ namespace VipcoMachine.Controllers
         [HttpGet("NoTaskMachine")]
         public async Task<IActionResult> GetNoTaskMachine()
         {
-            var Includes = new List<string> { "Employee", "EmployeeGroup" };
+            var Includes = new List<string> { "Employee", "EmployeeGroup", "EmployeeGroupMIS"};
             return new JsonResult(
                       this.ConverterTableToViewModel<NoTaskMachineViewModel, NoTaskMachine>(await this.repositoryNoTask.GetAllWithInclude2Async(Includes)),
                       this.DefaultJsonSettings);
@@ -279,7 +279,7 @@ namespace VipcoMachine.Controllers
         [HttpGet("NoTaskMachine/{key}")]
         public async Task<IActionResult> GetNoTaskMachine(int key)
         {
-            var Includes = new List<string> { "Employee", "EmployeeGroup" };
+            var Includes = new List<string> { "Employee", "EmployeeGroup" ,"EmployeeGroupMIS"};
             return new JsonResult(
                       this.mapper.Map<NoTaskMachine, NoTaskMachineViewModel>(await this.repositoryNoTask.GetAsynvWithIncludes(key, "NoTaskMachineId", Includes)),
                       this.DefaultJsonSettings);

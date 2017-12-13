@@ -124,15 +124,14 @@
                             <validation-messages [control]="editValueForm.controls.AssignedByString"></validation-messages>
                         </div>
 
-                        <label for="GroupCodeString" class="my-label">GroupName:</label>
+                        <label for="GroupMisString" class="my-label">GroupName:</label>
                         <div class="col-sm-4">
                             <input type="text" class="my-input-click" placeholder="Choose group name here"
-                                   (click)="onSelectedGroupCodeBy()"
-                                   id="GroupCodeString" formControlName="GroupCodeString" required readonly>
+                                   (click)="onSelectedGroupMisBy()"
+                                   id="GroupMisString" formControlName="GroupMisString" required readonly>
                             <validation-messages [control]="editValueForm.controls.GroupCodeString"></validation-messages>
                         </div>
                     </div>
-
                 </form>
             </div>
         </mat-tab>

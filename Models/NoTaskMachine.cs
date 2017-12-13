@@ -36,5 +36,9 @@ namespace VipcoMachine.Models
         // EmployeeGroup
         public string GroupCode { get; set; }
         public EmployeeGroup EmployeeGroup { get; set; }
+        // EmployeeGroupMis
+        public string GroupMis { get; set; }
+        public EmployeeGroupMIS EmployeeGroupMIS { get; set; }
+
     }
 }
