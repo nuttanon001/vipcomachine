@@ -552,13 +552,13 @@ export class OvertimeEditComponent
     // on show work group-mis
     onShowWorkGroupMis(event?: any): void {
         // debug here
-        console.log("Event is:", event);
+        // console.log("Event is:", event);
 
         if (event !== undefined) {
             this.showWorkGroupMis = event;
         }
 
-        console.log("ShowWorkGroupMis:", this.showWorkGroupMis);
+        // console.log("ShowWorkGroupMis:", this.showWorkGroupMis);
     }
 
     // on valid data override

@@ -17,7 +17,6 @@ import { TableColumn } from "@swimlane/ngx-datatable";
 // pipes
 import { DateOnlyPipe } from "../../pipes/date-only.pipe";
 
-
 @Component({
     selector: "notask-machine-master",
     templateUrl: "./notask-machine-master.component.html",
@@ -36,7 +35,7 @@ export class NoTaskMachineMasterComponent
     hasOverTime: boolean = false;
     columns: Array<TableColumn> = [
         { prop: "NoTaskMachineCode", name: "Code", flexGrow: 1 },
-        { prop: "GroupCodeString", name: "Group", flexGrow: 2 },
+        { prop: "GroupMisString", name: "Group", flexGrow: 2 },
         { prop: "CuttingPlanNo", name: "CuttingPlan", flexGrow: 2 },
         { prop: "Date", name: "Date", pipe: this.datePipe , flexGrow: 1 },
     ];

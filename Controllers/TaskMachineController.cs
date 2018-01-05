@@ -425,6 +425,8 @@ namespace VipcoMachine.Controllers
                             QueryData = QueryData.Where(x => x.TaskMachineStatus == TaskMachineStatus.Wait ||
                                                              x.TaskMachineStatus == TaskMachineStatus.Process);
                     }
+                    // Set order planned end date 
+                    QueryData = QueryData.OrderByDescending(x => x.PlannedStartDate);
 
                     TotalRow = await QueryData.CountAsync();
 

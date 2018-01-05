@@ -73,7 +73,7 @@
         <p-dataTable [value]="taskMachines" rowGroupMode="rowspan"
                      [lazy]="true" [rows]="5" [paginator]="true" [rowsPerPageOptions]="[5,10,20]"
                      [totalRecords]="totalRecords" (onLazyLoad)="loadDataLazy($event)"
-                     scrollable="true" scrollWidth="94vw">
+                     scrollable="true" scrollWidth="94vw" scrollHeight="50vh">
             <p-headerColumnGroup>
                 <p-row>
                     <p-column *ngFor="let colup of columnsUpper" [header]="colup.header"
